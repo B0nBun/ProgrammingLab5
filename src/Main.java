@@ -1,15 +1,14 @@
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.time.LocalDate;
-import java.util.Scanner;
+import java.util.LinkedList;
 
+import lib.Vehicles;
 import lib.entities.Coordinates;
 import lib.entities.FuelType;
 import lib.entities.Vehicle;
 import lib.entities.VehicleType;
 import lib.exceptions.InvalidArgumentException;
+
+// ВАРИАНТ: 863200
 
 /* 
 	TODO:
@@ -29,8 +28,13 @@ import lib.exceptions.InvalidArgumentException;
 
 
 public class Main {
+	private static String prettyPrintVehicles(Vehicles vehicles) {
+		return String.join("\n", vehicles.getAll().stream().map(Vehicle::toString).toList());
+	}
+	
 	public static void main(String[] args) throws InvalidArgumentException {
-		Vehicle foo = new Vehicle(
+		Vehicles vehicles = new Vehicles();
+		vehicles.add(new Vehicle(
 			123,
 			"Name",
 			new Coordinates(123, 123l),
@@ -38,8 +42,29 @@ public class Main {
 			123.123f,
 			VehicleType.BICYCLE,
 			FuelType.ALCOHOL
-		);
+		));
 
-		System.out.println(foo);
+		vehicles.addIfMin(new Vehicle(
+			124,
+			"Name",
+			new Coordinates(123, 123l),
+			LocalDate.now(),
+			123.123f,
+			VehicleType.BICYCLE,
+			FuelType.ALCOHOL
+		));
+
+		vehicles.add(new Vehicle(
+			125,
+			"Name",
+			new Coordinates(123, 123l),
+			LocalDate.now(),
+			123.123f,
+			VehicleType.BICYCLE,
+			FuelType.ALCOHOL
+		));
+
+		
+		System.out.println(Main.prettyPrintVehicles(vehicles));
 	}
 }
