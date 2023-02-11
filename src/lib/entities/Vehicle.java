@@ -1,15 +1,17 @@
 package lib.entities;
 
+import java.time.LocalDate;
+
 public record Vehicle(
     long id,
     String name,
     Coordinates coordinates,
-    java.time.LocalDate creationDate,
+    LocalDate creationDate,
     Float enginePower,
     VehicleType type,
     FuelType fuelType
 ) implements Comparable<Vehicle> {
-
+    
     @Override
     public String toString() {
         return String.join(

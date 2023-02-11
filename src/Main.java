@@ -1,6 +1,3 @@
-import java.time.LocalDate;
-import java.util.LinkedList;
-
 import lib.Vehicles;
 import lib.entities.Coordinates;
 import lib.entities.FuelType;
@@ -34,31 +31,25 @@ public class Main {
 	
 	public static void main(String[] args) throws InvalidArgumentException {
 		Vehicles vehicles = new Vehicles();
-		vehicles.add(new Vehicle(
-			123,
+		vehicles.add(new Vehicles.VehicleCreationSchema(
 			"Name",
 			new Coordinates(123, 123l),
-			LocalDate.now(),
 			123.123f,
 			VehicleType.BICYCLE,
 			FuelType.ALCOHOL
 		));
 
-		vehicles.addIfMin(new Vehicle(
-			124,
+		vehicles.addIfMin(new Vehicles.VehicleCreationSchema(
 			"Name",
 			new Coordinates(123, 123l),
-			LocalDate.now(),
 			123.123f,
 			VehicleType.BICYCLE,
 			FuelType.ALCOHOL
 		));
 
-		vehicles.add(new Vehicle(
-			125,
+		vehicles.add(new Vehicles.VehicleCreationSchema(
 			"Name",
 			new Coordinates(123, 123l),
-			LocalDate.now(),
 			123.123f,
 			VehicleType.BICYCLE,
 			FuelType.ALCOHOL

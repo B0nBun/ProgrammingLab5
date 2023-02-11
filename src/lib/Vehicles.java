@@ -1,13 +1,46 @@
 package lib;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.function.Predicate;
 
+import lib.entities.Coordinates;
+import lib.entities.FuelType;
 import lib.entities.Vehicle;
+import lib.entities.VehicleType;
 
-// TODO: Автоматическая генерация id и LocalDate
 public class Vehicles {
+    /*
+        Я понятия не имею как решить проблему разделения автоматический генерируемых
+        и указываемых полей. По идеи это не должно зависить от класса Vehicle так как
+        он просто является носителем информации, но если отделить CreationSchema и поместить
+        ее в другое место, то возникает проблема, что сигнатура ее конструктора зависит от 
+        сигнатуры конструктора Vehicle, из-за чего при изменении класса Vehicle полетят
+        ошибки. Решения у меня нет и этот комментарий тут как напоминание либо подумать потом,
+        либо спросить совета как надо
+    */
+    public static record VehicleCreationSchema(
+        String name,
+        Coordinates coordinates,
+        Float enginePower,
+        VehicleType type,
+        FuelType fuelType
+    ) {
+        public Vehicle generate(long id, LocalDate creationDate) {
+            return new Vehicle(
+                id,
+                this.name,
+                this.coordinates,
+                creationDate,
+                this.enginePower,
+                this.type,
+                this.fuelType
+            );
+        }
+    }
+
+    long idCounter = 0;
     private LinkedList<Vehicle> list;
 
     public Vehicles() {
@@ -40,25 +73,35 @@ public class Vehicles {
         return sum / this.list.size();
     }
     
-    public void add(Vehicle newVehicle) {
-        this.list.add(newVehicle);
+    public void add(VehicleCreationSchema newVehicle) {
+        this.idCounter ++;
+        this.list.add(newVehicle.generate(this.idCounter, LocalDate.now()));
     }
 
-    public boolean addIfMin(Vehicle newVehicle) {
+    public boolean addIfMin(VehicleCreationSchema newVehicle) {
         Vehicle minVehicle = this.findMin(Vehicle::compareTo);
-        if (minVehicle.compareTo(newVehicle) > 0) {
-            this.list.add(newVehicle);
+
+        this.idCounter ++;
+        Vehicle createdVehicle = newVehicle.generate(this.idCounter, LocalDate.now());
+        int comparison = minVehicle.compareTo(createdVehicle);
+
+        if (comparison > 0) {
+            this.list.add(createdVehicle);
             return true;
         }
         return false;
     }
     
-    public boolean update(long id, Vehicle updated) {
+    public boolean update(long id, VehicleCreationSchema updatedSchema) {
         boolean listChanged = false;
         for (int i = 0; i < this.list.size(); i ++) {
-            if (this.list.get(i).id() == id) {
+            Vehicle foundVehicle = this.list.get(i);
+            if (foundVehicle.id() == id) {
                 listChanged = true;
-                this.list.set(i, updated);
+                this.list.set(i, updatedSchema.generate(
+                    foundVehicle.id(),
+                    foundVehicle.creationDate()
+                ));
             }
         }
         return listChanged;
