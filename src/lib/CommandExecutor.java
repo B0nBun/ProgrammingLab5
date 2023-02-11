@@ -30,7 +30,7 @@ public class CommandExecutor {
     }
     
     private static SimpleEntry<String, String[]> parseCommandString(String commandString) throws CommandParseException {
-        String[] splitted = commandString.split("\s");
+        String[] splitted = commandString.split("\s+");
         if (splitted.length == 0 || splitted[0].length() == 0) {
             throw new CommandParseException(commandString);
         }
