@@ -89,6 +89,7 @@ public class Vehicles {
             this.list.add(createdVehicle);
             return true;
         }
+        this.idCounter --;
         return false;
     }
     
