@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.AbstractMap.SimpleEntry;
 
-import lib.commands.IsEvenCommand;
+import lib.commands.HelpCommand;
 import lib.exceptions.CommandNotFoundException;
 import lib.exceptions.CommandParseException;
 import lib.exceptions.InvalidArgumentException;
@@ -48,7 +48,7 @@ public class CommandExecutor {
         var arguments = pair.getValue();
 
         Map<String, Command> commandsMap = Map.ofEntries(
-            entry("even?", new IsEvenCommand())
+            entry("help", new HelpCommand())
         );
 
         Command command = commandsMap.get(commandname);
@@ -56,6 +56,6 @@ public class CommandExecutor {
             throw new CommandNotFoundException(commandname);
         }
 
-        command.execute(arguments, this.vehicles, this.scanner, this.writer);
+        command.execute(arguments, this.vehicles, this.scanner, this.writer, commandsMap);
     }
 }
