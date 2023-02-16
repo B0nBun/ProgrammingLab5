@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.AbstractMap.SimpleEntry;
 
+import lib.commands.IsEvenCommand;
 import lib.exceptions.CommandNotFoundException;
 import lib.exceptions.CommandParseException;
 import lib.exceptions.InvalidArgumentException;
@@ -47,40 +48,7 @@ public class CommandExecutor {
         var arguments = pair.getValue();
 
         Map<String, Command> commandsMap = Map.ofEntries(
-            entry("even?", new Command() {
-                @Override
-                public void execute(
-                    String[] arguments,
-                    Vehicles vehicles,
-                    Scanner scanner,
-                    Writer writer
-                ) throws CommandNotFoundException, InvalidArgumentException, IOException {
-                    Integer num = null;
-                    if (arguments.length == 0) {
-                        print("Input a number: ");
-                        while (num == null) {
-                            try {
-                                num = Integer.parseInt(scanner.nextLine());
-                            } catch (NumberFormatException err) {
-                                print("Please input an integer\n");
-                            }
-                        }
-                    } else {
-                        String firstArg = arguments[0];
-                        try {
-                            num = Integer.parseInt(firstArg);
-                        } catch (NumberFormatException err) {
-                            throw new InvalidArgumentException("Expected an integer, found '" + firstArg + "'");
-                        }
-                    }
-
-                    if (num % 2 == 0) {
-                        print(num + " is an even number\n");
-                    } else {
-                        print(num + " is an odd number\n");
-                    }
-                }
-            })
+            entry("even?", new IsEvenCommand())
         );
 
         Command command = commandsMap.get(commandname);
@@ -89,10 +57,5 @@ public class CommandExecutor {
         }
 
         command.execute(arguments, this.vehicles, this.scanner, this.writer);
-    }
-
-    private void print(String str) throws IOException {
-        this.writer.write(str);
-        this.writer.flush();
     }
 }
