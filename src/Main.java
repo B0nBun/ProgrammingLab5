@@ -17,7 +17,6 @@ import lib.exceptions.ExitProgramException;
 	// Путь к файлу должен быть в переменнах среды
 	// Сама коллекция должна хранится в xml
 // TODO: save
-// TODO: execute_script file_name
 
 // TODO: Сгенерировать javadoc
 // TODO: Обработать IOException

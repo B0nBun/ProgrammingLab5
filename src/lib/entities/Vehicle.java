@@ -19,11 +19,11 @@ public record Vehicle(
             "Vehicle[",
             "  id = " + this.id + ",",
             "  name = " + this.name + ",",
-            "  coordinates = " + this.coordinates.toString() + ",",
-            "  creationDate = " + this.creationDate.toString() + ",",
+            "  coordinates = " + this.coordinates + ",",
+            "  creationDate = " + this.creationDate + ",",
             "  enginePower = " + this.enginePower + ",",
-            "  type = " + this.type.name() + ",",
-            "  fuelType = " + this.fuelType.name() + ",",
+            "  type = " + this.type + ",",
+            "  fuelType = " + this.fuelType + ",",
             "]"
         );
     }
