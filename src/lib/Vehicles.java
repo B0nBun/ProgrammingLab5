@@ -43,7 +43,6 @@ public class Vehicles {
             );
         }
 
-        // TODO: Parse enumerations with integers as a list index, instead of full name
         public static VehicleCreationSchema createFromScanner(
             Scanner scanner,
             Writer writer
