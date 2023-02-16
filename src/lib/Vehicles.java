@@ -1,7 +1,10 @@
 package lib;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.time.LocalDate;
 import java.util.LinkedList;
+import java.util.Scanner;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -38,6 +41,20 @@ public class Vehicles {
                 this.type,
                 this.fuelType
             );
+        }
+
+        // TODO: Parse enumerations with integers as a list index, instead of full name
+        public static VehicleCreationSchema createFromScanner(
+            Scanner scanner,
+            Writer writer
+        ) throws IOException {
+            String name = Utils.scanUntilParsedNonemptyString(scanner, writer, "Name: ");
+            Coordinates coordinates = Utils.scanUntilParsedCoordinates(scanner, writer, "Coordinates: \n");
+            Float enginePower = Utils.scanUntilParsedPositiveFloat(scanner, writer, "Engine Power: ", false, null);
+            VehicleType vehicleType = Utils.scanUntilParsedVehicleType(scanner, writer, "Vehicle Type: ", true, null);
+            FuelType fuelType = Utils.scanUntilParsedFuelType(scanner, writer, "Fuel Type: ", false, null);
+
+            return new VehicleCreationSchema(name, coordinates, enginePower, vehicleType, fuelType);
         }
     }
 

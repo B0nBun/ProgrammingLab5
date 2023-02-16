@@ -10,6 +10,7 @@ import lib.exceptions.InvalidArgumentException;
 
 // ВАРИАНТ: 863200
 
+// TODO: Handle CommandNotFoundException
 public class Main {
 	public static void main(String[] args) throws InvalidArgumentException, CommandParseException, CommandParseException, CommandNotFoundException, IOException {
 		var scanner = new Scanner(System.in);

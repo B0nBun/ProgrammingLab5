@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.AbstractMap.SimpleEntry;
 
+import lib.commands.AddCommand;
 import lib.commands.HelpCommand;
 import lib.commands.InfoCommand;
 import lib.exceptions.CommandNotFoundException;
@@ -50,6 +51,7 @@ public class CommandExecutor {
         Map<String, Command> commandsMap = new LinkedHashMap<>();
         commandsMap.put("help", new HelpCommand());
         commandsMap.put("info", new InfoCommand());
+        commandsMap.put("add",  new AddCommand());
 
         Command command = commandsMap.get(commandname);
         if (command == null) {
