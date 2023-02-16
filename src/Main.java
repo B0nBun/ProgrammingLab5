@@ -22,8 +22,6 @@ import lib.exceptions.InvalidNumberOfArgumentsException;
 // TODO: save
 // TODO: execute_script file_name
 
-// TODO: min_by_name
-
 // TODO: Сгенерировать javadoc
 
 public class Main {
