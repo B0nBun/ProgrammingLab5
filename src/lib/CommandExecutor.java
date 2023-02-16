@@ -23,7 +23,6 @@ import lib.commands.RemoveByIdCommand;
 import lib.commands.RemoveLowerCommand;
 import lib.commands.ShowCommand;
 import lib.commands.UpdateCommand;
-import lib.exceptions.CommandNotFoundException;
 import lib.exceptions.CommandParseException;
 import lib.exceptions.ExitProgramException;
 import lib.exceptions.InvalidArgumentException;
@@ -56,32 +55,41 @@ public class CommandExecutor {
         return new SimpleEntry<>(command, arguments);
     }
 
-    public void executeCommandString(String commandString) throws CommandParseException, CommandNotFoundException, InvalidArgumentException, InvalidNumberOfArgumentsException, IOException, ExitProgramException {
-        var pair = CommandExecutor.parseCommandString(commandString);
-        var commandname = pair.getKey();
-        var arguments = pair.getValue();
-
-        Map<String, Command> commandsMap = new LinkedHashMap<>();
-        commandsMap.put("help", new HelpCommand());
-        commandsMap.put("info", new InfoCommand());
-        commandsMap.put("add",  new AddCommand());
-        commandsMap.put("show", new ShowCommand());
-        commandsMap.put("update", new UpdateCommand());
-        commandsMap.put("remove_by_id", new RemoveByIdCommand());
-        commandsMap.put("clear", new ClearCommand());
-        commandsMap.put("exit", new ExitCommand());
-        commandsMap.put("head", new HeadCommand());
-        commandsMap.put("add_if_min", new AddIfMinCommand());
-        commandsMap.put("remove_lower", new RemoveLowerCommand());
-        commandsMap.put("remove_all_by_fuel_type", new RemoveAllByFuelCommand());
-        commandsMap.put("average_of_engine_power", new AverageEnginePower());
-        commandsMap.put("min_by_name", new MinByNameCommand());
-
-        Command command = commandsMap.get(commandname);
-        if (command == null) {
-            throw new CommandNotFoundException(commandname);
+    public void executeCommandString(String commandString) throws IOException, ExitProgramException {
+        try {
+            var pair = CommandExecutor.parseCommandString(commandString);
+            var commandname = pair.getKey();
+            var arguments = pair.getValue();
+    
+            Map<String, Command> commandsMap = new LinkedHashMap<>();
+            commandsMap.put("help", new HelpCommand());
+            commandsMap.put("info", new InfoCommand());
+            commandsMap.put("add",  new AddCommand());
+            commandsMap.put("show", new ShowCommand());
+            commandsMap.put("update", new UpdateCommand());
+            commandsMap.put("remove_by_id", new RemoveByIdCommand());
+            commandsMap.put("clear", new ClearCommand());
+            commandsMap.put("exit", new ExitCommand());
+            commandsMap.put("head", new HeadCommand());
+            commandsMap.put("add_if_min", new AddIfMinCommand());
+            commandsMap.put("remove_lower", new RemoveLowerCommand());
+            commandsMap.put("remove_all_by_fuel_type", new RemoveAllByFuelCommand());
+            commandsMap.put("average_of_engine_power", new AverageEnginePower());
+            commandsMap.put("min_by_name", new MinByNameCommand());
+    
+            Command command = commandsMap.get(commandname);
+            if (command == null) {
+                Utils.print(writer, "Command '" + commandString + "' not found, input 'help' to see a list of all commands\n");
+                return;
+            }
+    
+            try {
+                command.execute(arguments, this.vehicles, this.scanner, this.writer, commandsMap);
+            } catch (InvalidNumberOfArgumentsException | InvalidArgumentException err) {
+                Utils.print(writer, err.getMessage() + "\n");
+            }
+        } catch (CommandParseException err) {
+            Utils.print(writer, "Couldn't parse the command: \"" + commandString + "\"\n");
         }
-
-        command.execute(arguments, this.vehicles, this.scanner, this.writer, commandsMap);
     }
 }
