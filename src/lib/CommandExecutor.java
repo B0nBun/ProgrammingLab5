@@ -12,6 +12,7 @@ import java.util.AbstractMap.SimpleEntry;
 import lib.commands.AddCommand;
 import lib.commands.HelpCommand;
 import lib.commands.InfoCommand;
+import lib.commands.ShowCommand;
 import lib.exceptions.CommandNotFoundException;
 import lib.exceptions.CommandParseException;
 import lib.exceptions.InvalidArgumentException;
@@ -52,6 +53,7 @@ public class CommandExecutor {
         commandsMap.put("help", new HelpCommand());
         commandsMap.put("info", new InfoCommand());
         commandsMap.put("add",  new AddCommand());
+        commandsMap.put("show", new ShowCommand());
 
         Command command = commandsMap.get(commandname);
         if (command == null) {

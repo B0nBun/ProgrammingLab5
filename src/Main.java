@@ -5,6 +5,9 @@ import java.util.Scanner;
 import lib.CommandExecutor;
 import lib.Utils;
 import lib.Vehicles;
+import lib.entities.Coordinates;
+import lib.entities.FuelType;
+import lib.entities.VehicleType;
 import lib.exceptions.CommandNotFoundException;
 import lib.exceptions.CommandParseException;
 import lib.exceptions.InvalidArgumentException;
@@ -16,6 +19,13 @@ public class Main {
 		var scanner = new Scanner(System.in);
 		var outputWriter = new OutputStreamWriter(System.out);
 		var vehicles = new Vehicles();
+		vehicles.add(new Vehicles.VehicleCreationSchema(
+			"testName",
+			new Coordinates(123, 321l),
+			1.5f,
+			VehicleType.BICYCLE,
+			FuelType.ALCOHOL
+		));
 
 		var executor = new CommandExecutor(scanner, outputWriter, vehicles);
 
