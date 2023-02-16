@@ -2,7 +2,6 @@ package lib.commands;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.time.LocalDate;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -23,7 +22,7 @@ public class AddIfMinCommand implements Command {
         var creationSchema = VehicleCreationSchema.createFromScanner(scanner, writer);   
         var minVehicle = vehicles.stream().min(Vehicle::compareTo).orElse(null);
         
-        if (minVehicle == null || creationSchema.generate(0, LocalDate.now()).compareTo(minVehicle) < 0) {
+        if (minVehicle == null || creationSchema.generate(vehicles.nextId(), vehicles.nextCreationDate()).compareTo(minVehicle) < 0) {
             vehicles.add(creationSchema);
         }
     }

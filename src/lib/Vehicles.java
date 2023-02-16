@@ -107,9 +107,17 @@ public class Vehicles {
         return this.list.stream();
     }
 
+    public long nextId() {
+        return this.idCounter + 1;
+    }
+    
+    public LocalDate nextCreationDate() {
+        return LocalDate.now();
+    }
+
     public void add(VehicleCreationSchema newVehicle) {
-        this.idCounter ++;
-        this.list.add(newVehicle.generate(this.idCounter, LocalDate.now()));
+        this.list.add(newVehicle.generate(this.nextId(), this.nextCreationDate()));
+        this.idCounter = this.nextId();
     }
 
     public Vehicles mutate(Function<Vehicle, Vehicle> mutator) {
