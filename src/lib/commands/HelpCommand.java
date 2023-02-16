@@ -10,8 +10,6 @@ import java.util.stream.Stream;
 import lib.Command;
 import static lib.Utils.print;
 import lib.Vehicles;
-import lib.exceptions.CommandNotFoundException;
-import lib.exceptions.InvalidArgumentException;
 
 public class HelpCommand implements Command {
     @Override
@@ -21,7 +19,7 @@ public class HelpCommand implements Command {
         Scanner _scanner,
         Writer writer,
         Map<String, Command> commandsMap
-    ) throws CommandNotFoundException, InvalidArgumentException, IOException {
+    ) throws IOException {
         Stream<String> commandStrings = commandsMap.entrySet().stream()
             .map(entry -> "- " + entry.getKey() + "\n" + entry.getValue().helpMessage());
         

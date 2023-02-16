@@ -1,22 +1,23 @@
-package lib;
+package lib.commands;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 import java.util.Scanner;
 
-import lib.exceptions.InvalidArgumentException;
+import lib.Command;
+import lib.Vehicles;
 
-public interface Command {
+public class UpdateCommand implements Command {
+    @Override
     public void execute(
         String[] arguments,
         Vehicles vehicles,
         Scanner scanner,
         Writer writer,
         Map<String, Command> commandsMap
-    ) throws InvalidArgumentException, IOException;
-
-    default public String helpMessage() {
-        return "No 'help' description";
+    ) throws IOException {
+        // TODO Auto-generated method stub
+        
     }
 }

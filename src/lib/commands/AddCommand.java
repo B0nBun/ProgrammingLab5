@@ -8,8 +8,6 @@ import java.util.Scanner;
 import lib.Command;
 import lib.Vehicles;
 import lib.Vehicles.VehicleCreationSchema;
-import lib.exceptions.CommandNotFoundException;
-import lib.exceptions.InvalidArgumentException;
 
 public class AddCommand implements Command {
     @Override
@@ -19,7 +17,7 @@ public class AddCommand implements Command {
         Scanner scanner,
         Writer writer,
         Map<String, Command> _commandsMap
-    ) throws CommandNotFoundException, InvalidArgumentException, IOException {
+    ) throws IOException {
         VehicleCreationSchema creationSchema = VehicleCreationSchema.createFromScanner(scanner, writer);
         vehicles.add(creationSchema);
     }

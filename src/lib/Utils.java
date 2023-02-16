@@ -3,8 +3,6 @@ package lib;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Scanner;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import lib.entities.Coordinates;
 import lib.entities.FuelType;

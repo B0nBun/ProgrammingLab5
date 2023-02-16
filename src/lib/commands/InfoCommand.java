@@ -8,8 +8,6 @@ import java.util.Scanner;
 import lib.Command;
 import static lib.Utils.print;
 import lib.Vehicles;
-import lib.exceptions.CommandNotFoundException;
-import lib.exceptions.InvalidArgumentException;
 
 public class InfoCommand implements Command {
     @Override
@@ -19,7 +17,7 @@ public class InfoCommand implements Command {
         Scanner _scanner,
         Writer writer,
         Map<String, Command> _commandsMap
-    ) throws CommandNotFoundException, InvalidArgumentException, IOException {
+    ) throws IOException {
         print(writer, (
             "Creation Date: " + vehicles.creationDate() + "\n" +
             "Collection Type: " + vehicles.collectionType() + "\n" +
