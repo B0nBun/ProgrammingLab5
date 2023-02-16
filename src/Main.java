@@ -29,9 +29,8 @@ import lib.exceptions.InvalidNumberOfArgumentsException;
 
 // TODO: Сгенерировать javadoc
 
-// TODO: Обработать CommandParseException
 public class Main {
-	public static void main(String[] args) throws InvalidArgumentException, CommandParseException, CommandParseException, IOException, ExitProgramException {
+	public static void main(String[] args) throws IOException {
 		var scanner = new Scanner(System.in);
 		var outputWriter = new OutputStreamWriter(System.out);
 		var vehicles = new Vehicles();
@@ -50,6 +49,8 @@ public class Main {
 			var commandString = scanner.nextLine();
 			try {
 				executor.executeCommandString(commandString);
+			} catch (CommandParseException err) {
+				Utils.print(outputWriter, "Couldn't parse the command: \"" + commandString + "\"\n");
 			} catch (CommandNotFoundException err) {
 				Utils.print(outputWriter, "Command '" + commandString + "' not found, input 'help' to see a list of all commands\n");
 			} catch (InvalidNumberOfArgumentsException | InvalidArgumentException err) {
