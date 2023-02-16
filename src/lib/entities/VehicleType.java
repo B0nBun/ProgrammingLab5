@@ -1,5 +1,7 @@
 package lib.entities;
 
+import java.util.stream.Stream;
+
 import lib.exceptions.ParsingException;
 
 public enum VehicleType {
@@ -8,11 +10,29 @@ public enum VehicleType {
     BICYCLE,
     CHOPPER;
 
+    public static String showIndexedList(String joiner) {
+        var names = Stream.of(VehicleType.values()).map(t -> t.name()).toList();
+        String result = "";
+        for (int i = 0; i < names.size(); i ++) {
+            result += (i + 1) + ". " + names.get(i) + (i == names.size() - 1 ? "" : joiner);
+        }
+        return result;
+    }
+    
     public static VehicleType parse(String string) throws ParsingException {
         try {
-            return VehicleType.valueOf(string);
-        } catch (IllegalArgumentException err) {
-            throw new ParsingException();
+            Integer index = Integer.parseUnsignedInt(string);
+            try {
+                return VehicleType.values()[index - 1];
+            } catch (ArrayIndexOutOfBoundsException _err) {
+                throw new ParsingException();
+            }
+        } catch (NumberFormatException _err) {
+            try {
+                return VehicleType.valueOf(string);
+            } catch (IllegalArgumentException _err2) {
+                throw new ParsingException();
+            }
         }
     }
 }

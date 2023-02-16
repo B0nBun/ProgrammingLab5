@@ -173,8 +173,7 @@ public class Utils {
         boolean allowEmptyString,
         VehicleType defaultValue
     ) throws IOException {
-        Stream<String> vehicleTypesStream = Stream.of(VehicleType.values()).map(t -> t.name());
-        String errorMessage = "VehicleType must be one of the following: " + vehicleTypesStream.collect(Collectors.joining(", "));
+        String errorMessage = "VehicleType must be one of the following: \n" + VehicleType.showIndexedList("\n");
         VehicleType type = Utils.scanUntilParsed(
             VehicleType::parse,
             scanner, writer, inputString, errorMessage, allowEmptyString, defaultValue
@@ -189,8 +188,7 @@ public class Utils {
         boolean allowEmptyString,
         FuelType defaultValue
     ) throws IOException {
-        Stream<String> fuelTypesStream = Stream.of(FuelType.values()).map(t -> t.name());
-        String errorMessage = "FuelType must be one of the following: " + fuelTypesStream.collect(Collectors.joining(", "));
+        String errorMessage = "FuelType must be one of the following: \n" + FuelType.showIndexedList("\n");
         FuelType type = Utils.scanUntilParsed(
             FuelType::parse,
             scanner, writer, inputString, errorMessage, allowEmptyString, defaultValue

@@ -51,8 +51,8 @@ public class Vehicles {
             String name = Utils.scanUntilParsedNonemptyString(scanner, writer, "Name: ");
             Coordinates coordinates = Utils.scanUntilParsedCoordinates(scanner, writer, "Coordinates: \n");
             Float enginePower = Utils.scanUntilParsedPositiveFloat(scanner, writer, "Engine Power: ", false, null);
-            VehicleType vehicleType = Utils.scanUntilParsedVehicleType(scanner, writer, "Vehicle Type: ", true, null);
-            FuelType fuelType = Utils.scanUntilParsedFuelType(scanner, writer, "Fuel Type: ", false, null);
+            VehicleType vehicleType = Utils.scanUntilParsedVehicleType(scanner, writer, "Vehicle Type " + VehicleType.showIndexedList(", ") + ": \n", true, null);
+            FuelType fuelType = Utils.scanUntilParsedFuelType(scanner, writer, "Fuel Type " + FuelType.showIndexedList(", ") + ": \n", false, null);
 
             return new VehicleCreationSchema(name, coordinates, enginePower, vehicleType, fuelType);
         }

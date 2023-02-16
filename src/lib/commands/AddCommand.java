@@ -18,7 +18,7 @@ public class AddCommand implements Command {
         Vehicles vehicles,
         Scanner scanner,
         Writer writer,
-        Map<String, Command> commandsMap
+        Map<String, Command> _commandsMap
     ) throws CommandNotFoundException, InvalidArgumentException, IOException {
         VehicleCreationSchema creationSchema = VehicleCreationSchema.createFromScanner(scanner, writer);
         vehicles.add(creationSchema);
