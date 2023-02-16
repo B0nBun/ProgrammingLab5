@@ -10,6 +10,7 @@ import lib.entities.FuelType;
 import lib.entities.VehicleType;
 import lib.exceptions.CommandNotFoundException;
 import lib.exceptions.CommandParseException;
+import lib.exceptions.ExitProgramException;
 import lib.exceptions.InvalidArgumentException;
 import lib.exceptions.InvalidNumberOfArgumentsException;
 
@@ -20,7 +21,7 @@ import lib.exceptions.InvalidNumberOfArgumentsException;
 	// Сама коллекция должна хранится в xml
 // TODO: save
 // TODO: execute_script file_name
-// TODO: exit
+
 // TODO: head
 // TODO: add_if_min {element}
 // TODO: remove_lower {element}
@@ -30,7 +31,7 @@ import lib.exceptions.InvalidNumberOfArgumentsException;
 
 // TODO: Сгенерировать javadoc
 public class Main {
-	public static void main(String[] args) throws InvalidArgumentException, CommandParseException, CommandParseException, IOException {
+	public static void main(String[] args) throws InvalidArgumentException, CommandParseException, CommandParseException, IOException, ExitProgramException {
 		var scanner = new Scanner(System.in);
 		var outputWriter = new OutputStreamWriter(System.out);
 		var vehicles = new Vehicles();
@@ -53,6 +54,8 @@ public class Main {
 				Utils.print(outputWriter, "Command '" + commandString + "' not found, input 'help' to see a list of all commands\n");
 			} catch (InvalidNumberOfArgumentsException | InvalidArgumentException err) {
 				Utils.print(outputWriter, err.getMessage() + "\n");
+			} catch (ExitProgramException err) {
+				System.exit(0);
 			}
 		}
 	}

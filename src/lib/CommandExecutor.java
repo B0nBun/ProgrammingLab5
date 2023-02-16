@@ -11,6 +11,7 @@ import java.util.AbstractMap.SimpleEntry;
 
 import lib.commands.AddCommand;
 import lib.commands.ClearCommand;
+import lib.commands.ExitCommand;
 import lib.commands.HelpCommand;
 import lib.commands.InfoCommand;
 import lib.commands.RemoveByIdCommand;
@@ -18,6 +19,7 @@ import lib.commands.ShowCommand;
 import lib.commands.UpdateCommand;
 import lib.exceptions.CommandNotFoundException;
 import lib.exceptions.CommandParseException;
+import lib.exceptions.ExitProgramException;
 import lib.exceptions.InvalidArgumentException;
 import lib.exceptions.InvalidNumberOfArgumentsException;
 
@@ -48,7 +50,7 @@ public class CommandExecutor {
         return new SimpleEntry<>(command, arguments);
     }
 
-    public void executeCommandString(String commandString) throws CommandParseException, CommandNotFoundException, InvalidArgumentException, InvalidNumberOfArgumentsException, IOException {
+    public void executeCommandString(String commandString) throws CommandParseException, CommandNotFoundException, InvalidArgumentException, InvalidNumberOfArgumentsException, IOException, ExitProgramException {
         var pair = CommandExecutor.parseCommandString(commandString);
         var commandname = pair.getKey();
         var arguments = pair.getValue();
@@ -61,6 +63,7 @@ public class CommandExecutor {
         commandsMap.put("update", new UpdateCommand());
         commandsMap.put("remove_by_id", new RemoveByIdCommand());
         commandsMap.put("clear", new ClearCommand());
+        commandsMap.put("exit", new ExitCommand());
 
         Command command = commandsMap.get(commandname);
         if (command == null) {
