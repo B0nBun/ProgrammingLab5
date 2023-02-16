@@ -17,6 +17,10 @@ public interface Command {
         Map<String, Command> commandsMap
     ) throws InvalidArgumentException, InvalidNumberOfArgumentsException, IOException;
 
+    default public String[] helpArguments() {
+        return new String[0];
+    }
+    
     default public String helpMessage() {
         return "No 'help' description";
     }

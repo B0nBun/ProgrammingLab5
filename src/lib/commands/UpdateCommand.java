@@ -50,4 +50,14 @@ public class UpdateCommand implements Command {
             throw new InvalidArgumentException("id", "id must be an unsigned long integer");
         }
     }
+
+    @Override
+    public String[] helpArguments() {
+        return new String[] {"id"};
+    }
+
+    @Override
+    public String helpMessage() {
+        return "Update element with specified 'id'";
+    }
 }

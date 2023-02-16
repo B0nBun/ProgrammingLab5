@@ -21,7 +21,11 @@ public class HelpCommand implements Command {
         Map<String, Command> commandsMap
     ) throws IOException {
         Stream<String> commandStrings = commandsMap.entrySet().stream()
-            .map(entry -> "- " + entry.getKey() + "\n" + entry.getValue().helpMessage());
+            .map(entry -> {
+                var command = entry.getValue();
+                var argumentsString = String.join(" ", command.helpArguments());
+                return "- " + entry.getKey() + " " + argumentsString + "\n" + command.helpMessage();
+            });
         
         print(writer, (
             "List of commands:\n" +
