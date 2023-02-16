@@ -41,11 +41,13 @@ public class Vehicles {
         }
     }
 
-    long idCounter = 0;
+    private LocalDate creationDate;
+    private long idCounter = 0;
     private LinkedList<Vehicle> list;
 
     public Vehicles() {
         this.list = new LinkedList<>();
+        this.creationDate = LocalDate.now();
     }
     
     public Stream<Vehicle> stream() {
@@ -73,5 +75,13 @@ public class Vehicles {
     public Vehicles clear() {
         this.list.clear();
         return this;
+    }
+
+    public String collectionType() {
+        return this.list.getClass().getName();
+    }
+
+    public LocalDate creationDate() {
+        return this.creationDate;
     }
 }

@@ -1,16 +1,16 @@
 package lib;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
-
-import static java.util.Map.entry;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.AbstractMap.SimpleEntry;
 
 import lib.commands.HelpCommand;
+import lib.commands.InfoCommand;
 import lib.exceptions.CommandNotFoundException;
 import lib.exceptions.CommandParseException;
 import lib.exceptions.InvalidArgumentException;
@@ -47,9 +47,9 @@ public class CommandExecutor {
         var commandname = pair.getKey();
         var arguments = pair.getValue();
 
-        Map<String, Command> commandsMap = Map.ofEntries(
-            entry("help", new HelpCommand())
-        );
+        Map<String, Command> commandsMap = new LinkedHashMap<>();
+        commandsMap.put("help", new HelpCommand());
+        commandsMap.put("info", new InfoCommand());
 
         Command command = commandsMap.get(commandname);
         if (command == null) {
