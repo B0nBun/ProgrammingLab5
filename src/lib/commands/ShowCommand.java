@@ -16,6 +16,13 @@ public class ShowCommand implements Command {
             this.iocause = iocause;
         }
     }
+
+    private class BooleanBox {
+        public boolean value;
+        public BooleanBox(boolean value) {
+            this.value = value;
+        }
+    }
     
     @Override
     public void execute(
@@ -27,13 +34,21 @@ public class ShowCommand implements Command {
     ) throws IOException {
         // Я обажаю джаву :)
         try {
-            vehicles.stream().forEach(vehicle -> {
+            var stream = vehicles.stream();
+
+            var isEmpty = new BooleanBox(true);            
+            stream.forEach(vehicle -> {
+                isEmpty.value = false;
                 try {
                     Utils.print(writer, vehicle.toString() + "\n");
                 } catch (IOException err) {
                     throw new RuntimeIOException(err);
                 }
             });
+
+            if (isEmpty.value) {
+                Utils.print(writer, "Collection is empty\n");
+            }
         } catch (RuntimeIOException err) {
             throw err.iocause;
         }
