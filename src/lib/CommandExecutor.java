@@ -17,6 +17,7 @@ import lib.commands.HeadCommand;
 import lib.commands.HelpCommand;
 import lib.commands.InfoCommand;
 import lib.commands.RemoveByIdCommand;
+import lib.commands.RemoveLowerCommand;
 import lib.commands.ShowCommand;
 import lib.commands.UpdateCommand;
 import lib.exceptions.CommandNotFoundException;
@@ -68,6 +69,7 @@ public class CommandExecutor {
         commandsMap.put("exit", new ExitCommand());
         commandsMap.put("head", new HeadCommand());
         commandsMap.put("add_if_min", new AddIfMinCommand());
+        commandsMap.put("remove_lower", new RemoveLowerCommand());
 
         Command command = commandsMap.get(commandname);
         if (command == null) {

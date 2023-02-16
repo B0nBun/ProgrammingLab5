@@ -28,6 +28,8 @@ import lib.exceptions.InvalidNumberOfArgumentsException;
 // TODO: min_by_name
 
 // TODO: Сгенерировать javadoc
+
+// TODO: Обработать CommandParseException
 public class Main {
 	public static void main(String[] args) throws InvalidArgumentException, CommandParseException, CommandParseException, IOException, ExitProgramException {
 		var scanner = new Scanner(System.in);

@@ -8,14 +8,9 @@ import java.util.Scanner;
 import lib.Command;
 import lib.Utils;
 import lib.Vehicles;
+import lib.exceptions.RuntimeIOException;
 
 public class ShowCommand implements Command {
-    private class RuntimeIOException extends RuntimeException {
-        public IOException iocause;
-        public RuntimeIOException(IOException iocause) {
-            this.iocause = iocause;
-        }
-    }
 
     private class BooleanBox {
         public boolean value;
