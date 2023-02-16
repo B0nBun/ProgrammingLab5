@@ -10,6 +10,7 @@ import java.io.Writer;
 import java.util.AbstractMap.SimpleEntry;
 
 import lib.commands.AddCommand;
+import lib.commands.ClearCommand;
 import lib.commands.HelpCommand;
 import lib.commands.InfoCommand;
 import lib.commands.RemoveByIdCommand;
@@ -59,6 +60,7 @@ public class CommandExecutor {
         commandsMap.put("show", new ShowCommand());
         commandsMap.put("update", new UpdateCommand());
         commandsMap.put("remove_by_id", new RemoveByIdCommand());
+        commandsMap.put("clear", new ClearCommand());
 
         Command command = commandsMap.get(commandname);
         if (command == null) {
