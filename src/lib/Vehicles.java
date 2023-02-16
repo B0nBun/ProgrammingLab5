@@ -120,9 +120,8 @@ public class Vehicles {
         return this;
     }
 
-    public Vehicles removeIf(Predicate<Vehicle> predicate) {
-        this.list.removeIf(predicate);
-        return this;
+    public boolean removeIf(Predicate<Vehicle> predicate) {
+        return this.list.removeIf(predicate);
     }
 
     public Vehicles clear() {
