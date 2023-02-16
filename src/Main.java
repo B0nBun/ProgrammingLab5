@@ -22,8 +22,6 @@ import lib.exceptions.InvalidNumberOfArgumentsException;
 // TODO: save
 // TODO: execute_script file_name
 
-// TODO: head
-// TODO: add_if_min {element}
 // TODO: remove_lower {element}
 // TODO: remove_all_by_fuel_type fuelType
 // TODO: average_of_engine_power

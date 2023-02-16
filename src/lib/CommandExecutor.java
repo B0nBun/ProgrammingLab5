@@ -10,6 +10,7 @@ import java.io.Writer;
 import java.util.AbstractMap.SimpleEntry;
 
 import lib.commands.AddCommand;
+import lib.commands.AddIfMinCommand;
 import lib.commands.ClearCommand;
 import lib.commands.ExitCommand;
 import lib.commands.HeadCommand;
@@ -66,6 +67,7 @@ public class CommandExecutor {
         commandsMap.put("clear", new ClearCommand());
         commandsMap.put("exit", new ExitCommand());
         commandsMap.put("head", new HeadCommand());
+        commandsMap.put("add_if_min", new AddIfMinCommand());
 
         Command command = commandsMap.get(commandname);
         if (command == null) {
