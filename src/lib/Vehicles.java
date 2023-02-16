@@ -31,6 +31,16 @@ public class Vehicles {
         VehicleType type,
         FuelType fuelType
     ) {
+        public VehicleCreationSchema(Vehicle vehicle) {
+            this(
+                vehicle.name(),
+                vehicle.coordinates(),
+                vehicle.enginePower(),
+                vehicle.type(),
+                vehicle.fuelType()
+            );
+        }
+
         public Vehicle generate(long id, LocalDate creationDate) {
             return new Vehicle(
                 id,
@@ -42,7 +52,34 @@ public class Vehicles {
                 this.fuelType
             );
         }
+        
+        public static VehicleCreationSchema createFromScanner(
+            Scanner scanner,
+            Writer writer,
+            VehicleCreationSchema example
+        ) throws IOException {
+            String name = Utils.scanUntilParsedNonemptyString(scanner, writer,
+                "Name (" + example.name() + ")" + ": " 
+            );
+            Coordinates coordinates = Utils.scanUntilParsedCoordinates(scanner, writer,
+                "Coordinates (" + example.coordinates() + "): \n"
+            );
+            Float enginePower = Utils.scanUntilParsedPositiveFloat(scanner, writer,
+                "Engine Power (" + example.enginePower() + "): ",
+                false, null
+            );
+            VehicleType vehicleType = Utils.scanUntilParsedVehicleType(scanner, writer,
+                "Vehicle Type (" + example.type() + "): " + VehicleType.showIndexedList(", ") + ": \n",
+                true, null
+            );
+            FuelType fuelType = Utils.scanUntilParsedFuelType(scanner, writer,
+                "Fuel Type (" + example.fuelType() + "): " + FuelType.showIndexedList(", ") + ": \n",
+                false, null
+            );
 
+            return new VehicleCreationSchema(name, coordinates, enginePower, vehicleType, fuelType);
+        }
+        
         public static VehicleCreationSchema createFromScanner(
             Scanner scanner,
             Writer writer
@@ -50,8 +87,8 @@ public class Vehicles {
             String name = Utils.scanUntilParsedNonemptyString(scanner, writer, "Name: ");
             Coordinates coordinates = Utils.scanUntilParsedCoordinates(scanner, writer, "Coordinates: \n");
             Float enginePower = Utils.scanUntilParsedPositiveFloat(scanner, writer, "Engine Power: ", false, null);
-            VehicleType vehicleType = Utils.scanUntilParsedVehicleType(scanner, writer, "Vehicle Type " + VehicleType.showIndexedList(", ") + ": \n", true, null);
-            FuelType fuelType = Utils.scanUntilParsedFuelType(scanner, writer, "Fuel Type " + FuelType.showIndexedList(", ") + ": \n", false, null);
+            VehicleType vehicleType = Utils.scanUntilParsedVehicleType(scanner, writer, "Vehicle Type: " + VehicleType.showIndexedList(", ") + ": \n", true, null);
+            FuelType fuelType = Utils.scanUntilParsedFuelType(scanner, writer, "Fuel Type: " + FuelType.showIndexedList(", ") + ": \n", false, null);
 
             return new VehicleCreationSchema(name, coordinates, enginePower, vehicleType, fuelType);
         }

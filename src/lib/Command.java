@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import lib.exceptions.InvalidArgumentException;
+import lib.exceptions.InvalidNumberOfArgumentsException;
 
 public interface Command {
     public void execute(
@@ -14,7 +15,7 @@ public interface Command {
         Scanner scanner,
         Writer writer,
         Map<String, Command> commandsMap
-    ) throws InvalidArgumentException, IOException;
+    ) throws InvalidArgumentException, InvalidNumberOfArgumentsException, IOException;
 
     default public String helpMessage() {
         return "No 'help' description";

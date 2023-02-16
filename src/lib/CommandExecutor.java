@@ -13,9 +13,11 @@ import lib.commands.AddCommand;
 import lib.commands.HelpCommand;
 import lib.commands.InfoCommand;
 import lib.commands.ShowCommand;
+import lib.commands.UpdateCommand;
 import lib.exceptions.CommandNotFoundException;
 import lib.exceptions.CommandParseException;
 import lib.exceptions.InvalidArgumentException;
+import lib.exceptions.InvalidNumberOfArgumentsException;
 
 public class CommandExecutor {
     private Scanner scanner;
@@ -44,7 +46,7 @@ public class CommandExecutor {
         return new SimpleEntry<>(command, arguments);
     }
 
-    public void executeCommandString(String commandString) throws CommandParseException, CommandNotFoundException, InvalidArgumentException, IOException {
+    public void executeCommandString(String commandString) throws CommandParseException, CommandNotFoundException, InvalidArgumentException, InvalidNumberOfArgumentsException, IOException {
         var pair = CommandExecutor.parseCommandString(commandString);
         var commandname = pair.getKey();
         var arguments = pair.getValue();
@@ -54,6 +56,7 @@ public class CommandExecutor {
         commandsMap.put("info", new InfoCommand());
         commandsMap.put("add",  new AddCommand());
         commandsMap.put("show", new ShowCommand());
+        commandsMap.put("update", new UpdateCommand());
 
         Command command = commandsMap.get(commandname);
         if (command == null) {

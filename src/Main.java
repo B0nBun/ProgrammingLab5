@@ -11,10 +11,12 @@ import lib.entities.VehicleType;
 import lib.exceptions.CommandNotFoundException;
 import lib.exceptions.CommandParseException;
 import lib.exceptions.InvalidArgumentException;
+import lib.exceptions.InvalidNumberOfArgumentsException;
 
 // ВАРИАНТ: 863200
 
 public class Main {
+	// TODO: Handle InvalidArgumentException
 	public static void main(String[] args) throws InvalidArgumentException, CommandParseException, CommandParseException, IOException {
 		var scanner = new Scanner(System.in);
 		var outputWriter = new OutputStreamWriter(System.out);
@@ -36,6 +38,8 @@ public class Main {
 				executor.executeCommandString(commandString);
 			} catch (CommandNotFoundException err) {
 				Utils.print(outputWriter, "Command '" + commandString + "' not found, input 'help' to see a list of all commands\n");
+			} catch (InvalidNumberOfArgumentsException err) {
+				Utils.print(outputWriter, err.getMessage() + "\n");
 			}
 		}
 	}
