@@ -13,6 +13,7 @@ import lib.commands.AddCommand;
 import lib.commands.AddIfMinCommand;
 import lib.commands.AverageEnginePower;
 import lib.commands.ClearCommand;
+import lib.commands.ExecuteScriptCommand;
 import lib.commands.ExitCommand;
 import lib.commands.HeadCommand;
 import lib.commands.HelpCommand;
@@ -76,6 +77,7 @@ public class CommandExecutor {
             commandsMap.put("remove_all_by_fuel_type", new RemoveAllByFuelCommand());
             commandsMap.put("average_of_engine_power", new AverageEnginePower());
             commandsMap.put("min_by_name", new MinByNameCommand());
+            commandsMap.put("execute_script", new ExecuteScriptCommand());
     
             Command command = commandsMap.get(commandname);
             if (command == null) {
