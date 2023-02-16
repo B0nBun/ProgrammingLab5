@@ -14,7 +14,7 @@ import lib.exceptions.InvalidNumberOfArgumentsException;
 import lib.exceptions.ParsingException;
 import lib.exceptions.RuntimeIOException;
 
-public class RemoveAllByFuel implements Command {
+public class RemoveAllByFuelCommand implements Command {
     @Override
     public void execute(
         String[] arguments,
