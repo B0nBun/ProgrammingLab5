@@ -15,6 +15,20 @@ import lib.exceptions.InvalidNumberOfArgumentsException;
 
 // ВАРИАНТ: 863200
 
+// TODO: Добавить обработку файла, из которого будет загружаться коллекция по умолчанию
+	// Путь к файлу должен быть в переменнах среды
+	// Сама коллекция должна хранится в xml
+// TODO: save
+// TODO: execute_script file_name
+// TODO: exit
+// TODO: head
+// TODO: add_if_min {element}
+// TODO: remove_lower {element}
+// TODO: remove_all_by_fuel_type fuelType
+// TODO: average_of_engine_power
+// TODO: min_by_name
+
+// TODO: Сгенерировать javadoc
 public class Main {
 	public static void main(String[] args) throws InvalidArgumentException, CommandParseException, CommandParseException, IOException {
 		var scanner = new Scanner(System.in);
