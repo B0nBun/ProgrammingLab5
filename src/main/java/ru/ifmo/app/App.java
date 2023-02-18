@@ -39,12 +39,12 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 // execute_script
 // exit
 // head
-
 // add_if_max
 // remove_lower
-// group_counting_by_id
+
 // count_greater_than_fuel_type
 // filter_greater_than_fuel_type
+// group_counting_by_id
 
 public class App {
 	public static void main(String[] args) {
