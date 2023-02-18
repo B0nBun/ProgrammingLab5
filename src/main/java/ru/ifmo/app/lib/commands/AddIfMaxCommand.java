@@ -10,7 +10,7 @@ import ru.ifmo.app.lib.Vehicles;
 import ru.ifmo.app.lib.Vehicles.VehicleCreationSchema;
 import ru.ifmo.app.lib.entities.Vehicle;
 
-public class AddIfMinCommand implements Command {
+public class AddIfMaxCommand implements Command {
     @Override
     public void execute(
         String[] arguments,
@@ -20,15 +20,15 @@ public class AddIfMinCommand implements Command {
         Map<String, Command> commandsMap
     ) throws IOException {
         var creationSchema = VehicleCreationSchema.createFromScanner(scanner, writer);   
-        var minVehicle = vehicles.stream().min(Vehicle::compareTo).orElse(null);
+        var maxVehicle = vehicles.stream().max(Vehicle::compareTo).orElse(null);
         
-        if (minVehicle == null || creationSchema.generate(vehicles.nextId(), vehicles.nextCreationDate()).compareTo(minVehicle) < 0) {
+        if (maxVehicle == null || creationSchema.generate(vehicles.nextId(), vehicles.nextCreationDate()).compareTo(maxVehicle) > 0) {
             vehicles.add(creationSchema);
         }
     }
 
     @Override
     public String helpMessage() {
-        return "Add a new element to the collection if it's less than the current minimal element";
+        return "Add a new element to the collection if it's greater than the current max element";
     }
 }

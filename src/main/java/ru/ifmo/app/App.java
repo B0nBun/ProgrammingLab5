@@ -27,6 +27,25 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 // TODO: Использовать Peekable Итератор/Генератор/Stream для генерации ID
 // TODO: Обрабатывать ошибки и вывод текста по-другому, если команды выполняются скриптом
 // TODO: Парсить энумерацию вне зависимости от регистра текста
+
+// help
+// info
+// show
+// add
+// update
+// remove_by_id
+// clear
+// save
+// execute_script
+// exit
+// head
+
+// add_if_max
+// remove_lower
+// group_counting_by_id
+// count_greater_than_fuel_type
+// filter_greater_than_fuel_type
+
 public class App {
 	public static void main(String[] args) {
 		var scanner = new Scanner(System.in); 
