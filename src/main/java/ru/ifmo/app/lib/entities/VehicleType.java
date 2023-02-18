@@ -20,18 +20,19 @@ public enum VehicleType {
     }
     
     public static VehicleType parse(String string) throws ParsingException {
+        String errorMessage = "VehicleType must be one of the following: \n" + VehicleType.showIndexedList("\n");
         try {
             Integer index = Integer.parseUnsignedInt(string);
             try {
                 return VehicleType.values()[index - 1];
             } catch (ArrayIndexOutOfBoundsException _err) {
-                throw new ParsingException();
+                throw new ParsingException(errorMessage);
             }
         } catch (NumberFormatException _err) {
             try {
                 return VehicleType.valueOf(string);
             } catch (IllegalArgumentException _err2) {
-                throw new ParsingException();
+                throw new ParsingException(errorMessage);
             }
         }
     }

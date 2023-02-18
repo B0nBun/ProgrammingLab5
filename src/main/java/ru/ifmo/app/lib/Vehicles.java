@@ -5,6 +5,7 @@ import java.io.Writer;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -16,15 +17,7 @@ import ru.ifmo.app.lib.entities.VehicleType;
 
 
 public class Vehicles {
-    /*
-        Я понятия не имею как решить проблему разделения автоматический генерируемых
-        и указываемых полей. По идеи это не должно зависить от класса Vehicle так как
-        он просто является носителем информации, но если отделить CreationSchema и поместить
-        ее в другое место, то возникает проблема, что сигнатура ее конструктора зависит от 
-        сигнатуры конструктора Vehicle, из-за чего при изменении класса Vehicle полетят
-        ошибки. Решения у меня нет и этот комментарий тут как напоминание либо подумать потом,
-        либо спросить совета как надо
-    */
+
     public static record VehicleCreationSchema(
         String name,
         Coordinates coordinates,
@@ -59,25 +52,47 @@ public class Vehicles {
             Writer writer,
             VehicleCreationSchema example
         ) throws IOException {
-            String name = Utils.scanUntilParsedNonemptyString(scanner, writer,
-                "Name (" + example.name() + ")" + ": " 
+            var vscanner = new Utils.ValidatedScanner(scanner, writer);
+
+            BiFunction<String, Object, String> withExample = (str1, exampleAttribute) -> {
+                if (example == null) {
+                    return str1 + ": ";
+                }
+                return str1 + " (" + exampleAttribute + ")" + ": ";
+            };
+            
+            String name = vscanner.string(
+                withExample.apply("Name", example == null ? null : example.name()),
+                Vehicle.validate::name
             );
-            Coordinates coordinates = Utils.scanUntilParsedCoordinates(scanner, writer,
-                "Coordinates (" + example.coordinates() + "): \n"
+            Long coordinatesX = vscanner.number(
+                Long::parseLong,
+                Coordinates.validate::x,
+                withExample.apply(
+                    "Coordinate X",
+                    example == null || example.coordinates() == null ? null : example.coordinates().x()
+                )
             );
-            Float enginePower = Utils.scanUntilParsedPositiveFloat(scanner, writer,
-                "Engine Power (" + example.enginePower() + "): ",
-                false, null
+            Integer coordinatesY = vscanner.number(
+                Integer::parseInt,
+                Coordinates.validate::y,
+                withExample.apply("Coordinate Y", example == null || example.coordinates() == null ? null : example.coordinates().y())
             );
-            VehicleType vehicleType = Utils.scanUntilParsedVehicleType(scanner, writer,
-                "Vehicle Type (" + example.type() + "): " + VehicleType.showIndexedList(", ") + ": \n",
-                true, null
+            Float enginePower = vscanner.number(
+                Float::parseFloat,
+                Vehicle.validate::enginePower,
+                withExample.apply("Engine Power", example == null ? null : example.enginePower())
             );
-            FuelType fuelType = Utils.scanUntilParsedFuelType(scanner, writer,
-                "Fuel Type (" + example.fuelType() + "): " + FuelType.showIndexedList(", ") + ": \n",
-                false, null
+            Utils.print(writer, VehicleType.showIndexedList(", ") + "\n");
+            VehicleType vehicleType = vscanner.vehicleType(
+                withExample.apply("Vehicle Type", example == null ? null : example.type())
+            );
+            Utils.print(writer, FuelType.showIndexedList(", ") + "\n");
+            FuelType fuelType = vscanner.fuelType(
+                withExample.apply("Fuel Type", example == null ? null : example.fuelType())
             );
 
+            var coordinates = new Coordinates(coordinatesX, coordinatesY);
             return new VehicleCreationSchema(name, coordinates, enginePower, vehicleType, fuelType);
         }
         
@@ -85,13 +100,7 @@ public class Vehicles {
             Scanner scanner,
             Writer writer
         ) throws IOException {
-            String name = Utils.scanUntilParsedNonemptyString(scanner, writer, "Name: ");
-            Coordinates coordinates = Utils.scanUntilParsedCoordinates(scanner, writer, "Coordinates: \n");
-            Float enginePower = Utils.scanUntilParsedPositiveFloat(scanner, writer, "Engine Power: ", false, null);
-            VehicleType vehicleType = Utils.scanUntilParsedVehicleType(scanner, writer, "Vehicle Type: " + VehicleType.showIndexedList(", ") + ": \n", true, null);
-            FuelType fuelType = Utils.scanUntilParsedFuelType(scanner, writer, "Fuel Type: " + FuelType.showIndexedList(", ") + ": \n", false, null);
-
-            return new VehicleCreationSchema(name, coordinates, enginePower, vehicleType, fuelType);
+            return VehicleCreationSchema.createFromScanner(scanner, writer, null);
         }
     }
 

@@ -2,15 +2,25 @@ package ru.ifmo.app.lib;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Optional;
 import java.util.Scanner;
 
-import ru.ifmo.app.lib.entities.Coordinates;
 import ru.ifmo.app.lib.entities.FuelType;
 import ru.ifmo.app.lib.entities.VehicleType;
 import ru.ifmo.app.lib.exceptions.ParsingException;
 
 
 public class Utils {
+    @FunctionalInterface
+    public static interface Validator<T> {
+        Optional<String> validate(T value);
+    }
+
+    @FunctionalInterface
+    public static interface NumberParser<N> {
+        N parse(String string) throws NumberFormatException;
+    }
+    
     public static void print(Writer writer, String string) throws IOException {
         writer.write(string);
         writer.flush();
@@ -21,177 +31,74 @@ public class Utils {
         T tryToParse(String string) throws ParsingException;
     }
     
-    public static <T> T scanUntilParsed(
+    public static <T> T scanUntilValid(
         ParsingFunction<T> parsingFunction,
+        Validator<T> validator,
         Scanner scanner,
         Writer writer,
-        String inputString,
-        String parseErrorString,
-        boolean allowEmptyString,
-        T defaultValue
+        String inputString
     ) throws IOException {
         while (true) {
             print(writer, inputString);
             String line = scanner.nextLine().trim();
 
-            if (allowEmptyString && line.length() == 0)
-                return defaultValue;
-
+            if (line.length() == 0) {
+                var validationError = validator.validate(null);
+                if (validationError.isEmpty())
+                    return null;
+                print(writer, validationError.get() + "\n");
+                continue;
+            }
+            
             try {
                 var result = parsingFunction.tryToParse(line);
-                return result;
+                var validationError = validator.validate(result);
+                if (validationError.isEmpty())
+                    return result;
+                print(writer, validationError.get() + "\n");
             } catch (ParsingException exception) {
-                print(writer, parseErrorString + "\n");
+                print(writer, "Couldn't parse: " + exception.getMessage() + "\n");
             }
         }
     }
-    
-    public static String scanUntilParsedNonemptyString(
-        Scanner scanner,
-        Writer writer,
-        String inputString
-    ) throws IOException {
-        return Utils.scanUntilParsed(
-            string -> {
-                if (string.length() == 0)
-                    throw new ParsingException();
-                return string;
-            }, scanner, writer, inputString,
-            "Nonempty string required!",
-            false,
-            null
-        );
-    }
-    
-    public static Integer scanUntilParsedUnsignedInt(
-        Scanner scanner,
-        Writer writer,
-        String inputString,
-        boolean allowEmptyString,
-        Integer defaultValue
-    ) throws IOException {
-        return Utils.scanUntilParsed(
-            (string) -> {
-                try {
-                    Integer result = Integer.parseUnsignedInt(string);
-                    return result;
-                } catch (NumberFormatException err) {
-                    throw new ParsingException();
-                }
-            }, scanner, writer, inputString, "Unsigned integer requried!", allowEmptyString, defaultValue
-        );
-    }
 
-    public static Integer scanUntilParsedInt(
+    public static record ValidatedScanner(
         Scanner scanner,
-        Writer writer,
-        String inputString,
-        boolean allowEmptyString,
-        Integer defaultValue
-    ) throws IOException {
-        return Utils.scanUntilParsed(
-            (string) -> {
-                try {
-                    Integer result = Integer.parseInt(string);
-                    return result;
-                } catch (NumberFormatException err) {
-                    throw new ParsingException();
-                }
-            }, scanner, writer, inputString, "Integer requried!", allowEmptyString, defaultValue
-        );
-    }
+        Writer writer
+    ) {
+        public String string(String inputString, Validator<String> validator) throws IOException {
+            return Utils.scanUntilValid(line -> line, validator, scanner, writer, inputString);
+        }
 
-    public static Long scanUntilParsedLong(
-        Scanner scanner,
-        Writer writer,
-        String inputString,
-        boolean allowEmptyString,
-        Long defaultValue
-    ) throws IOException {
-        return Utils.scanUntilParsed(
-            (string) -> {
-                try {
-                    Long result = Long.parseLong(string);
-                    return result;
-                } catch (NumberFormatException err) {
-                    throw new ParsingException();
-                }
-            }, scanner, writer, inputString, "Long integer requried!", allowEmptyString, defaultValue
-        );
-    }
-
-    public static Float scanUntilParsedPositiveFloat(
-        Scanner scanner,
-        Writer writer,
-        String inputString,
-        boolean allowEmptyString,
-        Float defaultValue
-    ) throws IOException {
-        return Utils.scanUntilParsed(
-            (string) -> {
-                try {
-                    Float result = Float.parseFloat(string);
-                    if (result <= 0) {
-                        throw new ParsingException();
+        public <T> T number(NumberParser<T> numberParser, Validator<T> validator, String inputString) throws IOException {
+            return Utils.scanUntilValid(
+                string -> {
+                    try {
+                        return numberParser.parse(string);
+                    } catch (NumberFormatException err) {
+                        throw new ParsingException(err.getMessage());
                     }
-                    return result;
-                } catch (NumberFormatException err) {
-                    throw new ParsingException();
-                }
-            }, scanner, writer, inputString, "Number greater than 0 with a floating point requried!", allowEmptyString, defaultValue
-        );
-    }
+                },
+                validator, scanner, writer, inputString
+            );
+        }
 
-    public static Coordinates scanUntilParsedCoordinates(
-        Scanner scanner,
-        Writer writer,
-        String inputString
-    ) throws IOException {
-        print(writer, inputString);
-        int x = Utils.scanUntilParsed(
-            (string) -> {
-                try {
-                    Integer result = Integer.parseInt(string);
-                    if (result > 156) {
-                        throw new ParsingException();
-                    }
-                    return result;
-                } catch (NumberFormatException err) {
-                    throw new ParsingException();
-                }
-            }, scanner, writer, "X coordinates: ", "Integer lower than 157 requried!", false, 0);
-        Long y = Utils.scanUntilParsedLong(scanner, writer, "Y coordinates: ", false, null);
+        public VehicleType vehicleType(String inputString) throws IOException {
+            VehicleType type = Utils.scanUntilValid(
+                VehicleType::parse,
+                (__) -> Optional.empty(),
+                scanner, writer, inputString
+            );
+            return type;
+        }
 
-        return new Coordinates(x, y);
-    }
-
-    public static VehicleType scanUntilParsedVehicleType(
-        Scanner scanner,
-        Writer writer,
-        String inputString,
-        boolean allowEmptyString,
-        VehicleType defaultValue
-    ) throws IOException {
-        String errorMessage = "VehicleType must be one of the following: \n" + VehicleType.showIndexedList("\n");
-        VehicleType type = Utils.scanUntilParsed(
-            VehicleType::parse,
-            scanner, writer, inputString, errorMessage, allowEmptyString, defaultValue
-        );
-        return type;
-    }
-
-    public static FuelType scanUntilParsedFuelType(
-        Scanner scanner,
-        Writer writer,
-        String inputString,
-        boolean allowEmptyString,
-        FuelType defaultValue
-    ) throws IOException {
-        String errorMessage = "FuelType must be one of the following: \n" + FuelType.showIndexedList("\n");
-        FuelType type = Utils.scanUntilParsed(
-            FuelType::parse,
-            scanner, writer, inputString, errorMessage, allowEmptyString, defaultValue
-        );
-        return type;
+        public FuelType fuelType(String inputString) throws IOException {
+            FuelType type = Utils.scanUntilValid(
+                FuelType::parse,
+                (__) -> Optional.empty(),
+                scanner, writer, inputString
+            );
+            return type;
+        }
     }
 }

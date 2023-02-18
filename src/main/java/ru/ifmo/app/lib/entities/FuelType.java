@@ -19,18 +19,19 @@ public enum FuelType {
     }
 
     public static FuelType parse(String string) throws ParsingException {
+        String errorMessage = "FuelType must be one of the following: \n" + FuelType.showIndexedList("\n");
         try {
             Integer index = Integer.parseUnsignedInt(string);
             try {
                 return FuelType.values()[index - 1];
             } catch (ArrayIndexOutOfBoundsException _err) {
-                throw new ParsingException();
+                throw new ParsingException(errorMessage);
             }
         } catch (NumberFormatException _err) {
             try {
                 return FuelType.valueOf(string);
             } catch (IllegalArgumentException _err2) {
-                throw new ParsingException();
+                throw new ParsingException(errorMessage);
             }
         }
     }
