@@ -8,7 +8,7 @@ import java.util.Scanner;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.Vehicles;
-import ru.ifmo.app.lib.entities.VehicleType;
+import ru.ifmo.app.lib.entities.FuelType;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 import ru.ifmo.app.lib.exceptions.ParsingException;
@@ -26,10 +26,10 @@ public class CountGreaterThanFuelTypeCommand implements Command {
             throw new InvalidNumberOfArgumentsException(1, arguments.length);
         
         try {
-            VehicleType chosenType = VehicleType.parse(arguments[0]);
+            FuelType chosenType = FuelType.parse(arguments[0]);
             
             var count = vehicles.stream()
-                .filter(v -> v.type().compareTo(chosenType) > 0)
+                .filter(v -> v.fuelType().compareTo(chosenType) > 0)
                 .count();
             Utils.print(writer, "Number of vehicles with greater fuel type: " + count + "\n");
         } catch (ParsingException err) {

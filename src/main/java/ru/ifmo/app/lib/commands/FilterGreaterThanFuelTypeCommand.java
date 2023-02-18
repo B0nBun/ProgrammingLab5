@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.Vehicles;
-import ru.ifmo.app.lib.entities.VehicleType;
+import ru.ifmo.app.lib.entities.FuelType;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 import ru.ifmo.app.lib.exceptions.ParsingException;
@@ -27,14 +27,15 @@ public class FilterGreaterThanFuelTypeCommand implements Command {
             throw new InvalidNumberOfArgumentsException(1, arguments.length);
         
         try {
-            VehicleType chosenType = VehicleType.parse(arguments[0]);
+            FuelType chosenType = FuelType.parse(arguments[0]);
             
             var filtered = vehicles.stream()
-                .filter(v -> v.type().compareTo(chosenType) > 0)
+                .filter(v -> v.fuelType().compareTo(chosenType) > 0)
                 .map(v -> v.toString())
-                .collect(Collectors.joining("\n"));
+                .collect(Collectors.joining("\n"))
+                .trim();
                 
-            if (filtered == "") {
+            if (filtered.equals("")) {
                 Utils.print(writer, "There are no elements with greater fuel type\n");
                 return;
             }
