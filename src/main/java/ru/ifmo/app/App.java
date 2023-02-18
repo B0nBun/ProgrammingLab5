@@ -25,6 +25,7 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 // TODO: Сгенерировать javadoc
 // TODO: Придумать способ для обработки алиасов
 // TODO: Использовать Peekable Итератор/Генератор/Stream для генерации ID
+// TODO: Обрабатывать ошибки и вывод текста по-другому, если команды выполняются скриптом
 public class App {
 	public static void main(String[] args) {
 		var scanner = new Scanner(System.in); 
@@ -52,10 +53,12 @@ public class App {
 					}
 				}
 			} catch (NoSuchElementException err) {
-				Utils.print(outputWriter, "Couldn't scan the next line: no such element exception was thrown");
+				Utils.print(outputWriter, "Couldn't scan the next line: " + err.getMessage());
+			} catch (IllegalStateException err) {
+				Utils.print(outputWriter, "Couldn't scan the next line: " + err.getMessage());
 			}
 		} catch (IOException err) {
-			System.out.println("IO Exception occured. Couldn't write to the output");
+			System.out.println("Couldn't write to the output. IOException occured: " + err.getMessage());
 		} 
 	}
 }
