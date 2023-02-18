@@ -30,23 +30,6 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 // TODO: Обрабатывать ошибки и вывод текста по-другому, если команды выполняются скриптом
 // TODO: Парсить энумерацию вне зависимости от регистра текста
 
-// help
-// info
-// show
-// add
-// update
-// remove_by_id
-// clear
-// save
-// execute_script
-// exit
-// head
-// add_if_max
-// remove_lower
-// count_greater_than_fuel_type
-// filter_greater_than_fuel_type
-// group_counting_by_id
-
 
 public class App {
 	public static void main(String[] args) {

@@ -11,7 +11,6 @@ import java.util.AbstractMap.SimpleEntry;
 
 import ru.ifmo.app.lib.commands.AddCommand;
 import ru.ifmo.app.lib.commands.AddIfMaxCommand;
-import ru.ifmo.app.lib.commands.AverageEnginePowerCommand;
 import ru.ifmo.app.lib.commands.ClearCommand;
 import ru.ifmo.app.lib.commands.CountGreaterThanFuelTypeCommand;
 import ru.ifmo.app.lib.commands.ExecuteScriptCommand;
@@ -21,8 +20,6 @@ import ru.ifmo.app.lib.commands.GroupCountingByIdCommand;
 import ru.ifmo.app.lib.commands.HeadCommand;
 import ru.ifmo.app.lib.commands.HelpCommand;
 import ru.ifmo.app.lib.commands.InfoCommand;
-import ru.ifmo.app.lib.commands.MinByNameCommand;
-import ru.ifmo.app.lib.commands.RemoveAllByFuelCommand;
 import ru.ifmo.app.lib.commands.RemoveByIdCommand;
 import ru.ifmo.app.lib.commands.RemoveLowerCommand;
 import ru.ifmo.app.lib.commands.ShowCommand;
@@ -77,9 +74,6 @@ public class CommandExecutor {
             commandsMap.put("head", new HeadCommand());
             commandsMap.put("add_if_min", new AddIfMaxCommand());
             commandsMap.put("remove_lower", new RemoveLowerCommand());
-            commandsMap.put("remove_all_by_fuel_type", new RemoveAllByFuelCommand());
-            commandsMap.put("average_of_engine_power", new AverageEnginePowerCommand());
-            commandsMap.put("min_by_name", new MinByNameCommand());
             commandsMap.put("execute_script", new ExecuteScriptCommand());
             commandsMap.put("count_greater_than_fuel_type", new CountGreaterThanFuelTypeCommand());
             commandsMap.put("filter_greater_than_fuel_type", new FilterGreaterThanFuelTypeCommand());
