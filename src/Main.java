@@ -19,9 +19,9 @@ import lib.exceptions.ExitProgramException;
 // TODO: save
 
 // TODO: Сгенерировать javadoc
-// TODO: Обработать IOException
+// TODO: Придумать способ для обработки алиасов
 public class Main {
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		var scanner = new Scanner(System.in); 
 		var outputWriter = new OutputStreamWriter(System.out);
 		var vehicles = new Vehicles();
@@ -36,17 +36,21 @@ public class Main {
 		var executor = new CommandExecutor(scanner, outputWriter, vehicles);
 
 		try {
-			while (true) {
-				Utils.print(outputWriter, "Input a command: ");
-				var commandString = scanner.nextLine();
-				try {
-					executor.executeCommandString(commandString);
-				} catch (ExitProgramException err) {
-					System.exit(0);
+			try {
+				while (true) {
+					Utils.print(outputWriter, "Input a command: ");
+					var commandString = scanner.nextLine();
+					try {
+						executor.executeCommandString(commandString);
+					} catch (ExitProgramException err) {
+						System.exit(0);
+					}
 				}
+			} catch (NoSuchElementException err) {
+				Utils.print(outputWriter, "Couldn't scan the next line: no such element exception was thrown");
 			}
-		} catch (NoSuchElementException err) {
-			Utils.print(outputWriter, "Couldn't scan the next line: no such element exception was thrown");
-		}
+		} catch (IOException err) {
+			System.out.println("IO Exception occured. Couldn't write to the output");
+		} 
 	}
 }
