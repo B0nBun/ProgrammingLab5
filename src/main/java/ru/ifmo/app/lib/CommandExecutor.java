@@ -17,6 +17,7 @@ import ru.ifmo.app.lib.commands.CountGreaterThanFuelTypeCommand;
 import ru.ifmo.app.lib.commands.ExecuteScriptCommand;
 import ru.ifmo.app.lib.commands.ExitCommand;
 import ru.ifmo.app.lib.commands.FilterGreaterThanFuelTypeCommand;
+import ru.ifmo.app.lib.commands.GroupCountingByIdCommand;
 import ru.ifmo.app.lib.commands.HeadCommand;
 import ru.ifmo.app.lib.commands.HelpCommand;
 import ru.ifmo.app.lib.commands.InfoCommand;
@@ -82,6 +83,7 @@ public class CommandExecutor {
             commandsMap.put("execute_script", new ExecuteScriptCommand());
             commandsMap.put("count_greater_than_fuel_type", new CountGreaterThanFuelTypeCommand());
             commandsMap.put("filter_greater_than_fuel_type", new FilterGreaterThanFuelTypeCommand());
+            commandsMap.put("group_counting_by_id", new GroupCountingByIdCommand());
     
             Command command = commandsMap.get(commandname);
             if (command == null) {

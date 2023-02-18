@@ -22,6 +22,8 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 	// Сама коллекция должна хранится в xml
 // TODO: save
 
+// TODO: Нормальные сообщения при ошибке парсинга
+
 // TODO: Сгенерировать javadoc
 // TODO: Придумать способ для обработки алиасов
 // TODO: Использовать Peekable Итератор/Генератор/Stream для генерации ID
@@ -41,10 +43,10 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 // head
 // add_if_max
 // remove_lower
-
 // count_greater_than_fuel_type
 // filter_greater_than_fuel_type
 // group_counting_by_id
+
 
 public class App {
 	public static void main(String[] args) {
@@ -75,7 +77,7 @@ public class App {
 			} catch (NoSuchElementException err) {
 				Utils.print(outputWriter, "Couldn't scan the next line: " + err.getMessage());
 			} catch (IllegalStateException err) {
-				Utils.print(outputWriter, "Couldn't scan the next line: " + err.getMessage());
+				Utils.print(outputWriter, "Illegal state exception: " + err.getMessage());
 			}
 		} catch (IOException err) {
 			System.out.println("Couldn't write to the output. IOException occured: " + err.getMessage());
