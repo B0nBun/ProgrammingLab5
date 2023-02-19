@@ -71,17 +71,20 @@ public class Vehicles {
                 withExample.apply(
                     "Coordinate X",
                     example == null || example.coordinates() == null ? null : example.coordinates().x()
-                )
+                ),
+                __ -> "Long integer required"
             );
             Integer coordinatesY = vscanner.number(
                 Integer::parseInt,
                 Coordinates.validate::y,
-                withExample.apply("Coordinate Y", example == null || example.coordinates() == null ? null : example.coordinates().y())
+                withExample.apply("Coordinate Y", example == null || example.coordinates() == null ? null : example.coordinates().y()),
+                __ -> "Integer required"
             );
             Float enginePower = vscanner.number(
                 Float::parseFloat,
                 Vehicle.validate::enginePower,
-                withExample.apply("Engine Power", example == null ? null : example.enginePower())
+                withExample.apply("Engine Power", example == null ? null : example.enginePower()),
+                __ -> "Float required"
             );
             Utils.print(writer, VehicleType.showIndexedList(", ") + "\n");
             VehicleType vehicleType = vscanner.vehicleType(

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.function.Function;
 
 import ru.ifmo.app.lib.entities.FuelType;
 import ru.ifmo.app.lib.entities.VehicleType;
@@ -66,7 +67,8 @@ public class Utils {
         Validator<T> validator,
         Scanner scanner,
         Writer writer,
-        String inputString
+        String inputString,
+        Function<ParsingException, String> parsingErrorMessage
     ) throws IOException {
         while (true) {
             print(writer, inputString);
@@ -87,7 +89,7 @@ public class Utils {
                     return result;
                 print(writer, validationError.get() + "\n");
             } catch (ParsingException exception) {
-                print(writer, "Couldn't parse: " + exception.getMessage() + "\n");
+                print(writer, "Couldn't parse: " + parsingErrorMessage.apply(exception) + "\n");
             }
         }
     }
@@ -97,10 +99,10 @@ public class Utils {
         Writer writer
     ) {
         public String string(String inputString, Validator<String> validator) throws IOException {
-            return Utils.scanUntilValid(line -> line, validator, scanner, writer, inputString);
+            return Utils.scanUntilValid(line -> line, validator, scanner, writer, inputString, Exception::getMessage);
         }
 
-        public <T> T number(NumberParser<T> numberParser, Validator<T> validator, String inputString) throws IOException {
+        public <T> T number(NumberParser<T> numberParser, Validator<T> validator, String inputString, Function<ParsingException, String> parsingErrorMessage) throws IOException {
             return Utils.scanUntilValid(
                 string -> {
                     try {
@@ -109,15 +111,16 @@ public class Utils {
                         throw new ParsingException(err.getMessage());
                     }
                 },
-                validator, scanner, writer, inputString
+                validator, scanner, writer, inputString, parsingErrorMessage
             );
         }
 
         public VehicleType vehicleType(String inputString) throws IOException {
             VehicleType type = Utils.scanUntilValid(
                 VehicleType::parse,
-                (__) -> Optional.empty(),
-                scanner, writer, inputString
+                __ -> Optional.empty(),
+                scanner, writer, inputString,
+                __ -> "Expected one of the following: " + VehicleType.showIndexedList(", ")
             );
             return type;
         }
@@ -126,7 +129,8 @@ public class Utils {
             FuelType type = Utils.scanUntilValid(
                 FuelType::parse,
                 (__) -> Optional.empty(),
-                scanner, writer, inputString
+                scanner, writer, inputString,
+                __ -> "Expected one of the following: " + FuelType.showIndexedList(", ")
             );
             return type;
         }
