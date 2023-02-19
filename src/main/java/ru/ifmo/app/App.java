@@ -26,8 +26,8 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 
 // TODO: Сгенерировать javadoc
 // TODO: Придумать способ для обработки алиасов
-// TODO: Парсить энумерацию вне зависимости от регистра текста
 // TODO: Использовать UUID4/6 для id
+// TODO: Игнорировать пустую команду
 
 
 public class App {

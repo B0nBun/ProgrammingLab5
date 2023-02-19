@@ -1,5 +1,6 @@
 package ru.ifmo.app.lib.entities;
 
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 import ru.ifmo.app.lib.exceptions.ParsingException;
@@ -28,11 +29,15 @@ public enum FuelType {
                 throw new ParsingException(errorMessage);
             }
         } catch (NumberFormatException _err) {
-            try {
-                return FuelType.valueOf(string);
-            } catch (IllegalArgumentException _err2) {
+            var value = Arrays
+                .stream(FuelType.values())
+                .filter(e -> e.name().equalsIgnoreCase(string))
+                .findAny()
+                .orElse(null);
+                
+            if (value == null)
                 throw new ParsingException(errorMessage);
-            }
+            return value;
         }
     }
 }
