@@ -2,13 +2,13 @@ package ru.ifmo.app.lib.commands;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.Vehicles;
+import ru.ifmo.app.lib.Utils.CommandRegistery;
 import ru.ifmo.app.lib.entities.FuelType;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
@@ -21,7 +21,7 @@ public class FilterGreaterThanFuelTypeCommand implements Command {
         Vehicles vehicles,
         Scanner scanner,
         Writer writer,
-        Map<String, Command> commandsMap
+        CommandRegistery commandsRegistery
     ) throws InvalidArgumentException, InvalidNumberOfArgumentsException, IOException {
         if (arguments.length < 1)
             throw new InvalidNumberOfArgumentsException(1, arguments.length);

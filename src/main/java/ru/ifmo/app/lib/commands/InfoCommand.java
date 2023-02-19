@@ -2,12 +2,12 @@ package ru.ifmo.app.lib.commands;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Map;
 import java.util.Scanner;
 
 import ru.ifmo.app.lib.Command;
 import static ru.ifmo.app.lib.Utils.print;
 import ru.ifmo.app.lib.Vehicles;
+import ru.ifmo.app.lib.Utils.CommandRegistery;
 
 public class InfoCommand implements Command {
     @Override
@@ -16,7 +16,7 @@ public class InfoCommand implements Command {
         Vehicles vehicles,
         Scanner _scanner,
         Writer writer,
-        Map<String, Command> _commandsMap
+        CommandRegistery commandsRegistery
     ) throws IOException {
         print(writer, (
             "Creation Date: " + vehicles.creationDate() + "\n" +

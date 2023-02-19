@@ -28,6 +28,7 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 // TODO: Придумать способ для обработки алиасов
 // TODO: Использовать UUID4/6 для id
 // TODO: Игнорировать пустую команду
+// TODO: Заменить нынешние структуры данных на указанные в новом варианте
 
 
 public class App {

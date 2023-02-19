@@ -2,9 +2,9 @@ package ru.ifmo.app.lib;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Map;
 import java.util.Scanner;
 
+import ru.ifmo.app.lib.Utils.CommandRegistery;
 import ru.ifmo.app.lib.exceptions.ExitProgramException;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
@@ -15,7 +15,7 @@ public interface Command {
         Vehicles vehicles,
         Scanner scanner,
         Writer writer,
-        Map<String, Command> commandsMap
+        CommandRegistery commandRegistery
     ) throws InvalidArgumentException, InvalidNumberOfArgumentsException, IOException, ExitProgramException;
 
     default public String[] helpArguments() {

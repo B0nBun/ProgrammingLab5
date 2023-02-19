@@ -2,11 +2,11 @@ package ru.ifmo.app.lib.commands;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Map;
 import java.util.Scanner;
 
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.Vehicles;
+import ru.ifmo.app.lib.Utils.CommandRegistery;
 import ru.ifmo.app.lib.Vehicles.VehicleCreationSchema;
 
 public class AddCommand implements Command {
@@ -16,7 +16,7 @@ public class AddCommand implements Command {
         Vehicles vehicles,
         Scanner scanner,
         Writer writer,
-        Map<String, Command> _commandsMap
+        CommandRegistery commandsRegistery
     ) throws IOException {
         VehicleCreationSchema creationSchema = VehicleCreationSchema.createFromScanner(scanner, writer);
         vehicles.add(creationSchema);

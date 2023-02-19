@@ -1,14 +1,13 @@
 package ru.ifmo.app.lib;
 
 import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.AbstractMap.SimpleEntry;
 
+import ru.ifmo.app.lib.Utils.CommandRegistery;
 import ru.ifmo.app.lib.commands.AddCommand;
 import ru.ifmo.app.lib.commands.AddIfMaxCommand;
 import ru.ifmo.app.lib.commands.ClearCommand;
@@ -33,6 +32,7 @@ public class CommandExecutor {
     private Scanner scanner;
     private Writer writer;
     private Vehicles vehicles;
+    private CommandRegistery commandRegistery;
 
     public CommandExecutor(
         Scanner scanner,
@@ -42,6 +42,23 @@ public class CommandExecutor {
         this.scanner = scanner;
         this.writer = writer;
         this.vehicles = vehicles; 
+
+        this.commandRegistery = new CommandRegistery()
+            .put(new HelpCommand(), "help", "h")
+            .put(new InfoCommand(), "info", "i")
+            .put(new AddCommand(), "add", "a")
+            .put(new ShowCommand(), "show", "s")
+            .put(new UpdateCommand(), "update", "u")
+            .put(new RemoveByIdCommand(), "remove_by_id", "r")
+            .put(new ClearCommand(), "clear")
+            .put(new ExitCommand(), "exit", "e", "q")
+            .put(new HeadCommand(), "head")
+            .put(new AddIfMaxCommand(), "add_if_min")
+            .put(new RemoveLowerCommand(), "remove_lower")
+            .put(new ExecuteScriptCommand(), "execute_script")
+            .put(new CountGreaterThanFuelTypeCommand(), "count_greater_than_fuel_type")
+            .put(new FilterGreaterThanFuelTypeCommand(), "filter_greater_than_fuel_type")
+            .put(new GroupCountingByIdCommand(), "group_counting_by_id");
     }
     
     private static SimpleEntry<String, String[]> parseCommandString(String commandString) throws CommandParseException {
@@ -62,31 +79,14 @@ public class CommandExecutor {
             var commandname = pair.getKey();
             var arguments = pair.getValue();
     
-            Map<String, Command> commandsMap = new LinkedHashMap<>();
-            commandsMap.put("help", new HelpCommand());
-            commandsMap.put("info", new InfoCommand());
-            commandsMap.put("add",  new AddCommand());
-            commandsMap.put("show", new ShowCommand());
-            commandsMap.put("update", new UpdateCommand());
-            commandsMap.put("remove_by_id", new RemoveByIdCommand());
-            commandsMap.put("clear", new ClearCommand());
-            commandsMap.put("exit", new ExitCommand());
-            commandsMap.put("head", new HeadCommand());
-            commandsMap.put("add_if_min", new AddIfMaxCommand());
-            commandsMap.put("remove_lower", new RemoveLowerCommand());
-            commandsMap.put("execute_script", new ExecuteScriptCommand());
-            commandsMap.put("count_greater_than_fuel_type", new CountGreaterThanFuelTypeCommand());
-            commandsMap.put("filter_greater_than_fuel_type", new FilterGreaterThanFuelTypeCommand());
-            commandsMap.put("group_counting_by_id", new GroupCountingByIdCommand());
-    
-            Command command = commandsMap.get(commandname);
+            Command command = this.commandRegistery.get(commandname);
             if (command == null) {
                 Utils.print(writer, "Command '" + commandString + "' not found, input 'help' to see a list of all commands\n");
                 return;
             }
     
             try {
-                command.execute(arguments, this.vehicles, this.scanner, this.writer, commandsMap);
+                command.execute(arguments, this.vehicles, this.scanner, this.writer, this.commandRegistery);
             } catch (InvalidNumberOfArgumentsException | InvalidArgumentException err) {
                 Utils.print(writer, err.getMessage() + "\n");
             }

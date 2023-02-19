@@ -2,7 +2,6 @@ package ru.ifmo.app.lib.commands;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.stream.Collectors;
@@ -10,6 +9,7 @@ import java.util.stream.Collectors;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.Vehicles;
+import ru.ifmo.app.lib.Utils.CommandRegistery;
 
 public class GroupCountingByIdCommand implements Command {
     @Override
@@ -18,7 +18,7 @@ public class GroupCountingByIdCommand implements Command {
         Vehicles vehicles,
         Scanner scanner,
         Writer writer,
-        Map<String, Command> commandsMap
+        CommandRegistery commandsRegistery
     ) throws IOException {
         var grouped = vehicles
             .stream()
