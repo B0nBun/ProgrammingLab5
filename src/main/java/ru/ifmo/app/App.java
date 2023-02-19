@@ -26,9 +26,9 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 
 // TODO: Сгенерировать javadoc
 // TODO: Придумать способ для обработки алиасов
-// TODO: Использовать Peekable Итератор/Генератор/Stream для генерации ID
 // TODO: Обрабатывать ошибки и вывод текста по-другому, если команды выполняются скриптом
 // TODO: Парсить энумерацию вне зависимости от регистра текста
+// TODO: Использовать UUID4/6 для id
 
 
 public class App {

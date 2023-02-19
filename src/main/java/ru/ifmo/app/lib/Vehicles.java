@@ -105,29 +105,34 @@ public class Vehicles {
     }
 
     private LocalDate creationDate;
-    private long idCounter = 0;
+    private Utils.Peekable<Long> idGenerator;
     private LinkedList<Vehicle> list;
 
     public Vehicles() {
-        this.list = new LinkedList<>();
         this.creationDate = LocalDate.now();
+        this.idGenerator = new Utils.Peekable<>(
+            Stream.iterate(1l, i -> i + 1).iterator()
+        );
+        this.list = new LinkedList<>();
     }
     
     public Stream<Vehicle> stream() {
         return this.list.stream();
     }
 
-    public long nextId() {
-        return this.idCounter + 1;
+    public long peekNextId() {
+        return this.idGenerator.peek();
     }
     
-    public LocalDate nextCreationDate() {
+    public LocalDate peekNextCreationDate() {
         return LocalDate.now();
     }
 
     public void add(VehicleCreationSchema newVehicle) {
-        this.list.add(newVehicle.generate(this.nextId(), this.nextCreationDate()));
-        this.idCounter = this.nextId();
+        this.list.add(newVehicle.generate(
+            this.idGenerator.next(),
+            this.peekNextCreationDate()
+        ));
     }
 
     public Vehicles mutate(Function<Vehicle, Vehicle> mutator) {

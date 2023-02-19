@@ -21,7 +21,7 @@ public class RemoveLowerCommand implements Command {
         Map<String, Command> commandsMap
     ) throws IOException {
         var creationSchema = VehicleCreationSchema.createFromScanner(scanner, writer);
-        var notAddedVehicle = creationSchema.generate(vehicles.nextId(), vehicles.nextCreationDate());
+        var notAddedVehicle = creationSchema.generate(vehicles.peekNextId(), vehicles.peekNextCreationDate());
         try {
             vehicles.removeIf(vehicle -> {
                 if (vehicle.compareTo(notAddedVehicle) < 0) {

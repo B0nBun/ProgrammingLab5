@@ -22,7 +22,7 @@ public class AddIfMaxCommand implements Command {
         var creationSchema = VehicleCreationSchema.createFromScanner(scanner, writer);   
         var maxVehicle = vehicles.stream().max(Vehicle::compareTo).orElse(null);
         
-        if (maxVehicle == null || creationSchema.generate(vehicles.nextId(), vehicles.nextCreationDate()).compareTo(maxVehicle) > 0) {
+        if (maxVehicle == null || creationSchema.generate(vehicles.peekNextId(), vehicles.peekNextCreationDate()).compareTo(maxVehicle) > 0) {
             vehicles.add(creationSchema);
         }
     }
