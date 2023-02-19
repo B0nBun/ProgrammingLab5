@@ -3,7 +3,8 @@ package ru.ifmo.app.lib;
 import java.io.IOException;
 import java.io.Writer;
 import java.time.LocalDate;
-import java.util.LinkedList;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Scanner;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -109,18 +110,18 @@ public class Vehicles {
 
     private LocalDate creationDate;
     private Utils.Peekable<Long> idGenerator;
-    private LinkedList<Vehicle> list;
+    private Deque<Vehicle> collection;
 
     public Vehicles() {
         this.creationDate = LocalDate.now();
         this.idGenerator = new Utils.Peekable<>(
             Stream.iterate(1l, i -> i + 1).iterator()
         );
-        this.list = new LinkedList<>();
+        this.collection = new ArrayDeque<>();
     }
     
     public Stream<Vehicle> stream() {
-        return this.list.stream();
+        return this.collection.stream();
     }
 
     public long peekNextId() {
@@ -132,31 +133,33 @@ public class Vehicles {
     }
 
     public void add(VehicleCreationSchema newVehicle) {
-        this.list.add(newVehicle.generate(
+        this.collection.add(newVehicle.generate(
             this.idGenerator.next(),
             this.peekNextCreationDate()
         ));
     }
 
     public Vehicles mutate(Function<Vehicle, Vehicle> mutator) {
-        for (int i = 0; i < this.list.size(); i ++) {
-            var mutated = mutator.apply(this.list.get(i));
-            this.list.set(i, mutated);
+        var newDeque = new ArrayDeque<Vehicle>(this.collection.size());
+        for (var vehicle: this.collection) {
+            var mutated = mutator.apply(vehicle);
+            newDeque.add(mutated);
         }
+        this.collection = newDeque;
         return this;
     }
 
     public boolean removeIf(Predicate<Vehicle> predicate) {
-        return this.list.removeIf(predicate);
+        return this.collection.removeIf(predicate);
     }
 
     public Vehicles clear() {
-        this.list.clear();
+        this.collection.clear();
         return this;
     }
 
     public String collectionType() {
-        return this.list.getClass().getName();
+        return this.collection.getClass().getName();
     }
 
     public LocalDate creationDate() {
