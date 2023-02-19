@@ -74,6 +74,7 @@ public class CommandExecutor {
     }
 
     public void executeCommandString(String commandString) throws IOException, ExitProgramException {
+        if (commandString.trim().length() == 0) return;
         try {
             var pair = CommandExecutor.parseCommandString(commandString);
             var commandname = pair.getKey();
