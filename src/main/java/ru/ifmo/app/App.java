@@ -1,7 +1,8 @@
 package ru.ifmo.app;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -26,13 +27,12 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 
 // TODO: Сгенерировать javadoc
 // TODO: Использовать UUID4/6 для id
-// TODO: Заменить нынешние структуры данных на указанные в новом варианте
 
 
 public class App {
 	public static void main(String[] args) {
-		var scanner = new Scanner(System.in); 
-		var outputWriter = new OutputStreamWriter(System.out);
+		Scanner scanner = new Scanner(System.in); 
+		Writer outputWriter = new PrintWriter(System.out);
 		var vehicles = new Vehicles();
 		vehicles.add(new Vehicles.VehicleCreationSchema(
 			"testName",
