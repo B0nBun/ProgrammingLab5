@@ -47,7 +47,7 @@ public class App {
 		try {
 			try {
 				while (true) {
-					Utils.print(outputWriter, "Input a command: ");
+					Utils.print(outputWriter, "> ");
 					var commandString = scanner.nextLine();
 					try {
 						executor.executeCommandString(commandString);
