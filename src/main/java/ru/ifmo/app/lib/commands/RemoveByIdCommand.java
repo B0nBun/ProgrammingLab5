@@ -9,6 +9,7 @@ import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.Vehicles;
 import ru.ifmo.app.lib.Utils.CommandRegistery;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
+import ru.ifmo.app.lib.exceptions.RuntimeIOException;
 
 public class RemoveByIdCommand implements Command {
     @Override
@@ -24,12 +25,24 @@ public class RemoveByIdCommand implements Command {
         
         String vehicleUUID = arguments[0];
 
-        // TODO: Выводить все удаленные uuid
-        var found = vehicles.removeIf(v -> v.id().toString().startsWith(vehicleUUID));
-
-        // TODO: Поменять это сообщение на Vehicle with id startingWith {vehicleUUID} not found
-        if (!found) {
-            Utils.print(writer, "Vehicle with id " + vehicleUUID + " not found\n");
+        try {
+            var found = vehicles.removeIf(v -> {
+                if (v.id().toString().startsWith(vehicleUUID)) {
+                    try {
+                        Utils.print(writer, "Removing vehicle with id=" + v.id() + "...\n");
+                    } catch (IOException err) {
+                        throw new RuntimeIOException(err);
+                    }
+                    return true;
+                }
+                return false;
+            });
+    
+            if (!found) {
+                Utils.print(writer, "Vehicle with id starting with '" + vehicleUUID + "' not found\n");
+            }
+        } catch (RuntimeIOException err) {
+            throw err.iocause;
         }
     }
 
