@@ -1,25 +1,16 @@
 package ru.ifmo.app.lib.commands;
 
 import java.io.IOException;
-import java.io.Writer;
-import java.util.Scanner;
 
 import ru.ifmo.app.lib.Command;
-import ru.ifmo.app.lib.Vehicles;
-import ru.ifmo.app.lib.Utils.CommandRegistery;
+import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.Vehicles.VehicleCreationSchema;
 
 public class AddCommand implements Command {
     @Override
-    public void execute(
-        String[] _arguments,
-        Vehicles vehicles,
-        Scanner scanner,
-        Writer writer,
-        CommandRegistery commandsRegistery
-    ) throws IOException {
-        VehicleCreationSchema creationSchema = VehicleCreationSchema.createFromScanner(scanner, writer);
-        vehicles.add(creationSchema);
+    public void execute(CommandContext context) throws IOException {
+        VehicleCreationSchema creationSchema = VehicleCreationSchema.createFromScanner(context.scanner(), context.writer());
+        context.vehicles().add(creationSchema);
     }
 
     @Override

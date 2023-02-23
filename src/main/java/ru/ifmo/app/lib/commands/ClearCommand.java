@@ -1,25 +1,16 @@
 package ru.ifmo.app.lib.commands;
 
 import java.io.IOException;
-import java.io.Writer;
-import java.util.Scanner;
 
 import ru.ifmo.app.lib.Command;
+import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.Utils;
-import ru.ifmo.app.lib.Vehicles;
-import ru.ifmo.app.lib.Utils.CommandRegistery;
 
 public class ClearCommand implements Command {
     @Override
-    public void execute(
-        String[] arguments,
-        Vehicles vehicles,
-        Scanner scanner,
-        Writer writer,
-        CommandRegistery commandsRegistery
-    ) throws IOException {
-        vehicles.clear();        
-        Utils.print(writer, "Collection cleared!\n");
+    public void execute(CommandContext context) throws IOException {
+        context.vehicles().clear();        
+        Utils.print(context.writer(), "Collection cleared!\n");
     }
 
     @Override

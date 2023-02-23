@@ -3,33 +3,25 @@ package ru.ifmo.app.lib.commands;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.Scanner;
 
 import ru.ifmo.app.lib.Command;
+import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.CommandExecutor;
-import ru.ifmo.app.lib.Vehicles;
-import ru.ifmo.app.lib.Utils.CommandRegistery;
 import ru.ifmo.app.lib.exceptions.ExitProgramException;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 
 public class ExecuteScriptCommand implements Command{
     @Override
-    public void execute(
-        String[] arguments,
-        Vehicles vehicles,
-        Scanner scanner,
-        Writer writer,
-        CommandRegistery commandsRegistery
-    ) throws InvalidArgumentException, InvalidNumberOfArgumentsException, IOException, ExitProgramException {
-        if (arguments.length < 1)
-            throw new InvalidNumberOfArgumentsException(1, arguments.length);
+    public void execute(CommandContext context) throws InvalidArgumentException, InvalidNumberOfArgumentsException, IOException, ExitProgramException {
+        if (context.arguments().length < 1)
+            throw new InvalidNumberOfArgumentsException(1, context.arguments().length);
 
-        String scriptFilepath = arguments[0];
+        String scriptFilepath = context.arguments()[0];
 
         try(Scanner fileScanner = new Scanner(new FileInputStream(scriptFilepath))) {
-            var commandExecutor = new CommandExecutor(fileScanner, writer, vehicles);
+            var commandExecutor = new CommandExecutor(fileScanner, context.writer(), context.vehicles());
             
             while (fileScanner.hasNextLine()) {
                 String commandString = fileScanner.nextLine();

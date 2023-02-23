@@ -1,29 +1,20 @@
 package ru.ifmo.app.lib.commands;
 
 import java.io.IOException;
-import java.io.Writer;
-import java.util.Scanner;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.stream.Collectors;
 
 import ru.ifmo.app.lib.Command;
+import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.Utils;
-import ru.ifmo.app.lib.Vehicles;
-import ru.ifmo.app.lib.Utils.CommandRegistery;
 
 public class GroupCountingByIdCommand implements Command {
     @Override
-    public void execute(
-        String[] arguments,
-        Vehicles vehicles,
-        Scanner scanner,
-        Writer writer,
-        CommandRegistery commandsRegistery
-    ) throws IOException {
-        var grouped = vehicles
+    public void execute(CommandContext context) throws IOException {
+        var grouped = context.vehicles()
             .stream()
             .map(vehicle -> {
-                var withSameId = vehicles
+                var withSameId = context.vehicles()
                     .stream()
                     .filter(v -> v.id() == vehicle.id())
                     .count();
@@ -35,10 +26,10 @@ public class GroupCountingByIdCommand implements Command {
             .collect(Collectors.joining("\n"));
         
         if (joined.equals("")) {
-            Utils.print(writer, "The collection is empty");
+            Utils.print(context.writer(), "The collection is empty");
             return;
         }
-        Utils.print(writer, joined + "\n");
+        Utils.print(context.writer(), joined + "\n");
     }
 
     @Override

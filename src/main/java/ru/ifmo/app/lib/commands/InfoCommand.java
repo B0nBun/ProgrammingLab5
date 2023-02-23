@@ -1,27 +1,19 @@
 package ru.ifmo.app.lib.commands;
 
 import java.io.IOException;
-import java.io.Writer;
-import java.util.Scanner;
 
 import ru.ifmo.app.lib.Command;
+import ru.ifmo.app.lib.CommandContext;
+
 import static ru.ifmo.app.lib.Utils.print;
-import ru.ifmo.app.lib.Vehicles;
-import ru.ifmo.app.lib.Utils.CommandRegistery;
 
 public class InfoCommand implements Command {
     @Override
-    public void execute(
-        String[] _arguments,
-        Vehicles vehicles,
-        Scanner _scanner,
-        Writer writer,
-        CommandRegistery commandsRegistery
-    ) throws IOException {
-        print(writer, (
-            "Creation Date: " + vehicles.creationDate() + "\n" +
-            "Collection Type: " + vehicles.collectionType() + "\n" +
-            "Collection Size: " + vehicles.stream().count() + "\n"
+    public void execute(CommandContext context) throws IOException {
+        print(context.writer(), (
+            "Creation Date: " + context.vehicles().creationDate() + "\n" +
+            "Collection Type: " + context.vehicles().collectionType() + "\n" +
+            "Collection Size: " + context.vehicles().stream().count() + "\n"
         ));
     }
 

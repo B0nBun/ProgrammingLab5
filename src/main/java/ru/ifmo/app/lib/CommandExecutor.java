@@ -87,7 +87,13 @@ public class CommandExecutor {
             }
     
             try {
-                command.execute(arguments, this.vehicles, this.scanner, this.writer, this.commandRegistery);
+                command.execute(new CommandContext(
+                    arguments,
+                    this.vehicles,
+                    this.scanner,
+                    this.writer,
+                    this.commandRegistery
+                ));
             } catch (InvalidNumberOfArgumentsException | InvalidArgumentException err) {
                 Utils.print(writer, err.getMessage() + "\n");
             }

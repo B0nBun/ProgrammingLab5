@@ -1,26 +1,18 @@
 package ru.ifmo.app.lib.commands;
 
 import java.io.IOException;
-import java.io.Writer;
-import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import ru.ifmo.app.lib.Command;
+import ru.ifmo.app.lib.CommandContext;
+
 import static ru.ifmo.app.lib.Utils.print;
-import ru.ifmo.app.lib.Vehicles;
-import ru.ifmo.app.lib.Utils.CommandRegistery;
 
 public class HelpCommand implements Command {
     @Override
-    public void execute(
-        String[] _arguments,
-        Vehicles _vehicles,
-        Scanner _scanner,
-        Writer writer,
-        CommandRegistery commandsRegistery
-    ) throws IOException {
-        Stream<String> commandStrings = commandsRegistery.getAllCommands().stream()
+    public void execute(CommandContext context) throws IOException {
+        Stream<String> commandStrings = context.commandRegistery().getAllCommands().stream()
             .map(entry -> {
                 var command = entry.getValue();
                 var helpMessage = command.helpMessage();
@@ -29,7 +21,7 @@ public class HelpCommand implements Command {
                 return "- " + commandAliases + " " + argumentsString + "\n" + helpMessage;
             });
         
-        print(writer, (
+        print(context.writer(), (
             "List of commands:\n" +
             commandStrings.collect(Collectors.joining("\n")) +
             "\n"
