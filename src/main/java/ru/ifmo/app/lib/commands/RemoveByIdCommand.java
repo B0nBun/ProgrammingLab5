@@ -8,7 +8,6 @@ import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.Vehicles;
 import ru.ifmo.app.lib.Utils.CommandRegistery;
-import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 
 public class RemoveByIdCommand implements Command {
@@ -19,20 +18,18 @@ public class RemoveByIdCommand implements Command {
         Scanner scanner,
         Writer writer,
         CommandRegistery commandsRegistery
-    ) throws InvalidArgumentException, InvalidNumberOfArgumentsException, IOException {
+    ) throws InvalidNumberOfArgumentsException, IOException {
         if (arguments.length < 1)
             throw new InvalidNumberOfArgumentsException(1, arguments.length);
         
-        try {
-            Long vehicleId = Long.parseUnsignedLong(arguments[0]);
+        String vehicleUUID = arguments[0];
 
-            var found = vehicles.removeIf(v -> v.id() == vehicleId);
+        // TODO: Выводить все удаленные uuid
+        var found = vehicles.removeIf(v -> v.id().toString().startsWith(vehicleUUID));
 
-            if (!found) {
-                Utils.print(writer, "Vehicle with id " + vehicleId + " not found\n");
-            }
-        } catch (NumberFormatException err) {
-            throw new InvalidArgumentException("id", "id must be an unsigned long integer");
+        // TODO: Поменять это сообщение на Vehicle with id startingWith {vehicleUUID} not found
+        if (!found) {
+            Utils.print(writer, "Vehicle with id " + vehicleUUID + " not found\n");
         }
     }
 

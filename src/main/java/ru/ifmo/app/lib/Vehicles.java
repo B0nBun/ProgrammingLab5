@@ -6,10 +6,13 @@ import java.time.LocalDate;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Scanner;
+import java.util.UUID;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
+
+import com.fasterxml.uuid.Generators;
 
 import ru.ifmo.app.lib.entities.Coordinates;
 import ru.ifmo.app.lib.entities.FuelType;
@@ -36,7 +39,7 @@ public class Vehicles {
             );
         }
 
-        public Vehicle generate(long id, LocalDate creationDate) {
+        public Vehicle generate(UUID id, LocalDate creationDate) {
             return new Vehicle(
                 id,
                 this.name,
@@ -109,13 +112,14 @@ public class Vehicles {
     }
 
     private LocalDate creationDate;
-    private Utils.Peekable<Long> idGenerator;
+    private Utils.Peekable<UUID> idGenerator;
     private Deque<Vehicle> collection;
 
     public Vehicles() {
         this.creationDate = LocalDate.now();
+        var uuidGenerator = Generators.randomBasedGenerator();
         this.idGenerator = new Utils.Peekable<>(
-            Stream.iterate(1l, i -> i + 1).iterator()
+            Stream.iterate(uuidGenerator.generate(), __ -> uuidGenerator.generate()).iterator()
         );
         this.collection = new ArrayDeque<>();
     }
@@ -124,7 +128,7 @@ public class Vehicles {
         return this.collection.stream();
     }
 
-    public long peekNextId() {
+    public UUID peekNextId() {
         return this.idGenerator.peek();
     }
     
