@@ -2,6 +2,8 @@ package ru.ifmo.app;
 
 import java.util.stream.Stream;
 
+import com.fasterxml.uuid.Generators;
+
 import ru.ifmo.app.lib.Utils;
 
 /*
@@ -10,9 +12,12 @@ import ru.ifmo.app.lib.Utils;
 
 public class Test {
     public static void main(String[] args) {
-        var iterator = Stream.iterate(1, i -> i + 1).limit(0).iterator();
-        var peekable = new Utils.Peekable<>(iterator);
-        System.out.println(peekable.peek());
-        peekable.forEachRemaining(System.out::println);
+        var uuidgenerator = Generators.randomBasedGenerator();
+        var uuidstream = Stream.iterate(uuidgenerator.generate(), __ -> uuidgenerator.generate());
+        var uuidpeekable = new Utils.Peekable<>(uuidstream.iterator());
+        System.out.println(uuidpeekable.peek());
+        System.out.println(uuidpeekable.next());
+        System.out.println(uuidpeekable.peek());
+        System.out.println(uuidpeekable.next());
     }
 }
