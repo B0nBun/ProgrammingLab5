@@ -37,15 +37,14 @@ public class UpdateCommand implements Command {
             .findFirst()
             .orElseGet(() -> null);
         
-        // TODO: Поменять это сообщение на Vehicle with id startingWith {vehicleUUID} not found
         if (found == null) {
-            Utils.print(writer, "Vehicle with id " + vehicleUUID + " not found\n");
+            Utils.print(writer, "Vehicle with id starting with '" + vehicleUUID + "' not found\n");
             return;
         }
+        Utils.print(writer, "Updating vehicle with id=" + found.id() + "\n");
 
         var updatedSchema = VehicleCreationSchema.createFromScanner(scanner, writer, new VehicleCreationSchema(found));
 
-        // TODO: Вывести uuid найденного vehicle
         vehicles.mutate(vehicle -> {
             if (compareUUIDs.test(vehicle.id(), vehicleUUID)) {
                 return updatedSchema.generate(vehicle.id(), vehicle.creationDate());
