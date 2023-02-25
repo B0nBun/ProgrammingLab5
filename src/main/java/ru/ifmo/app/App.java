@@ -26,6 +26,7 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 // TODO: Логирование
 // TODO: Выводить другие сообщения/логи если команды исполняются скриптом, а не пользователем
 
+// TODO: Попробовать внедрить класс Try для избежания огромных пиромид вложенности из try-catch
 
 public class App {
 	public static void main(String[] args) {

@@ -1,10 +1,14 @@
 package ru.ifmo.app.lib;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Writer;
 import java.time.LocalDate;
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 import java.util.function.BiFunction;
@@ -18,6 +22,14 @@ import ru.ifmo.app.lib.entities.Coordinates;
 import ru.ifmo.app.lib.entities.FuelType;
 import ru.ifmo.app.lib.entities.Vehicle;
 import ru.ifmo.app.lib.entities.VehicleType;
+import ru.ifmo.app.lib.exceptions.ParsingException;
+
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+
+import javax.xml.XMLConstants;
 
 
 public class Vehicles {
@@ -26,13 +38,42 @@ public class Vehicles {
     private Utils.Peekable<UUID> idGenerator;
     private Deque<Vehicle> collection;
 
-    public Vehicles() {
-        this.creationDate = LocalDate.now();
+    public Vehicles(Collection<Vehicle> vehiclesIter, LocalDate creationDate) {
+        this.creationDate = creationDate;
         var uuidGenerator = Generators.randomBasedGenerator();
         this.idGenerator = new Utils.Peekable<>(
             Stream.iterate(uuidGenerator.generate(), __ -> uuidGenerator.generate()).iterator()
         );
-        this.collection = new ArrayDeque<>();
+        this.collection = new ArrayDeque<>(vehiclesIter);
+    }
+
+    public Vehicles() {
+        this(new ArrayList<>(), LocalDate.now());
+    }
+
+    public static Vehicles loadFromXml(InputStream xmlInputStream) throws IOException, JDOMException, ParsingException {
+        var sax = new SAXBuilder();
+
+        // https://rules.sonarsource.com/java/RSPEC-2755
+        // prevent xxe
+        sax.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        sax.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        
+        Document doc = sax.build(xmlInputStream);
+
+        // TODO: Обработать creation-date атрибут
+        LocalDate creationDate = LocalDate.now();
+        Element rootElement = doc.getRootElement();
+        List<Element> vehicleElements = rootElement.getChildren();
+        var vehicles = new ArrayList<Vehicle>();
+
+        // TODO: Сообщать о невалидных элементах и пропускать их
+        for (var vehicleElement : vehicleElements) {
+            Vehicle vehicle = Vehicle.fromXmlElement(vehicleElement);
+            vehicles.add(vehicle);
+        }
+
+        return new Vehicles(vehicles, creationDate);
     }
     
     public Stream<Vehicle> stream() {

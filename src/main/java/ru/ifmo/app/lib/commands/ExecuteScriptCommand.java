@@ -13,6 +13,7 @@ import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 
 public class ExecuteScriptCommand implements Command{
+
     @Override
     public void execute(CommandContext context) throws InvalidArgumentException, InvalidNumberOfArgumentsException, IOException, ExitProgramException {
         if (context.arguments().length < 1)

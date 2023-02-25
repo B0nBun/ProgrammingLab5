@@ -87,6 +87,30 @@ public class Utils {
         N parse(String string) throws NumberFormatException;
     }
     
+    public static ParsingException xmlElementParsingException(
+        String elementName,
+        String vehicleUUID,
+        String message
+    ) {
+        return new ParsingException("'" + elementName + "' element of vehicle '" + vehicleUUID + "':" + message);
+    }
+
+    public static ParsingException xmlElementParsingException(
+        String elementName,
+        String vehicleUUID,
+        ParsingException exception
+    ) {
+        return xmlElementParsingException(elementName, vehicleUUID, exception.getMessage());
+    }
+
+    public static ParsingException xmlAttributeParsingException(
+        String attributeName,
+        String vehicleUUID,
+        String message
+    ) {
+        return new ParsingException("'" + attributeName + "' attribute of vehicle '" + vehicleUUID + "':" + message);
+    }
+    
     public static void print(Writer writer, String string) throws IOException {
         writer.write(string);
         writer.flush();
