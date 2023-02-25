@@ -1,0 +1,16 @@
+<vehicles creation-date="2023-02-25">
+    <vehicle id="5990a582-56b8-447a-8c2a-51ccffeb420e" creation-date="2023-02-25">
+        <name>testVehicle</name>
+        <coordinates x="222" y="-1112"/>
+        <engine-power>1.23</engine-power>
+        <vehicle-type>BOAT</vehicle-type>
+        <fuel-type>Gasoline</fuel-type>
+    </vehicle>
+    <vehicle id="ca424d74-82c2-4d6b-8df6-167b60032590" creation-date="2023-02-26">
+        <name>other vehicle</name>
+        <coordinates x="11111" y="-13320"/>
+        <engine-power>23.1</engine-power>
+        <vehicle-type>CHOPPER</vehicle-type>
+        <fuel-type>2</fuel-type>
+    </vehicle>
+</vehicles>
