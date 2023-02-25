@@ -22,6 +22,65 @@ import ru.ifmo.app.lib.entities.VehicleType;
 
 public class Vehicles {
 
+    private LocalDate creationDate;
+    private Utils.Peekable<UUID> idGenerator;
+    private Deque<Vehicle> collection;
+
+    public Vehicles() {
+        this.creationDate = LocalDate.now();
+        var uuidGenerator = Generators.randomBasedGenerator();
+        this.idGenerator = new Utils.Peekable<>(
+            Stream.iterate(uuidGenerator.generate(), __ -> uuidGenerator.generate()).iterator()
+        );
+        this.collection = new ArrayDeque<>();
+    }
+    
+    public Stream<Vehicle> stream() {
+        return this.collection.stream();
+    }
+
+    public UUID peekNextId() {
+        return this.idGenerator.peek();
+    }
+    
+    public LocalDate peekNextCreationDate() {
+        return LocalDate.now();
+    }
+
+    public void add(VehicleCreationSchema newVehicle) {
+        this.collection.add(newVehicle.generate(
+            this.idGenerator.next(),
+            this.peekNextCreationDate()
+        ));
+    }
+
+    public Vehicles mutate(Function<Vehicle, Vehicle> mutator) {
+        var newDeque = new ArrayDeque<Vehicle>(this.collection.size());
+        for (var vehicle: this.collection) {
+            var mutated = mutator.apply(vehicle);
+            newDeque.add(mutated);
+        }
+        this.collection = newDeque;
+        return this;
+    }
+
+    public boolean removeIf(Predicate<Vehicle> predicate) {
+        return this.collection.removeIf(predicate);
+    }
+
+    public Vehicles clear() {
+        this.collection.clear();
+        return this;
+    }
+
+    public String collectionType() {
+        return this.collection.getClass().getName();
+    }
+
+    public LocalDate creationDate() {
+        return this.creationDate;
+    }
+
     public static record VehicleCreationSchema(
         String name,
         Coordinates coordinates,
@@ -109,64 +168,5 @@ public class Vehicles {
         ) throws IOException {
             return VehicleCreationSchema.createFromScanner(scanner, writer, null);
         }
-    }
-
-    private LocalDate creationDate;
-    private Utils.Peekable<UUID> idGenerator;
-    private Deque<Vehicle> collection;
-
-    public Vehicles() {
-        this.creationDate = LocalDate.now();
-        var uuidGenerator = Generators.randomBasedGenerator();
-        this.idGenerator = new Utils.Peekable<>(
-            Stream.iterate(uuidGenerator.generate(), __ -> uuidGenerator.generate()).iterator()
-        );
-        this.collection = new ArrayDeque<>();
-    }
-    
-    public Stream<Vehicle> stream() {
-        return this.collection.stream();
-    }
-
-    public UUID peekNextId() {
-        return this.idGenerator.peek();
-    }
-    
-    public LocalDate peekNextCreationDate() {
-        return LocalDate.now();
-    }
-
-    public void add(VehicleCreationSchema newVehicle) {
-        this.collection.add(newVehicle.generate(
-            this.idGenerator.next(),
-            this.peekNextCreationDate()
-        ));
-    }
-
-    public Vehicles mutate(Function<Vehicle, Vehicle> mutator) {
-        var newDeque = new ArrayDeque<Vehicle>(this.collection.size());
-        for (var vehicle: this.collection) {
-            var mutated = mutator.apply(vehicle);
-            newDeque.add(mutated);
-        }
-        this.collection = newDeque;
-        return this;
-    }
-
-    public boolean removeIf(Predicate<Vehicle> predicate) {
-        return this.collection.removeIf(predicate);
-    }
-
-    public Vehicles clear() {
-        this.collection.clear();
-        return this;
-    }
-
-    public String collectionType() {
-        return this.collection.getClass().getName();
-    }
-
-    public LocalDate creationDate() {
-        return this.creationDate;
     }
 }
