@@ -25,7 +25,6 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 
 // TODO: Логирование
 // TODO: Выводить другие сообщения/логи если команды исполняются скриптом, а не пользователем
-// TODO: Сгенерировать javadoc
 
 
 public class App {
