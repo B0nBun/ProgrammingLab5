@@ -13,7 +13,28 @@ public record Vehicle(
     VehicleType type,
     FuelType fuelType
 ) implements Comparable<Vehicle> {
+
+    @Override
+    public String toString() {
+        return String.join(
+            "\n",
+            "Vehicle[",
+            "  id = " + this.id + ",",
+            "  name = " + this.name + ",",
+            "  coordinates = " + this.coordinates + ",",
+            "  creationDate = " + this.creationDate + ",",
+            "  enginePower = " + this.enginePower + ",",
+            "  type = " + this.type + ",",
+            "  fuelType = " + this.fuelType + ",",
+            "]"
+        );
+    }
     
+    @Override
+    public int compareTo(Vehicle other) {
+        return this.enginePower.compareTo(other.enginePower);
+    }
+
     public static class validate {
         private validate() {}
         
@@ -37,26 +58,5 @@ public record Vehicle(
                 return Optional.of("'fuelType' can't be empty");
             return Optional.empty();
         }
-    }
-
-    @Override
-    public String toString() {
-        return String.join(
-            "\n",
-            "Vehicle[",
-            "  id = " + this.id + ",",
-            "  name = " + this.name + ",",
-            "  coordinates = " + this.coordinates + ",",
-            "  creationDate = " + this.creationDate + ",",
-            "  enginePower = " + this.enginePower + ",",
-            "  type = " + this.type + ",",
-            "  fuelType = " + this.fuelType + ",",
-            "]"
-        );
-    }
-    
-    @Override
-    public int compareTo(Vehicle other) {
-        return this.enginePower.compareTo(other.enginePower);
     }
 }
