@@ -22,7 +22,7 @@ public class ExecuteScriptCommand implements Command{
         String scriptFilepath = context.arguments()[0];
 
         try(Scanner fileScanner = new Scanner(new FileInputStream(scriptFilepath))) {
-            var commandExecutor = new CommandExecutor(fileScanner, context.writer(), context.vehicles());
+            var commandExecutor = new CommandExecutor(fileScanner, context.writer(), context.vehicles(), context.vehiclesFile());
             
             while (fileScanner.hasNextLine()) {
                 String commandString = fileScanner.nextLine();

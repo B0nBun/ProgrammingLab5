@@ -5,29 +5,37 @@ import java.util.Optional;
 import org.jdom2.Element;
 
 import ru.ifmo.app.lib.Utils;
+import ru.ifmo.app.lib.VehiclesXmlTag;
 import ru.ifmo.app.lib.exceptions.ParsingException;
 
 public record Coordinates(
     Long x,
     Integer y
 ) {
+    public Element toXmlElement() {
+        Element coordinatesElement = new Element(VehiclesXmlTag.Coordinates.toString())
+            .setAttribute(VehiclesXmlTag.CoordinatesXAttr.toString(), this.x().toString())
+            .setAttribute(VehiclesXmlTag.CoordinatesYAttr.toString(), this.y().toString());
+        return coordinatesElement;
+    }
+
     public static Coordinates fromXmlElement(Element coordinatesElement, String vehicleUUID) throws ParsingException {
         if (coordinatesElement == null) {
             return null;
         }
 
-        String xString = coordinatesElement.getAttributeValue("x");
-        String yString = coordinatesElement.getAttributeValue("y");
+        String xString = coordinatesElement.getAttributeValue(VehiclesXmlTag.CoordinatesXAttr.toString());
+        String yString = coordinatesElement.getAttributeValue(VehiclesXmlTag.CoordinatesYAttr.toString());
         
         Long x = null;
         try {
             x = Long.parseLong(xString);
             var xValidationError = Coordinates.validate.x(x);
             if (xValidationError.isPresent()) {
-                throw Utils.xmlAttributeParsingException("coordinates.x", vehicleUUID, xValidationError.get());
+                throw Utils.xmlAttributeParsingException(VehiclesXmlTag.CoordinatesXAttr, vehicleUUID, xValidationError.get());
             }
         } catch (NumberFormatException err) {
-            throw Utils.xmlElementParsingException("coordinates", vehicleUUID, "'x' attribute: Long integer required but got '" + xString + "'");
+            throw Utils.xmlElementParsingException(VehiclesXmlTag.Coordinates, vehicleUUID, "'" + VehiclesXmlTag.CoordinatesXAttr + "' attribute: Long integer required but got '" + xString + "'");
         }
 
         Integer y = null;
@@ -35,10 +43,10 @@ public record Coordinates(
             y = Integer.parseInt(yString);
             var yValidationError = Coordinates.validate.y(y);
             if (yValidationError.isPresent()) {
-                throw Utils.xmlAttributeParsingException("coordinates.y", vehicleUUID, yValidationError.get());
+                throw Utils.xmlAttributeParsingException(VehiclesXmlTag.CoordinatesYAttr, vehicleUUID, yValidationError.get());
             }
         } catch (NumberFormatException err) {
-            throw Utils.xmlElementParsingException("coordinates", vehicleUUID, "'y' attribute: Integer required but got '" + yString + "'");
+            throw Utils.xmlElementParsingException(VehiclesXmlTag.Coordinates, vehicleUUID, "'" + VehiclesXmlTag.CoordinatesYAttr + "' attribute: Integer required but got '" + yString + "'");
         }
 
         return new Coordinates(x, y);

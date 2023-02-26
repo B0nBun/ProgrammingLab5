@@ -12,27 +12,27 @@ import ru.ifmo.app.lib.exceptions.ParsingException;
 public class Utils {
 
     public static ParsingException xmlElementParsingException(
-        String elementName,
+        VehiclesXmlTag xmlTag,
         String vehicleUUID,
         String message
     ) {
-        return new ParsingException("'" + elementName + "' element of vehicle '" + vehicleUUID + "':" + message);
+        return new ParsingException("'" + xmlTag + "' element of vehicle '" + vehicleUUID + "':" + message);
     }
 
     public static ParsingException xmlElementParsingException(
-        String elementName,
+        VehiclesXmlTag tagName,
         String vehicleUUID,
         ParsingException exception
     ) {
-        return xmlElementParsingException(elementName, vehicleUUID, exception.getMessage());
+        return xmlElementParsingException(tagName, vehicleUUID, exception.getMessage());
     }
 
     public static ParsingException xmlAttributeParsingException(
-        String attributeName,
+        VehiclesXmlTag tagName,
         String vehicleUUID,
         String message
     ) {
-        return new ParsingException("'" + attributeName + "' attribute of vehicle '" + vehicleUUID + "':" + message);
+        return new ParsingException("'" + tagName + "' attribute of vehicle '" + vehicleUUID + "':" + message);
     }
     
     public static void print(Writer writer, String string) throws IOException {

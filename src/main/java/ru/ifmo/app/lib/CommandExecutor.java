@@ -2,7 +2,7 @@ package ru.ifmo.app.lib;
 
 import java.util.Arrays;
 import java.util.Scanner;
-
+import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.AbstractMap.SimpleEntry;
@@ -20,6 +20,7 @@ import ru.ifmo.app.lib.commands.HelpCommand;
 import ru.ifmo.app.lib.commands.InfoCommand;
 import ru.ifmo.app.lib.commands.RemoveByIdCommand;
 import ru.ifmo.app.lib.commands.RemoveLowerCommand;
+import ru.ifmo.app.lib.commands.SaveCommand;
 import ru.ifmo.app.lib.commands.ShowCommand;
 import ru.ifmo.app.lib.commands.UpdateCommand;
 import ru.ifmo.app.lib.exceptions.CommandParseException;
@@ -32,16 +33,19 @@ public class CommandExecutor {
     private Scanner scanner;
     private Writer writer;
     private Vehicles vehicles;
+    private File vehiclesFile;
     private CommandRegistery commandRegistery;
 
     public CommandExecutor(
         Scanner scanner,
         Writer writer,
-        Vehicles vehicles
+        Vehicles vehicles,
+        File vehiclesFile
     ) {
         this.scanner = scanner;
         this.writer = writer;
         this.vehicles = vehicles; 
+        this.vehiclesFile = vehiclesFile;
 
         this.commandRegistery = new CommandRegistery()
             .put(new HelpCommand(), "help", "h")
@@ -58,7 +62,8 @@ public class CommandExecutor {
             .put(new ExecuteScriptCommand(), "execute_script")
             .put(new CountGreaterThanFuelTypeCommand(), "count_greater_than_fuel_type")
             .put(new FilterGreaterThanFuelTypeCommand(), "filter_greater_than_fuel_type")
-            .put(new GroupCountingByIdCommand(), "group_counting_by_id");
+            .put(new GroupCountingByIdCommand(), "group_counting_by_id")
+            .put(new SaveCommand(), "save");
     }
     
     private static SimpleEntry<String, String[]> parseCommandString(String commandString) throws CommandParseException {
@@ -90,6 +95,7 @@ public class CommandExecutor {
                 command.execute(new CommandContext(
                     arguments,
                     this.vehicles,
+                    this.vehiclesFile,
                     this.scanner,
                     this.writer,
                     this.commandRegistery

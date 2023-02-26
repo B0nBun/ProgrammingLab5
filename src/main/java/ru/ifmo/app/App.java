@@ -17,8 +17,6 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 
 // ВАРИАНТ: 863200
 
-// TODO: Добавить команду save для сохранения файла
-
 // TODO: Логирование
 // TODO: Выводить другие сообщения/логи если команды исполняются скриптом, а не пользователем
 // TODO: По разному обрабатывать разных потомков IOException
@@ -26,13 +24,13 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 public class App {
 	public static void main(String[] args) {
 
-		File vehiclesXmlFilepath = null;
+		File vehiclesXmlFile = null;
 		if (args.length > 0) {
-			vehiclesXmlFilepath = new File(args[0]);
+			vehiclesXmlFile = new File(args[0]);
 		}
 
 		try (
-			var vehiclesXmlFileStream = vehiclesXmlFilepath != null ? new FileInputStream(vehiclesXmlFilepath) : null;
+			var vehiclesXmlFileStream = vehiclesXmlFile != null ? new FileInputStream(vehiclesXmlFile) : null;
 			var scanner = new Scanner(System.in);
 			var outputWriter = new PrintWriter(System.out);
 		) {
@@ -47,11 +45,11 @@ public class App {
 					vehicles = new Vehicles();
 				}
 			} catch (JDOMException err) {
-				Utils.print(outputWriter, "Couldn't parse xml file '" + vehiclesXmlFilepath + "': " + err.getMessage() + "\n");
+				Utils.print(outputWriter, "Couldn't parse xml file '" + vehiclesXmlFile + "': " + err.getMessage() + "\n");
 				return;
 			}
 	
-			var executor = new CommandExecutor(scanner, outputWriter, vehicles);
+			var executor = new CommandExecutor(scanner, outputWriter, vehicles, vehiclesXmlFile);
 	
 			try {
 				while (true) {

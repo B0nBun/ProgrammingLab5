@@ -53,8 +53,19 @@ public class Vehicles {
     public Vehicles() {
         this(new ArrayList<>(), LocalDate.now());
     }
-
-    // TODO: Также валидировать все распарсенные поля
+    
+    public Element toXmlElement() {
+        var rootVehicles = new Element(VehiclesXmlTag.Vehicles.toString())
+            .setAttribute(VehiclesXmlTag.CreationDateAttr.toString(), this.creationDate.toString());
+            
+        List<Element> vehicleElements = this.stream()
+            .map(Vehicle::toXmlElement)
+            .toList();
+        rootVehicles.addContent(vehicleElements);
+            
+        return rootVehicles;
+    }
+    
     public static Vehicles loadFromXml(InputStream xmlInputStream, Writer outputWriter) throws IOException, JDOMException {
         var sax = new SAXBuilder();
 
@@ -66,10 +77,10 @@ public class Vehicles {
         Document doc = sax.build(xmlInputStream);
 
         Element rootElement = doc.getRootElement();
-        String creationDateString = rootElement.getAttributeValue("creation-date");
+        String creationDateString = rootElement.getAttributeValue(VehiclesXmlTag.CreationDateAttr.toString());
         if (creationDateString == null) {
             creationDateString = LocalDate.now().toString();
-            Utils.print(outputWriter, "Expected creation-date attribute in vehicles collection wasn't found, using current date: " + creationDateString + "\n");
+            Utils.print(outputWriter, "Expected '" + VehiclesXmlTag.CreationDateAttr + "' attribute in vehicles collection wasn't found, using current date: " + creationDateString + "\n");
         }
         LocalDate creationDate = null;
         try {

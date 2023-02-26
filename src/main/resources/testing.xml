@@ -1,16 +1,30 @@
 <vehicles creation-date="1983-11-11">
-    <vehicle id="5990a582-56b8-447a-8c2a-51ccffeb420e" creation-date="2023-02-25">
-        <name>testVehicle</name>
-        <coordinates x="222" y="-1112"/>
-        <engine-power>1.23</engine-power>
-        <vehicle-type>BOAT</vehicle-type>
-        <fuel-type>Gasoline</fuel-type>
-    </vehicle>
-    <vehicle id="ca424d74-82c2-4d6b-8df6-167b60032590" creation-date="2023-02-26">
-        <name>other vehicle</name>
-        <coordinates x="11111" y="-13320"/>
-        <engine-power>23.1</engine-power>
-        <vehicle-type>CHOPPER</vehicle-type>
-        <fuel-type>2</fuel-type>
-    </vehicle>
+  <vehicle id="5990a582-56b8-447a-8c2a-51ccffeb420e" creation-date="2023-02-25">
+    <name>testVehicle</name>
+    <coordinates x="222" y="-1112" />
+    <engine-power>1.23</engine-power>
+    <vehicle-type>BOAT</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="ca424d74-82c2-4d6b-8df6-167b60032590" creation-date="2023-02-26">
+    <name>other vehicle</name>
+    <coordinates x="11111" y="-13320" />
+    <engine-power>23.1</engine-power>
+    <vehicle-type>CHOPPER</vehicle-type>
+    <fuel-type>KEROSENE</fuel-type>
+  </vehicle>
+  <vehicle id="d76c75e3-7aa5-4bd2-ac75-e37aa53bd2ab" creation-date="2023-02-26">
+    <name>asd</name>
+    <coordinates x="123" y="-1111111111" />
+    <engine-power>1.1111</engine-power>
+    <vehicle-type>BOAT</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="82385f34-85bd-4007-b85f-3485bdf00781" creation-date="2023-02-26">
+    <name>asd</name>
+    <coordinates x="123" y="-1111" />
+    <engine-power>2.2</engine-power>
+    <vehicle-type>BOAT</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
 </vehicles>

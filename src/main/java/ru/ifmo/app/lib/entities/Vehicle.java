@@ -2,12 +2,14 @@ package ru.ifmo.app.lib.entities;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.jdom2.Element;
 
 import ru.ifmo.app.lib.Utils;
+import ru.ifmo.app.lib.VehiclesXmlTag;
 import ru.ifmo.app.lib.exceptions.ParsingException;
 
 public record Vehicle(
@@ -20,10 +22,25 @@ public record Vehicle(
     FuelType fuelType
 ) implements Comparable<Vehicle> {
     
+    public Element toXmlElement() {
+        Element vehicleElement = new Element(VehiclesXmlTag.Vehicle.toString())
+            .setAttribute(VehiclesXmlTag.IdAttr.toString(), this.id.toString())
+            .setAttribute(VehiclesXmlTag.CreationDateAttr.toString(), this.creationDate.toString())
+            .addContent(List.of(
+                new Element(VehiclesXmlTag.Name.toString()).setText(this.name()),
+                this.coordinates().toXmlElement(),
+                new Element(VehiclesXmlTag.EnginePower.toString()).setText(this.enginePower().toString()),
+                new Element(VehiclesXmlTag.VehicleType.toString()).setText(this.type().toString()),
+                new Element(VehiclesXmlTag.FuelType.toString()).setText(this.fuelType().toString())
+            ));
+
+        return vehicleElement;
+    }
+    
     public static Vehicle fromXmlElement(Element vehicleElement) throws ParsingException {
-        String idString = vehicleElement.getAttributeValue("id");
+        String idString = vehicleElement.getAttributeValue(VehiclesXmlTag.IdAttr.toString());
         if (idString == null) {
-            throw new ParsingException("'id' attribute: Expected a valid uuid, but got nothing");
+            throw new ParsingException("'" + VehiclesXmlTag.IdAttr + "' attribute: Expected a valid uuid, but got nothing");
         }
 
 
@@ -31,98 +48,98 @@ public record Vehicle(
         try {
             id = UUID.fromString(idString);
         } catch (IllegalArgumentException err) {
-            throw new ParsingException("'id' attribute: Expected a valid uuid, but got '" + idString + "'");
+            throw new ParsingException("'" + VehiclesXmlTag.IdAttr + "' attribute: Expected a valid uuid, but got '" + idString + "'");
         }
         
 
-        var nameElement = vehicleElement.getChild("name");
+        var nameElement = vehicleElement.getChild(VehiclesXmlTag.Name.toString());
         String name = nameElement == null ? null : nameElement.getText();
         var nameValidationError = Vehicle.validate.name(name);
         if (nameValidationError.isPresent()) {
-            throw Utils.xmlElementParsingException("name", idString, nameValidationError.get());
+            throw Utils.xmlElementParsingException(VehiclesXmlTag.Name, idString, nameValidationError.get());
         }
 
 
-        Element coordinatesElement = vehicleElement.getChild("coordinates");
+        Element coordinatesElement = vehicleElement.getChild(VehiclesXmlTag.Coordinates.toString());
         Coordinates coordinates = Coordinates.fromXmlElement(coordinatesElement, idString);
         var coordinatesValidationError = Vehicle.validate.coordinates(coordinates);
         if (coordinatesValidationError.isPresent()) {
-            throw Utils.xmlElementParsingException("coordinates", idString, coordinatesValidationError.get());
+            throw Utils.xmlElementParsingException(VehiclesXmlTag.Coordinates, idString, coordinatesValidationError.get());
         }
 
 
-        String creationDateString = vehicleElement.getAttributeValue("creation-date");
+        String creationDateString = vehicleElement.getAttributeValue(VehiclesXmlTag.CreationDateAttr.toString());
         LocalDate creationDate = null;
         try {
             if (creationDateString == null) {
-                throw Utils.xmlAttributeParsingException("creation-date", idString, "date expected, but got nothing");
+                throw Utils.xmlAttributeParsingException(VehiclesXmlTag.CreationDateAttr, idString, "date expected, but got nothing");
             }
             creationDate = LocalDate.parse(creationDateString);
         } catch (DateTimeParseException err) {
-            throw Utils.xmlAttributeParsingException("creation-date", idString, "date expected, but got '" + creationDateString + "'");
+            throw Utils.xmlAttributeParsingException(VehiclesXmlTag.CreationDateAttr, idString, "date expected, but got '" + creationDateString + "'");
         }
 
         
-        Element enginePowerElement = vehicleElement.getChild("engine-power");
+        Element enginePowerElement = vehicleElement.getChild(VehiclesXmlTag.EnginePower.toString());
         String enginePowerString = enginePowerElement == null ? null : enginePowerElement.getText();
         Float enginePower = null;
         try {
             if (enginePowerString == null) {
                 var validationError = Vehicle.validate.enginePower(null);
                 if (validationError.isPresent()) {
-                    throw Utils.xmlElementParsingException("engine-power", idString, validationError.get());
+                    throw Utils.xmlElementParsingException(VehiclesXmlTag.EnginePower, idString, validationError.get());
                 }
             } else {
                 enginePower = Float.parseFloat(enginePowerString);
                 var enginePowerValidationError = Vehicle.validate.enginePower(enginePower);
                 if (enginePowerValidationError.isPresent()) {
-                    throw Utils.xmlElementParsingException("engine-power", idString, enginePowerValidationError.get());
+                    throw Utils.xmlElementParsingException(VehiclesXmlTag.EnginePower, idString, enginePowerValidationError.get());
                 }
             }
         } catch (IllegalArgumentException err) {
-            throw Utils.xmlElementParsingException("engine-power", idString, "number with floating point expected, but got '" + enginePowerString + "'");
+            throw Utils.xmlElementParsingException(VehiclesXmlTag.EnginePower, idString, "number with floating point expected, but got '" + enginePowerString + "'");
         }
 
 
-        Element vehicleTypeElement = vehicleElement.getChild("vehicle-type");
+        Element vehicleTypeElement = vehicleElement.getChild(VehiclesXmlTag.VehicleType.toString());
         String vehicleTypeString = vehicleTypeElement == null ? null : vehicleTypeElement.getText();
         VehicleType vehicleType = null;
         try {
             if (vehicleTypeString == null) {
                 var validationError = Vehicle.validate.vehicleType(null);
                 if (validationError.isPresent()) {
-                    throw Utils.xmlElementParsingException("vehicle-type", idString, validationError.get());
+                    throw Utils.xmlElementParsingException(VehiclesXmlTag.VehicleType, idString, validationError.get());
                 }
             } else {
                 vehicleType = VehicleType.parse(vehicleTypeString);
                 var validationError = Vehicle.validate.vehicleType(vehicleType);
                 if (validationError.isPresent()) {
-                    throw Utils.xmlElementParsingException("vehicle-type", idString, validationError.get());
+                    throw Utils.xmlElementParsingException(VehiclesXmlTag.VehicleType, idString, validationError.get());
                 }
             }
         } catch (ParsingException err) {
-            throw Utils.xmlElementParsingException("vehicle-type", idString, err);
+            throw Utils.xmlElementParsingException(VehiclesXmlTag.VehicleType, idString, err);
         }
 
 
-        Element fuelTypeElement = vehicleElement.getChild("fuel-type");
+        Element fuelTypeElement = vehicleElement.getChild(VehiclesXmlTag.FuelType.toString());
         String fuelTypeString = fuelTypeElement == null ? null : fuelTypeElement.getText();
         FuelType fuelType = null;
         try {
             if (fuelTypeString == null) {
                 var validationError = Vehicle.validate.fuelType(null);
                 if (validationError.isPresent()) {
-                    throw Utils.xmlElementParsingException("fuel-type", idString, validationError.get());
+                    throw Utils.xmlElementParsingException(VehiclesXmlTag.FuelType, idString, validationError.get());
                 }
             } else {
                 fuelType = FuelType.parse(fuelTypeString);
                 var validationError = Vehicle.validate.fuelType(fuelType);
                 if (validationError.isPresent()) {
-                    throw Utils.xmlElementParsingException("fuel-type", idString, validationError.get());
+                    throw Utils.xmlElementParsingException(VehiclesXmlTag.FuelType, idString, validationError.get());
                 }
             }
         } catch (ParsingException err) {
-            throw Utils.xmlElementParsingException("fuel-type", idString, err);
+            throw Utils.xmlElementParsingException(VehiclesXmlTag.FuelType, idString, err);
         }
         
         return new Vehicle(
