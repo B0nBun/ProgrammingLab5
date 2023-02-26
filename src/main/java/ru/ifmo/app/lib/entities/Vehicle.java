@@ -35,12 +35,14 @@ public record Vehicle(
         }
         
 
-        String name =
-            Optional.ofNullable(vehicleElement.getChild("name"))
-                .orElseThrow(() -> Utils.xmlElementParsingException(
-                    "name", idString, "Expected a child name element, but got nothing"
-                ))
-                .getText();
+        // String name =
+        //     Optional.ofNullable(vehicleElement.getChild("name"))
+        //         .orElseThrow(() -> Utils.xmlElementParsingException(
+        //             "name", idString, "Expected a child name element, but got nothing"
+        //         ))
+        //         .getText();
+        var nameElement = vehicleElement.getChild("name");
+        String name = nameElement == null ? null : nameElement.getText();
         var nameValidationError = Vehicle.validate.name(name);
         if (nameValidationError.isPresent()) {
             throw Utils.xmlElementParsingException("name", idString, nameValidationError.get());

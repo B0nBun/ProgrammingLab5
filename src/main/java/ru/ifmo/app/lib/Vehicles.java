@@ -53,7 +53,8 @@ public class Vehicles {
         this(new ArrayList<>(), LocalDate.now());
     }
 
-    public static Vehicles loadFromXml(InputStream xmlInputStream) throws IOException, JDOMException, ParsingException {
+    // TODO: Также валидировать все распарсенные поля
+    public static Vehicles loadFromXml(InputStream xmlInputStream, Writer outputWriter) throws IOException, JDOMException {
         var sax = new SAXBuilder();
 
         // https://rules.sonarsource.com/java/RSPEC-2755
@@ -69,10 +70,13 @@ public class Vehicles {
         List<Element> vehicleElements = rootElement.getChildren();
         var vehicles = new ArrayList<Vehicle>();
 
-        // TODO: Сообщать о невалидных элементах и пропускать их
         for (var vehicleElement : vehicleElements) {
-            Vehicle vehicle = Vehicle.fromXmlElement(vehicleElement);
-            vehicles.add(vehicle);
+            try {
+                Vehicle vehicle = Vehicle.fromXmlElement(vehicleElement);
+                vehicles.add(vehicle);
+            } catch (ParsingException err) {
+                Utils.print(outputWriter, "Couldn't parse one of the elements: " + err + "\n");
+            }
         }
 
         return new Vehicles(vehicles, creationDate);
