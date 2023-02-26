@@ -65,7 +65,6 @@ public class Vehicles {
         
         Document doc = sax.build(xmlInputStream);
 
-        // TODO: Обработать creation-date атрибут
         Element rootElement = doc.getRootElement();
         String creationDateString = rootElement.getAttributeValue("creation-date");
         if (creationDateString == null) {

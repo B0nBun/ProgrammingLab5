@@ -12,12 +12,20 @@ public record Coordinates(
     Integer y
 ) {
     public static Coordinates fromXmlElement(Element coordinatesElement, String vehicleUUID) throws ParsingException {
+        if (coordinatesElement == null) {
+            return null;
+        }
+
         String xString = coordinatesElement.getAttributeValue("x");
         String yString = coordinatesElement.getAttributeValue("y");
         
         Long x = null;
         try {
             x = Long.parseLong(xString);
+            var xValidationError = Coordinates.validate.x(x);
+            if (xValidationError.isPresent()) {
+                throw Utils.xmlAttributeParsingException("coordinates.x", vehicleUUID, xValidationError.get());
+            }
         } catch (NumberFormatException err) {
             throw Utils.xmlElementParsingException("coordinates", vehicleUUID, "'x' attribute: Long integer required but got '" + xString + "'");
         }
@@ -25,6 +33,10 @@ public record Coordinates(
         Integer y = null;
         try {
             y = Integer.parseInt(yString);
+            var yValidationError = Coordinates.validate.y(y);
+            if (yValidationError.isPresent()) {
+                throw Utils.xmlAttributeParsingException("coordinates.y", vehicleUUID, yValidationError.get());
+            }
         } catch (NumberFormatException err) {
             throw Utils.xmlElementParsingException("coordinates", vehicleUUID, "'y' attribute: Integer required but got '" + yString + "'");
         }

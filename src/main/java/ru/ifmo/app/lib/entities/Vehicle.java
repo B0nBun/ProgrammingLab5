@@ -35,12 +35,6 @@ public record Vehicle(
         }
         
 
-        // String name =
-        //     Optional.ofNullable(vehicleElement.getChild("name"))
-        //         .orElseThrow(() -> Utils.xmlElementParsingException(
-        //             "name", idString, "Expected a child name element, but got nothing"
-        //         ))
-        //         .getText();
         var nameElement = vehicleElement.getChild("name");
         String name = nameElement == null ? null : nameElement.getText();
         var nameValidationError = Vehicle.validate.name(name);
@@ -51,54 +45,82 @@ public record Vehicle(
 
         Element coordinatesElement = vehicleElement.getChild("coordinates");
         Coordinates coordinates = Coordinates.fromXmlElement(coordinatesElement, idString);
+        var coordinatesValidationError = Vehicle.validate.coordinates(coordinates);
+        if (coordinatesValidationError.isPresent()) {
+            throw Utils.xmlElementParsingException("coordinates", idString, coordinatesValidationError.get());
+        }
 
 
         String creationDateString = vehicleElement.getAttributeValue("creation-date");
         LocalDate creationDate = null;
         try {
+            if (creationDateString == null) {
+                throw Utils.xmlAttributeParsingException("creation-date", idString, "date expected, but got nothing");
+            }
             creationDate = LocalDate.parse(creationDateString);
         } catch (DateTimeParseException err) {
             throw Utils.xmlAttributeParsingException("creation-date", idString, "date expected, but got '" + creationDateString + "'");
         }
 
-
-        String enginePowerString = 
-            Optional.ofNullable(vehicleElement.getChild("engine-power"))
-                .orElseThrow(() -> Utils.xmlElementParsingException(
-                    "engine-power", idString, "Expected a child engine-power element, but got nothing"
-                ))
-                .getText();
+        
+        Element enginePowerElement = vehicleElement.getChild("engine-power");
+        String enginePowerString = enginePowerElement == null ? null : enginePowerElement.getText();
         Float enginePower = null;
         try {
-            enginePower = Float.parseFloat(enginePowerString);
+            if (enginePowerString == null) {
+                var validationError = Vehicle.validate.enginePower(null);
+                if (validationError.isPresent()) {
+                    throw Utils.xmlElementParsingException("engine-power", idString, validationError.get());
+                }
+            } else {
+                enginePower = Float.parseFloat(enginePowerString);
+                var enginePowerValidationError = Vehicle.validate.enginePower(enginePower);
+                if (enginePowerValidationError.isPresent()) {
+                    throw Utils.xmlElementParsingException("engine-power", idString, enginePowerValidationError.get());
+                }
+            }
         } catch (IllegalArgumentException err) {
-            throw Utils.xmlAttributeParsingException("engine-power", idString, "number with floating point expected, but got '" + enginePowerString + "'");
+            throw Utils.xmlElementParsingException("engine-power", idString, "number with floating point expected, but got '" + enginePowerString + "'");
         }
 
 
-        String vehicleTypeString =
-            Optional.ofNullable(vehicleElement.getChild("vehicle-type"))
-                .orElseThrow(() -> Utils.xmlElementParsingException(
-                    "vehicle-type", idString, "Expected a child vehicle-type element, but got nothing"
-                ))
-                .getText();
+        Element vehicleTypeElement = vehicleElement.getChild("vehicle-type");
+        String vehicleTypeString = vehicleTypeElement == null ? null : vehicleTypeElement.getText();
         VehicleType vehicleType = null;
         try {
-            vehicleType = VehicleType.parse(vehicleTypeString);
+            if (vehicleTypeString == null) {
+                var validationError = Vehicle.validate.vehicleType(null);
+                if (validationError.isPresent()) {
+                    throw Utils.xmlElementParsingException("vehicle-type", idString, validationError.get());
+                }
+            } else {
+                vehicleType = VehicleType.parse(vehicleTypeString);
+                var validationError = Vehicle.validate.vehicleType(vehicleType);
+                if (validationError.isPresent()) {
+                    throw Utils.xmlElementParsingException("vehicle-type", idString, validationError.get());
+                }
+            }
         } catch (ParsingException err) {
             throw Utils.xmlElementParsingException("vehicle-type", idString, err);
         }
 
 
-        String fuelTypeString =
-            Optional.ofNullable(vehicleElement.getChild("fuel-type"))
-                .orElseThrow(() -> Utils.xmlElementParsingException(
-                    "fuel-type", idString, "Expected a child fuel-type element, but got nothing"
-                ))
-                .getText();
+        Element fuelTypeElement = vehicleElement.getChild("fuel-type");
+        String fuelTypeString = fuelTypeElement == null ? null : fuelTypeElement.getText();
         FuelType fuelType = null;
         try {
-            fuelType = FuelType.parse(fuelTypeString);
+            if (fuelTypeString == null) {
+                var validationError = Vehicle.validate.fuelType(null);
+                if (validationError.isPresent()) {
+                    throw Utils.xmlElementParsingException("fuel-type", idString, validationError.get());
+                }
+            } else {
+                fuelType = FuelType.parse(fuelTypeString);
+                var validationError = Vehicle.validate.fuelType(fuelType);
+                if (validationError.isPresent()) {
+                    throw Utils.xmlElementParsingException("fuel-type", idString, validationError.get());
+                }
+            }
         } catch (ParsingException err) {
             throw Utils.xmlElementParsingException("fuel-type", idString, err);
         }
@@ -112,97 +134,6 @@ public record Vehicle(
             vehicleType,
             fuelType
         );
-    }
-    
-    public static Vehicle fromXmlElementa(Element vehicleElement) throws ParsingException {
-        
-        /* Parsing id */
-        String idString = vehicleElement.getAttributeValue("id");
-        if (idString == null) {
-            throw new ParsingException("'id' attribute: Expected a valid uuid, but got nothing");
-        }
-
-        try {
-            UUID id = UUID.fromString(idString);    
-            
-            /* Parsing name */
-            String name =
-                Optional.ofNullable(vehicleElement.getChild("name"))
-                    .orElseThrow(() -> Utils.xmlElementParsingException(
-                        "name", idString, "Expected a child name element, but got nothing"
-                    ))
-                    .getText();
-            var nameValidationError = Vehicle.validate.name(name);
-            if (nameValidationError.isPresent()) {
-                throw Utils.xmlElementParsingException("name", idString, nameValidationError.get());
-            }
-
-            /* Parsing coordinates */
-            Element coordinatesElement = vehicleElement.getChild("coordinates");
-            Coordinates coordinates = Coordinates.fromXmlElement(coordinatesElement, idString);
-            
-            /* Parsing creation date */
-            String creationDateString = vehicleElement.getAttributeValue("creation-date");
-            try {
-                LocalDate creationDate = LocalDate.parse(creationDateString);
-
-                /* Parsing engine power */
-                String enginePowerString = 
-                    Optional.ofNullable(vehicleElement.getChild("engine-power"))
-                        .orElseThrow(() -> Utils.xmlElementParsingException(
-                            "engine-power", idString, "Expected a child engine-power element, but got nothing"
-                        ))
-                        .getText();
-                
-                try {
-                    Float enginePower = Float.parseFloat(enginePowerString);
-
-                    /* Parsing vehicle type */
-                    String vehicleTypeString =
-                        Optional.ofNullable(vehicleElement.getChild("vehicle-type"))
-                            .orElseThrow(() -> Utils.xmlElementParsingException(
-                                "vehicle-type", idString, "Expected a child vehicle-type element, but got nothing"
-                            ))
-                            .getText();
-                    
-                    try {
-                        VehicleType vehicleType = VehicleType.parse(vehicleTypeString);
-
-                        /* Parsing fuel type */
-                        String fuelTypeString =
-                            Optional.ofNullable(vehicleElement.getChild("fuel-type"))
-                                .orElseThrow(() -> Utils.xmlElementParsingException(
-                                    "fuel-type", idString, "Expected a child fuel-type element, but got nothing"
-                                ))
-                                .getText();
-                        
-                        try {
-                            FuelType fuelType = FuelType.parse(fuelTypeString);
-    
-                            return new Vehicle(
-                                id,
-                                name,
-                                coordinates,
-                                creationDate,
-                                enginePower,
-                                vehicleType,
-                                fuelType
-                            );
-                        } catch (ParsingException err) {
-                            throw Utils.xmlElementParsingException("fuel-type", idString, err);
-                        }
-                    } catch (ParsingException err) {
-                        throw Utils.xmlElementParsingException("vehicle-type", idString, err);
-                    }
-                } catch (IllegalArgumentException err) {
-                    throw Utils.xmlAttributeParsingException("engine-power", idString, "number with floating point expected, but got '" + enginePowerString + "'");
-                }
-            } catch (DateTimeParseException err) {
-                throw Utils.xmlAttributeParsingException("creation-date", idString, "date expected, but got '" + creationDateString + "'");
-            }
-        } catch (IllegalArgumentException err) {
-            throw new ParsingException("'id' attribute: Expected a valid uuid, but got '" + idString + "'");
-        }
     }
 
     @Override
@@ -245,8 +176,9 @@ public record Vehicle(
             return Optional.empty();
         }
         public static Optional<String> fuelType(FuelType type) {
-            if (type == null)
-                return Optional.of("'fuelType' can't be empty");
+            return Optional.empty();
+        }
+        public static Optional<String> vehicleType(VehicleType type) {
             return Optional.empty();
         }
     }

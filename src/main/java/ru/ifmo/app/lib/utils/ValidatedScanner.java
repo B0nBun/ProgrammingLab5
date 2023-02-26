@@ -2,7 +2,6 @@ package ru.ifmo.app.lib.utils;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.Function;
 
@@ -10,6 +9,7 @@ import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.Utils.NumberParser;
 import ru.ifmo.app.lib.Utils.Validator;
 import ru.ifmo.app.lib.entities.FuelType;
+import ru.ifmo.app.lib.entities.Vehicle;
 import ru.ifmo.app.lib.entities.VehicleType;
 import ru.ifmo.app.lib.exceptions.ParsingException;
 
@@ -37,7 +37,7 @@ public record ValidatedScanner(
     public VehicleType vehicleType(String inputString) throws IOException {
         VehicleType type = Utils.scanUntilValid(
             VehicleType::parse,
-            __ -> Optional.empty(),
+            Vehicle.validate::vehicleType,
             scanner, writer, inputString,
             __ -> "Expected one of the following: " + VehicleType.showIndexedList(", ")
         );
@@ -47,7 +47,7 @@ public record ValidatedScanner(
     public FuelType fuelType(String inputString) throws IOException {
         FuelType type = Utils.scanUntilValid(
             FuelType::parse,
-            (__) -> Optional.empty(),
+            Vehicle.validate::fuelType,
             scanner, writer, inputString,
             __ -> "Expected one of the following: " + FuelType.showIndexedList(", ")
         );
