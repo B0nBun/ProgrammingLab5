@@ -3,17 +3,17 @@ package ru.ifmo.app;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.net.URL;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+import org.jdom2.JDOMException;
 
 import ru.ifmo.app.lib.CommandExecutor;
 import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.Vehicles;
-import ru.ifmo.app.lib.entities.Coordinates;
-import ru.ifmo.app.lib.entities.FuelType;
-import ru.ifmo.app.lib.entities.VehicleType;
 import ru.ifmo.app.lib.exceptions.ExitProgramException;
+import ru.ifmo.app.lib.exceptions.ParsingException;
 
 
 // ВАРИАНТ: 863200
@@ -26,24 +26,27 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 // TODO: Логирование
 // TODO: Выводить другие сообщения/логи если команды исполняются скриптом, а не пользователем
 
-// TODO: Попробовать внедрить класс Try для избежания огромных пиромид вложенности из try-catch
-
 public class App {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in); 
 		Writer outputWriter = new PrintWriter(System.out);
-		var vehicles = new Vehicles();
-		vehicles.add(new Vehicles.VehicleCreationSchema(
-			"testName",
-			new Coordinates(123l, 321),
-			1.5f,
-			VehicleType.BICYCLE,
-			FuelType.ALCOHOL
-		));
+		URL testingFile = Test.class.getClassLoader().getResource("testing.xml");
+		try (var vehiclesStream = testingFile.openStream()) {
 
-		var executor = new CommandExecutor(scanner, outputWriter, vehicles);
-
-		try {
+			Vehicles vehicles = null;
+			try {
+				vehicles = Vehicles.loadFromXml(vehiclesStream);
+			} catch (JDOMException err) {
+				Utils.print(outputWriter, "Couldn't parse xml file 'testing.xml': " + err.getMessage());
+				return;
+			} catch (ParsingException err) {
+				// TODO: Continue parsing despite invalid data
+				Utils.print(outputWriter, "Parsing exception occured: " + err.getMessage());
+				return;
+			}
+	
+			var executor = new CommandExecutor(scanner, outputWriter, vehicles);
+	
 			try {
 				while (true) {
 					Utils.print(outputWriter, "> ");
@@ -60,7 +63,11 @@ public class App {
 				Utils.print(outputWriter, "Illegal state exception: " + err.getMessage());
 			}
 		} catch (IOException err) {
-			System.out.println("Couldn't write to the output. IOException occured: " + err.getMessage());
-		} 
+			try {
+				Utils.print(outputWriter, "IOException occured: " + err);
+			} catch (IOException exc) {
+				System.out.println("IOException occured: " + exc);
+			}
+		}
 	}
 }
