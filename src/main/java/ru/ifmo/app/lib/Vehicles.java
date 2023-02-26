@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Collection;
@@ -65,8 +66,20 @@ public class Vehicles {
         Document doc = sax.build(xmlInputStream);
 
         // TODO: Обработать creation-date атрибут
-        LocalDate creationDate = LocalDate.now();
         Element rootElement = doc.getRootElement();
+        String creationDateString = rootElement.getAttributeValue("creation-date");
+        if (creationDateString == null) {
+            creationDateString = LocalDate.now().toString();
+            Utils.print(outputWriter, "Expected creation-date attribute in vehicles collection wasn't found, using current date: " + creationDateString + "\n");
+        }
+        LocalDate creationDate = null;
+        try {
+            creationDate = LocalDate.parse(creationDateString);
+        } catch (DateTimeParseException err) {
+            Utils.print(outputWriter, "Couldn't parse the creation date: " + err.getMessage() + "\n");
+            creationDate = LocalDate.now();
+            Utils.print(outputWriter, "Continuing with the current date: " + creationDate + "\n");
+        }
         List<Element> vehicleElements = rootElement.getChildren();
         var vehicles = new ArrayList<Vehicle>();
 
