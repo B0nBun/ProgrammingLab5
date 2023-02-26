@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.AbstractMap.SimpleEntry;
 
-import ru.ifmo.app.lib.Utils.CommandRegistery;
 import ru.ifmo.app.lib.commands.AddCommand;
 import ru.ifmo.app.lib.commands.AddIfMaxCommand;
 import ru.ifmo.app.lib.commands.ClearCommand;
@@ -27,6 +26,7 @@ import ru.ifmo.app.lib.exceptions.CommandParseException;
 import ru.ifmo.app.lib.exceptions.ExitProgramException;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
+import ru.ifmo.app.lib.utils.CommandRegistery;
 
 public class CommandExecutor {
     private Scanner scanner;

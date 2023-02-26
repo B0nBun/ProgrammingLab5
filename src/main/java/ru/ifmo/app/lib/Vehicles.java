@@ -23,6 +23,8 @@ import ru.ifmo.app.lib.entities.FuelType;
 import ru.ifmo.app.lib.entities.Vehicle;
 import ru.ifmo.app.lib.entities.VehicleType;
 import ru.ifmo.app.lib.exceptions.ParsingException;
+import ru.ifmo.app.lib.utils.Peekable;
+import ru.ifmo.app.lib.utils.ValidatedScanner;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -35,13 +37,13 @@ import javax.xml.XMLConstants;
 public class Vehicles {
 
     private LocalDate creationDate;
-    private Utils.Peekable<UUID> idGenerator;
+    private Peekable<UUID> idGenerator;
     private Deque<Vehicle> collection;
 
     public Vehicles(Collection<Vehicle> vehiclesIter, LocalDate creationDate) {
         this.creationDate = creationDate;
         var uuidGenerator = Generators.randomBasedGenerator();
-        this.idGenerator = new Utils.Peekable<>(
+        this.idGenerator = new Peekable<>(
             Stream.iterate(uuidGenerator.generate(), __ -> uuidGenerator.generate()).iterator()
         );
         this.collection = new ArrayDeque<>(vehiclesIter);
@@ -156,7 +158,7 @@ public class Vehicles {
             Writer writer,
             VehicleCreationSchema example
         ) throws IOException {
-            var vscanner = new Utils.ValidatedScanner(scanner, writer);
+            var vscanner = new ValidatedScanner(scanner, writer);
 
             BiFunction<String, Object, String> withExample = (str1, exampleAttribute) -> {
                 if (example == null) {
