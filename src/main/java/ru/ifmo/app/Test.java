@@ -1,9 +1,10 @@
 package ru.ifmo.app;
 
 import java.io.IOException;
-import java.time.LocalDate;
 
 import org.jdom2.JDOMException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ru.ifmo.app.lib.exceptions.ParsingException;
 
@@ -14,7 +15,7 @@ import ru.ifmo.app.lib.exceptions.ParsingException;
 
 public class Test {    
     public static void main(String[] args) throws IOException, JDOMException, ParsingException {
-        LocalDate a = LocalDate.parse(null);
-        System.out.println(a);
+        Logger logger = LoggerFactory.getLogger(Test.class);
+        logger.info("This is a test message from logger: {}", 42);
     }
 }
