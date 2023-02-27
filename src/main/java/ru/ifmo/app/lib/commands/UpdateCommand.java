@@ -1,19 +1,18 @@
 package ru.ifmo.app.lib.commands;
 
-import java.io.IOException;
 import java.util.UUID;
 import java.util.function.BiPredicate;
 
+import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
-import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.Vehicles.VehicleCreationSchema;
 import ru.ifmo.app.lib.entities.Vehicle;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 
 public class UpdateCommand implements Command {
     @Override
-    public void execute(CommandContext context) throws IOException, InvalidNumberOfArgumentsException {
+    public void execute(CommandContext context) throws InvalidNumberOfArgumentsException {
         if (context.arguments().length < 1)
             throw new InvalidNumberOfArgumentsException(1, context.arguments().length);
         
@@ -29,10 +28,10 @@ public class UpdateCommand implements Command {
             .orElseGet(() -> null);
         
         if (found == null) {
-            Utils.print(context.writer(), "Vehicle with id starting with '" + vehicleUUID + "' not found\n");
+            App.logger.warn("Vehicle with id starting with '{}' not found", vehicleUUID);
             return;
         }
-        Utils.print(context.writer(), "Updating vehicle with id=" + found.id() + "\n");
+        App.logger.info("Updating vehicle with id='{}'", found.id());
 
         var updatedSchema = VehicleCreationSchema.createFromScanner(context.scanner(), context.writer(), new VehicleCreationSchema(found));
 

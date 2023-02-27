@@ -1,7 +1,5 @@
 package ru.ifmo.app;
 
-import java.io.IOException;
-
 import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +12,7 @@ import ru.ifmo.app.lib.exceptions.ParsingException;
 
 
 public class Test {    
-    public static void main(String[] args) throws IOException, JDOMException, ParsingException {
+    public static void main(String[] args) throws JDOMException, ParsingException {
         Logger logger = LoggerFactory.getLogger("ru.ifmo.app.logger");
         logger.trace("trace message");
         logger.debug("debug message");

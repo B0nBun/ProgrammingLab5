@@ -3,10 +3,10 @@ package ru.ifmo.app.lib;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.io.File;
-import java.io.IOException;
 import java.io.Writer;
 import java.util.AbstractMap.SimpleEntry;
 
+import ru.ifmo.app.App;
 import ru.ifmo.app.lib.commands.AddCommand;
 import ru.ifmo.app.lib.commands.AddIfMaxCommand;
 import ru.ifmo.app.lib.commands.ClearCommand;
@@ -78,7 +78,7 @@ public class CommandExecutor {
         return new SimpleEntry<>(command, arguments);
     }
 
-    public void executeCommandString(String commandString) throws IOException, ExitProgramException {
+    public void executeCommandString(String commandString) throws ExitProgramException {
         if (commandString.trim().length() == 0) return;
         try {
             var pair = CommandExecutor.parseCommandString(commandString);
@@ -87,7 +87,7 @@ public class CommandExecutor {
     
             Command command = this.commandRegistery.get(commandname);
             if (command == null) {
-                Utils.print(writer, "Command '" + commandString + "' not found, input 'help' to see a list of all commands\n");
+                App.logger.warn("Command '{}' not found, input 'help' to see a list of all commands", commandString);
                 return;
             }
     
@@ -101,10 +101,10 @@ public class CommandExecutor {
                     this.commandRegistery
                 ));
             } catch (InvalidNumberOfArgumentsException | InvalidArgumentException err) {
-                Utils.print(writer, err.getMessage() + "\n");
+                App.logger.error(err.getMessage());
             }
         } catch (CommandParseException err) {
-            Utils.print(writer, "Couldn't parse the command: \"" + commandString + "\"\n");
+            App.logger.error("Couldn't parse the command: '{}'", commandString);
         }
     }
 }

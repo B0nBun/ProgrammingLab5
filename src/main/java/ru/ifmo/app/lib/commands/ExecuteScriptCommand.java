@@ -2,7 +2,6 @@ package ru.ifmo.app.lib.commands;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Scanner;
 
 import ru.ifmo.app.lib.Command;
@@ -15,7 +14,7 @@ import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 public class ExecuteScriptCommand implements Command{
 
     @Override
-    public void execute(CommandContext context) throws InvalidArgumentException, InvalidNumberOfArgumentsException, IOException, ExitProgramException {
+    public void execute(CommandContext context) throws InvalidArgumentException, InvalidNumberOfArgumentsException, ExitProgramException {
         if (context.arguments().length < 1)
             throw new InvalidNumberOfArgumentsException(1, context.arguments().length);
 
