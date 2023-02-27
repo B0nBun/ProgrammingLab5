@@ -19,10 +19,10 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 
 // ВАРИАНТ: 863200
 
-// TODO: Выводить другие сообщения/логи если команды исполняются скриптом, а не пользователем
 // TODO: Убрать захардкоженные строки и перенсти все в файлы конфигурации
+// TODO: Выводить другие сообщения/логи если команды исполняются скриптом, а не пользователем
 // TODO: javadoc
-// TODO: Заняться декомпозицией методов
+// TODO: Заняться декомпозицией методов (параллельно посмотреть не стоит ли поставить final там, где это возможно)
 // TODO: Занятся форматированием кода
 
 public class App {
@@ -30,7 +30,6 @@ public class App {
 	public static Logger logger = LoggerFactory.getLogger("ru.ifmo.app.logger");
 	
 	public static void main(String[] args) {
-
 		File vehiclesXmlFile = null;
 		if (args.length > 0) {
 			vehiclesXmlFile = new File(args[0]);
