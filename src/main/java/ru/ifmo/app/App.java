@@ -20,6 +20,10 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 
 // TODO: Логирование
 // TODO: Выводить другие сообщения/логи если команды исполняются скриптом, а не пользователем
+// TODO: Убрать захардкоженные строки и перенсти все в файлы конфигурации
+// TODO: javadoc
+// TODO: Заняться декомпозицией методов
+// TODO: Занятся форматированием кода
 
 public class App {
 	public static void main(String[] args) {
