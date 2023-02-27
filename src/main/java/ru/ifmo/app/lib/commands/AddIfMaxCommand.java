@@ -4,6 +4,7 @@ import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.Vehicles.VehicleCreationSchema;
 import ru.ifmo.app.lib.entities.Vehicle;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class AddIfMaxCommand implements Command {
     @Override
@@ -19,6 +20,6 @@ public class AddIfMaxCommand implements Command {
 
     @Override
     public String helpMessage() {
-        return "Add a new element to the collection if it's greater than the current max element";
+        return Messages.get("Help.Command.AddIfMax");
     }
 }

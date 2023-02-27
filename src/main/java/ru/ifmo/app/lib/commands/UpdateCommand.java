@@ -9,6 +9,7 @@ import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.Vehicles.VehicleCreationSchema;
 import ru.ifmo.app.lib.entities.Vehicle;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class UpdateCommand implements Command {
     @Override
@@ -45,11 +46,13 @@ public class UpdateCommand implements Command {
 
     @Override
     public String[] helpArguments() {
-        return new String[] {"id"};
+        return new String[] {
+            Messages.get("Help.Command.Arg.Id")
+        };
     }
 
     @Override
     public String helpMessage() {
-        return "Update element with specified 'id'";
+        return Messages.get("Help.Command.Update");
     }
 }

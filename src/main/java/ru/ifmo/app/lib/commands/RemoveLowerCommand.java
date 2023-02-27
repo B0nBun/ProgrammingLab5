@@ -4,6 +4,7 @@ import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.Vehicles.VehicleCreationSchema;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class RemoveLowerCommand implements Command {
     @Override
@@ -21,6 +22,6 @@ public class RemoveLowerCommand implements Command {
 
     @Override
     public String helpMessage() {
-        return "Remove from the collection all of the elements, which are lower than a specified one";
+        return Messages.get("Help.Command.RemoveLowerCommand");
     }
 }

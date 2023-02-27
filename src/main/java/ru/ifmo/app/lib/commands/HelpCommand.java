@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class HelpCommand implements Command {
     @Override
@@ -25,6 +26,6 @@ public class HelpCommand implements Command {
 
     @Override
     public String helpMessage() {
-        return "Prints out a reference for all of the available commands";
+        return Messages.get("Help.Command.Help");
     }
 }

@@ -4,6 +4,7 @@ import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class RemoveByIdCommand implements Command {
     @Override
@@ -28,11 +29,13 @@ public class RemoveByIdCommand implements Command {
 
     @Override
     public String[] helpArguments() {
-        return new String[] {"id"};
+        return new String[] {
+            Messages.get("Help.Command.Arg.Id")
+        };
     }
 
     @Override
     public String helpMessage() {
-        return "Remove element with specified 'id'";
+        return Messages.get("Help.Command.RemoveById");
     }
 }

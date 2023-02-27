@@ -4,6 +4,7 @@ package ru.ifmo.app.lib.commands;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.exceptions.ExitProgramException;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class ExitCommand implements Command {
     @Override
@@ -13,6 +14,6 @@ public class ExitCommand implements Command {
 
     @Override
     public String helpMessage() {
-        return "Exits the program";
+        return Messages.get("Help.Command.Exit");
     }
 }

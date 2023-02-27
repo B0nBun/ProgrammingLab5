@@ -4,6 +4,7 @@ import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.entities.Vehicle;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class HeadCommand implements Command {
     @Override
@@ -18,6 +19,6 @@ public class HeadCommand implements Command {
 
     @Override
     public String helpMessage() {
-        return "Prints out the first element in the collection";
+        return Messages.get("Help.Command.Head");
     }
 }

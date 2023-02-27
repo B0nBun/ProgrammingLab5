@@ -13,6 +13,7 @@ import org.jdom2.output.XMLOutputter;
 import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class SaveCommand implements Command {
     private File askForFilepath(Writer writer, Scanner scanner) {
@@ -57,6 +58,6 @@ public class SaveCommand implements Command {
     
     @Override
     public String helpMessage() {
-        return "Saves a collection to specified file";
+        return Messages.get("Help.Command.Save");
     }
 }

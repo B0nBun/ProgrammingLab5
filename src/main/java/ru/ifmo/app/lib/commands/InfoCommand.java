@@ -3,6 +3,7 @@ package ru.ifmo.app.lib.commands;
 import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class InfoCommand implements Command {
     @Override
@@ -14,6 +15,6 @@ public class InfoCommand implements Command {
 
     @Override
     public String helpMessage() {
-        return "Print out the info about current collection";
+        return Messages.get("Help.Command.Info");
     }
 }

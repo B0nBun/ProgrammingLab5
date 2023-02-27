@@ -10,6 +10,7 @@ import ru.ifmo.app.lib.CommandExecutor;
 import ru.ifmo.app.lib.exceptions.ExitProgramException;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class ExecuteScriptCommand implements Command{
 
@@ -36,11 +37,13 @@ public class ExecuteScriptCommand implements Command{
 
     @Override
     public String[] helpArguments() {
-        return new String[] {"filepath"};
+        return new String[] {
+            Messages.get("Help.Command.Arg.Filepath")
+        };
     }
     
     @Override
     public String helpMessage() {
-        return "Executes commands from the provided file";
+        return Messages.get("Help.Command.ExecuteScript");
     }
 }
