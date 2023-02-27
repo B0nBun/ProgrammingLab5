@@ -1,11 +1,11 @@
 package ru.ifmo.app.lib;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.Function;
 
+import ru.ifmo.app.App;
 import ru.ifmo.app.lib.exceptions.ParsingException;
 
 
@@ -35,11 +35,6 @@ public class Utils {
         return new ParsingException("'" + tagName + "' attribute of vehicle '" + vehicleUUID + "':" + message);
     }
     
-    public static void print(Writer writer, String string) throws IOException {
-        writer.write(string);
-        writer.flush();
-    }
-    
     public static <T> T scanUntilValid(
         ParsingFunction<T> parsingFunction,
         Validator<T> validator,
@@ -47,16 +42,16 @@ public class Utils {
         Writer writer,
         String inputString,
         Function<ParsingException, String> parsingErrorMessage
-    ) throws IOException {
+    ) {
         while (true) {
-            print(writer, inputString);
+            App.logger.info(inputString);
             String line = scanner.nextLine().trim();
 
             if (line.length() == 0) {
                 var validationError = validator.validate(null);
                 if (validationError.isEmpty())
                     return null;
-                print(writer, validationError.get() + "\n");
+                App.logger.error(validationError.get());
                 continue;
             }
             
@@ -65,9 +60,9 @@ public class Utils {
                 var validationError = validator.validate(result);
                 if (validationError.isEmpty())
                     return result;
-                print(writer, validationError.get() + "\n");
+                App.logger.error(validationError.get());
             } catch (ParsingException exception) {
-                print(writer, "Couldn't parse: " + parsingErrorMessage.apply(exception) + "\n");
+                App.logger.error("Couldn't parse: {}", parsingErrorMessage.apply(exception));
             }
         }
     }
