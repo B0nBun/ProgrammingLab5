@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.AbstractMap.SimpleEntry;
 
+import ru.ifmo.app.App;
 import ru.ifmo.app.lib.commands.AddCommand;
 import ru.ifmo.app.lib.commands.AddIfMaxCommand;
 import ru.ifmo.app.lib.commands.ClearCommand;
@@ -87,7 +88,7 @@ public class CommandExecutor {
     
             Command command = this.commandRegistery.get(commandname);
             if (command == null) {
-                Utils.print(writer, "Command '" + commandString + "' not found, input 'help' to see a list of all commands\n");
+                App.logger.warn("Command '{}' not found, input 'help' to see a list of all commands", commandString);
                 return;
             }
     
@@ -101,10 +102,10 @@ public class CommandExecutor {
                     this.commandRegistery
                 ));
             } catch (InvalidNumberOfArgumentsException | InvalidArgumentException err) {
-                Utils.print(writer, err.getMessage() + "\n");
+                App.logger.error(err.getMessage());
             }
         } catch (CommandParseException err) {
-            Utils.print(writer, "Couldn't parse the command: \"" + commandString + "\"\n");
+            App.logger.error("Couldn't parse the command: '{}'", commandString);
         }
     }
 }
