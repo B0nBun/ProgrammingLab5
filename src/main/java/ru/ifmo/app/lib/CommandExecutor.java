@@ -3,7 +3,6 @@ package ru.ifmo.app.lib;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.io.File;
-import java.io.IOException;
 import java.io.Writer;
 import java.util.AbstractMap.SimpleEntry;
 
@@ -79,7 +78,7 @@ public class CommandExecutor {
         return new SimpleEntry<>(command, arguments);
     }
 
-    public void executeCommandString(String commandString) throws IOException, ExitProgramException {
+    public void executeCommandString(String commandString) throws ExitProgramException {
         if (commandString.trim().length() == 0) return;
         try {
             var pair = CommandExecutor.parseCommandString(commandString);

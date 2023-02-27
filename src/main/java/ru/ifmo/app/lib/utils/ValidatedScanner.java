@@ -1,6 +1,5 @@
 package ru.ifmo.app.lib.utils;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.Scanner;
 import java.util.function.Function;
@@ -17,11 +16,11 @@ public record ValidatedScanner(
     Scanner scanner,
     Writer writer
 ) {
-    public String string(String inputString, Validator<String> validator) throws IOException {
+    public String string(String inputString, Validator<String> validator) {
         return Utils.scanUntilValid(line -> line, validator, scanner, writer, inputString, Exception::getMessage);
     }
 
-    public <T> T number(NumberParser<T> numberParser, Validator<T> validator, String inputString, Function<ParsingException, String> parsingErrorMessage) throws IOException {
+    public <T> T number(NumberParser<T> numberParser, Validator<T> validator, String inputString, Function<ParsingException, String> parsingErrorMessage) {
         return Utils.scanUntilValid(
             string -> {
                 try {
@@ -34,7 +33,7 @@ public record ValidatedScanner(
         );
     }
 
-    public VehicleType vehicleType(String inputString) throws IOException {
+    public VehicleType vehicleType(String inputString) {
         VehicleType type = Utils.scanUntilValid(
             VehicleType::parse,
             Vehicle.validate::vehicleType,
@@ -44,7 +43,7 @@ public record ValidatedScanner(
         return type;
     }
 
-    public FuelType fuelType(String inputString) throws IOException {
+    public FuelType fuelType(String inputString) {
         FuelType type = Utils.scanUntilValid(
             FuelType::parse,
             Vehicle.validate::fuelType,

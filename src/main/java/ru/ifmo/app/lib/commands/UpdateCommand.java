@@ -1,6 +1,5 @@
 package ru.ifmo.app.lib.commands;
 
-import java.io.IOException;
 import java.util.UUID;
 import java.util.function.BiPredicate;
 
@@ -13,7 +12,7 @@ import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 
 public class UpdateCommand implements Command {
     @Override
-    public void execute(CommandContext context) throws IOException, InvalidNumberOfArgumentsException {
+    public void execute(CommandContext context) throws InvalidNumberOfArgumentsException {
         if (context.arguments().length < 1)
             throw new InvalidNumberOfArgumentsException(1, context.arguments().length);
         

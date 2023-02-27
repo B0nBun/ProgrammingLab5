@@ -185,7 +185,7 @@ public class Vehicles {
             Scanner scanner,
             Writer writer,
             VehicleCreationSchema example
-        ) throws IOException {
+        ) {
             var vscanner = new ValidatedScanner(scanner, writer);
 
             BiFunction<String, Object, String> withExample = (str1, exampleAttribute) -> {
@@ -236,7 +236,7 @@ public class Vehicles {
         public static VehicleCreationSchema createFromScanner(
             Scanner scanner,
             Writer writer
-        ) throws IOException {
+        ) {
             return VehicleCreationSchema.createFromScanner(scanner, writer, null);
         }
     }
