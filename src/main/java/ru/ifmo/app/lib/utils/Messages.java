@@ -4,13 +4,9 @@ import java.text.MessageFormat;
 import java.util.ResourceBundle;
 
 public class Messages {
-    private final ResourceBundle bundle;
+    private static final ResourceBundle bundle = ResourceBundle.getBundle("ApplicationMessages");
 
-    public Messages(ResourceBundle bundle) {
-        this.bundle = bundle;
-    }
-
-    public String get(String key, Object... args) {
-        return MessageFormat.format(this.bundle.getString(key), args);
+    public static String get(String key, Object... args) {
+        return MessageFormat.format(Messages.bundle.getString(key), args);
     }
 }
