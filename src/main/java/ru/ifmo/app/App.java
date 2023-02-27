@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import ru.ifmo.app.lib.CommandExecutor;
 import ru.ifmo.app.lib.Vehicles;
 import ru.ifmo.app.lib.exceptions.ExitProgramException;
+import ru.ifmo.app.lib.utils.Messages;
 
 
 // ВАРИАНТ: 863200
@@ -46,18 +47,18 @@ public class App {
 			) {		
 				if (vehiclesXmlFileStream != null) {
 					vehicles = Vehicles.loadFromXml(vehiclesXmlFileStream, outputWriter);
-					App.logger.info("Loaded {} elements from provided file", vehicles.stream().count());
+					App.logger.info(Messages.get("LoadedElementsFromFile", vehicles.stream().count()));
 				} else {
-					App.logger.warn("No xml files in arguments were provided");
+					App.logger.warn(Messages.get("Warn.NoXmlFileInArguments"));
 				}
 			} catch (JDOMException err) {
-				App.logger.error("Couldn't parse xml file '{}': {}", vehiclesXmlFile, err.getMessage());
+				App.logger.error(Messages.get("Error.XmlFileParsing", vehiclesXmlFile, err.getMessage()));
 			} catch (FileNotFoundException err) {
-				App.logger.error("File '{}' not found: {}", vehiclesXmlFile, err.getMessage());
+				App.logger.error(Messages.get("Error.FileNotFound", vehiclesXmlFile, err.getMessage()));
 			}
 
 			if (vehicles == null) {
-				App.logger.warn("Starting with empty collection...");
+				App.logger.warn(Messages.get("Warn.EmptyCollectionStart"));
 				vehicles = new Vehicles();
 			}
 		
@@ -74,12 +75,12 @@ public class App {
 					}
 				}
 			} catch (NoSuchElementException err) {
-				App.logger.error("Couldn't scan the next line: {}", err.getMessage());
+				App.logger.error(Messages.get("Error.NoSuchElement", err.getMessage()));
 			} catch (IllegalStateException err) {
-				App.logger.error("Illegal state exception: {}", err.getMessage());
+				App.logger.error(Messages.get("Error.IllegalState", err.getMessage()));
 			}
 		} catch (IOException err) {
-			App.logger.error("IOException occured: {}", err.getMessage());
+			App.logger.error(Messages.get("Error.IO", err.getMessage()));
 		}
 	}
 }
