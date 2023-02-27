@@ -15,7 +15,10 @@ import ru.ifmo.app.lib.exceptions.ParsingException;
 
 public class Test {    
     public static void main(String[] args) throws IOException, JDOMException, ParsingException {
-        Logger logger = LoggerFactory.getLogger(Test.class);
-        logger.info("This is a test message from logger: {}", 42);
+        Logger logger = LoggerFactory.getLogger("ru.ifmo.app.logger");
+        logger.debug("debug message");
+        logger.info("info message");
+        logger.warn("warn message");
+        logger.error("error message");
     }
 }
