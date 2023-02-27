@@ -9,16 +9,17 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import org.jdom2.JDOMException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ru.ifmo.app.lib.CommandExecutor;
-import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.Vehicles;
 import ru.ifmo.app.lib.exceptions.ExitProgramException;
 
 
 // ВАРИАНТ: 863200
 
-// TODO: Логирование
+// TODO: Логирование (После этого убрать метод Utils.print)
 // TODO: Выводить другие сообщения/логи если команды исполняются скриптом, а не пользователем
 // TODO: Убрать захардкоженные строки и перенсти все в файлы конфигурации
 // TODO: javadoc
@@ -26,6 +27,9 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 // TODO: Занятся форматированием кода
 
 public class App {
+
+	public static Logger logger = LoggerFactory.getLogger("ru.ifmo.app.logger");
+	
 	public static void main(String[] args) {
 
 		File vehiclesXmlFile = null;
@@ -44,18 +48,18 @@ public class App {
 			) {		
 				if (vehiclesXmlFileStream != null) {
 					vehicles = Vehicles.loadFromXml(vehiclesXmlFileStream, outputWriter);
-					Utils.print(outputWriter, "Loaded " + vehicles.stream().count() + " elements from provided file\n");
+					App.logger.info("Loaded {} elements from provided file", vehicles.stream().count());
 				} else {
-					Utils.print(outputWriter, "No xml files in arguments were provided\n");
+					App.logger.warn("No xml files in arguments were provided");
 				}
 			} catch (JDOMException err) {
-				Utils.print(outputWriter, "Couldn't parse xml file '" + vehiclesXmlFile + "': " + err.getMessage() + "\n");
+				App.logger.error("Couldn't parse xml file '{}': {}", vehiclesXmlFile, err.getMessage());
 			} catch (FileNotFoundException err) {
-				Utils.print(outputWriter, "File '" + vehiclesXmlFile + "' not found: " + err.getMessage() + "\n");
+				App.logger.error("File '{}' not found: {}", vehiclesXmlFile, err.getMessage());
 			}
 
 			if (vehicles == null) {
-				Utils.print(outputWriter, "Starting with empty collection...\n");
+				App.logger.warn("Starting with empty collection...");
 				vehicles = new Vehicles();
 			}
 		
@@ -63,7 +67,7 @@ public class App {
 	
 			try {
 				while (true) {
-					Utils.print(outputWriter, "> ");
+					System.out.print("> ");
 					var commandString = scanner.nextLine();
 					try {
 						executor.executeCommandString(commandString);
@@ -72,12 +76,12 @@ public class App {
 					}
 				}
 			} catch (NoSuchElementException err) {
-				Utils.print(outputWriter, "Couldn't scan the next line: " + err.getMessage() + "\n");
+				App.logger.error("Couldn't scan the next line: {}", err.getMessage());
 			} catch (IllegalStateException err) {
-				Utils.print(outputWriter, "Illegal state exception: " + err.getMessage() + "\n");
+				App.logger.error("Illegal state exception: {}", err.getMessage());
 			}
 		} catch (IOException err) {
-			System.out.println("IOException occured: " + err.getMessage() + "\n");
+			App.logger.error("IOException occured: {}", err.getMessage());
 		}
 	}
 }
