@@ -1,21 +1,19 @@
 package ru.ifmo.app.lib.commands;
 
-import java.io.IOException;
-
+import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
-import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.entities.Vehicle;
 
 public class HeadCommand implements Command {
     @Override
-    public void execute(CommandContext context) throws IOException {
+    public void execute(CommandContext context) {
         Vehicle head = context.vehicles().stream().sorted().findFirst().orElse(null);
         if (head == null) {
-            Utils.print(context.writer(), "The collection is empty, so there is no first element\n");
+            App.logger.info("The collection is empty, so there is no first element");
             return;
         }
-        Utils.print(context.writer(), head.toString() + "\n");
+        App.logger.info(head.toString());
     }
 
     @Override

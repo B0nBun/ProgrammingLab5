@@ -1,11 +1,10 @@
 package ru.ifmo.app.lib.commands;
 
-import java.io.IOException;
 import java.util.stream.Collectors;
 
+import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
-import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.entities.FuelType;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
@@ -13,7 +12,7 @@ import ru.ifmo.app.lib.exceptions.ParsingException;
 
 public class FilterGreaterThanFuelTypeCommand implements Command {
     @Override
-    public void execute(CommandContext context) throws InvalidArgumentException, InvalidNumberOfArgumentsException, IOException {
+    public void execute(CommandContext context) throws InvalidArgumentException, InvalidNumberOfArgumentsException {
         if (context.arguments().length < 1)
             throw new InvalidNumberOfArgumentsException(1, context.arguments().length);
         
@@ -27,10 +26,10 @@ public class FilterGreaterThanFuelTypeCommand implements Command {
                 .trim();
                 
             if (filtered.equals("")) {
-                Utils.print(context.writer(), "There are no elements with greater fuel type\n");
+                App.logger.info("There are no elements with greater fuel type");
                 return;
             }
-            Utils.print(context.writer(), filtered + "\n");
+            App.logger.info(filtered);
         } catch (ParsingException err) {
             throw new InvalidArgumentException("type", err.getMessage());
         }
