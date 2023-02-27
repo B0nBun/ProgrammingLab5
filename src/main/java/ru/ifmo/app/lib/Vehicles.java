@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 
 import com.fasterxml.uuid.Generators;
 
+import ru.ifmo.app.App;
 import ru.ifmo.app.lib.entities.Coordinates;
 import ru.ifmo.app.lib.entities.FuelType;
 import ru.ifmo.app.lib.entities.Vehicle;
@@ -80,15 +81,15 @@ public class Vehicles {
         String creationDateString = rootElement.getAttributeValue(VehiclesXmlTag.CreationDateAttr.toString());
         if (creationDateString == null) {
             creationDateString = LocalDate.now().toString();
-            Utils.print(outputWriter, "Expected '" + VehiclesXmlTag.CreationDateAttr + "' attribute in vehicles collection wasn't found, using current date: " + creationDateString + "\n");
+            App.logger.warn("Expected '{}' attribute in vehicles collection wasn't found, using current date: {}", VehiclesXmlTag.CreationDateAttr, creationDateString);
         }
         LocalDate creationDate = null;
         try {
             creationDate = LocalDate.parse(creationDateString);
         } catch (DateTimeParseException err) {
-            Utils.print(outputWriter, "Couldn't parse the creation date: " + err.getMessage() + "\n");
+            App.logger.error("Couldn't parse the creation date: {}", err.getMessage());
             creationDate = LocalDate.now();
-            Utils.print(outputWriter, "Continuing with the current date: " + creationDate + "\n");
+            App.logger.error("Continuing with the current date: {}", creationDate);
         }
         List<Element> vehicleElements = rootElement.getChildren();
         var vehicles = new ArrayList<Vehicle>();
@@ -98,7 +99,7 @@ public class Vehicles {
                 Vehicle vehicle = Vehicle.fromXmlElement(vehicleElement);
                 vehicles.add(vehicle);
             } catch (ParsingException err) {
-                Utils.print(outputWriter, "Couldn't parse one of the elements: " + err + "\n");
+                App.logger.error("Coulnd't parse one of the elements");
             }
         }
 
@@ -219,11 +220,11 @@ public class Vehicles {
                 withExample.apply("Engine Power", example == null ? null : example.enginePower()),
                 __ -> "Float required"
             );
-            Utils.print(writer, VehicleType.showIndexedList(", ") + "\n");
+            App.logger.info(VehicleType.showIndexedList(", "));
             VehicleType vehicleType = vscanner.vehicleType(
                 withExample.apply("Vehicle Type", example == null ? null : example.type())
             );
-            Utils.print(writer, FuelType.showIndexedList(", ") + "\n");
+            App.logger.info(FuelType.showIndexedList(", "));
             FuelType fuelType = vscanner.fuelType(
                 withExample.apply("Fuel Type", example == null ? null : example.fuelType())
             );
