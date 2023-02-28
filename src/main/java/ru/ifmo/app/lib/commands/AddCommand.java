@@ -8,7 +8,7 @@ import ru.ifmo.app.lib.utils.Messages;
 public class AddCommand implements Command {
     @Override
     public void execute(CommandContext context) {
-        VehicleCreationSchema creationSchema = VehicleCreationSchema.createFromScanner(context.scanner(), context.writer());
+        VehicleCreationSchema creationSchema = VehicleCreationSchema.createFromScanner(context.scanner());
         context.vehicles().add(creationSchema);
     }
 

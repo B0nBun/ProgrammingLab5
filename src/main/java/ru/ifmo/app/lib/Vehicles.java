@@ -2,7 +2,6 @@ package ru.ifmo.app.lib;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayDeque;
@@ -68,7 +67,7 @@ public class Vehicles {
         return rootVehicles;
     }
     
-    public static Vehicles loadFromXml(InputStream xmlInputStream, Writer outputWriter) throws IOException, JDOMException {
+    public static Vehicles loadFromXml(InputStream xmlInputStream) throws IOException, JDOMException {
         var sax = new SAXBuilder();
 
         // https://rules.sonarsource.com/java/RSPEC-2755
@@ -185,10 +184,9 @@ public class Vehicles {
         
         public static VehicleCreationSchema createFromScanner(
             Scanner scanner,
-            Writer writer,
             VehicleCreationSchema example
         ) {
-            var vscanner = new ValidatedScanner(scanner, writer);
+            var vscanner = new ValidatedScanner(scanner);
 
             BiFunction<String, Object, String> withExample = (str1, exampleAttribute) -> {
                 if (example == null) {
@@ -251,10 +249,9 @@ public class Vehicles {
         }
         
         public static VehicleCreationSchema createFromScanner(
-            Scanner scanner,
-            Writer writer
+            Scanner scanner
         ) {
-            return VehicleCreationSchema.createFromScanner(scanner, writer, null);
+            return VehicleCreationSchema.createFromScanner(scanner, null);
         }
     }
 }

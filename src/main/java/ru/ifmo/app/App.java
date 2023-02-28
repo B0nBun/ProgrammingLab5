@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -39,7 +38,6 @@ public class App {
 
 		try (
 			var scanner = new Scanner(System.in);
-			var outputWriter = new PrintWriter(System.out);
 		) {
 
 			Vehicles vehicles = null;
@@ -47,7 +45,7 @@ public class App {
 				var vehiclesXmlFileStream = vehiclesXmlFile != null ? new FileInputStream(vehiclesXmlFile) : null;
 			) {		
 				if (vehiclesXmlFileStream != null) {
-					vehicles = Vehicles.loadFromXml(vehiclesXmlFileStream, outputWriter);
+					vehicles = Vehicles.loadFromXml(vehiclesXmlFileStream);
 					App.logger.info(Messages.get("LoadedElementsFromFile", vehicles.stream().count()));
 				} else {
 					App.logger.warn(Messages.get("Warn.NoXmlFileInArguments"));
@@ -63,7 +61,7 @@ public class App {
 				vehicles = new Vehicles();
 			}
 		
-			var executor = new CommandExecutor(scanner, outputWriter, vehicles, vehiclesXmlFile);
+			var executor = new CommandExecutor(scanner, vehicles, vehiclesXmlFile);
 	
 			try {
 				while (true) {

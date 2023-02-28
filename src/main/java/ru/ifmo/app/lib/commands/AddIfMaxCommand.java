@@ -9,7 +9,7 @@ import ru.ifmo.app.lib.utils.Messages;
 public class AddIfMaxCommand implements Command {
     @Override
     public void execute(CommandContext context) {
-        var creationSchema = VehicleCreationSchema.createFromScanner(context.scanner(), context.writer());   
+        var creationSchema = VehicleCreationSchema.createFromScanner(context.scanner());   
         var vehicles = context.vehicles();
         var maxVehicle = vehicles.stream().max(Vehicle::compareTo).orElse(null);
         

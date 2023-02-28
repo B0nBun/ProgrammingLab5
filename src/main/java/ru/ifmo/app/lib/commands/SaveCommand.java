@@ -3,7 +3,6 @@ package ru.ifmo.app.lib.commands;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.Scanner;
 
 import org.jdom2.Element;
@@ -16,7 +15,7 @@ import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.utils.Messages;
 
 public class SaveCommand implements Command {
-    private File askForFilepath(Writer writer, Scanner scanner) {
+    private File askForFilepath(Scanner scanner) {
         App.logger.info(Messages.get("ProvideFileForSaving"));
         String filepath = scanner.nextLine();
         if (filepath == null || filepath.length() == 0) {
@@ -35,7 +34,7 @@ public class SaveCommand implements Command {
         String vehiclesSerialized = xmlOutputter.outputString(vehiclesRootElement);
 
         if (savingFile == null) {
-            savingFile = askForFilepath(context.writer(), context.scanner());
+            savingFile = askForFilepath(context.scanner());
         }
         while (true) {
             try (var printWriter = new PrintWriter(savingFile)) {
@@ -43,7 +42,7 @@ public class SaveCommand implements Command {
                 break;
             } catch (FileNotFoundException err) {
                 App.logger.error(Messages.get("Error.FileNotFound", savingFile, err.getMessage()));
-                savingFile = askForFilepath(context.writer(), context.scanner());
+                savingFile = askForFilepath(context.scanner());
                 if (savingFile == null) {
                     break;
                 }

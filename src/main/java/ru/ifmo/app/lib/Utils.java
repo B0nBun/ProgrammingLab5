@@ -1,6 +1,5 @@
 package ru.ifmo.app.lib;
 
-import java.io.Writer;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.Function;
@@ -16,7 +15,6 @@ public class Utils {
         ParsingFunction<T> parsingFunction,
         Validator<T> validator,
         Scanner scanner,
-        Writer writer,
         String inputString,
         Function<ParsingException, String> parsingErrorMessage
     ) {

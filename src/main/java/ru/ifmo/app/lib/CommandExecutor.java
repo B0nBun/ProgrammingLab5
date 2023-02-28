@@ -3,7 +3,6 @@ package ru.ifmo.app.lib;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.io.File;
-import java.io.Writer;
 import java.util.AbstractMap.SimpleEntry;
 
 import ru.ifmo.app.App;
@@ -32,19 +31,16 @@ import ru.ifmo.app.lib.utils.Messages;
 
 public class CommandExecutor {
     private Scanner scanner;
-    private Writer writer;
     private Vehicles vehicles;
     private File vehiclesFile;
     private CommandRegistery commandRegistery;
 
     public CommandExecutor(
         Scanner scanner,
-        Writer writer,
         Vehicles vehicles,
         File vehiclesFile
     ) {
         this.scanner = scanner;
-        this.writer = writer;
         this.vehicles = vehicles; 
         this.vehiclesFile = vehiclesFile;
 
@@ -98,7 +94,6 @@ public class CommandExecutor {
                     this.vehicles,
                     this.vehiclesFile,
                     this.scanner,
-                    this.writer,
                     this.commandRegistery
                 ));
             } catch (InvalidNumberOfArgumentsException | InvalidArgumentException err) {
