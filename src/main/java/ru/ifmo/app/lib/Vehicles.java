@@ -99,7 +99,7 @@ public class Vehicles {
                 Vehicle vehicle = Vehicle.fromXmlElement(vehicleElement);
                 vehicles.add(vehicle);
             } catch (ParsingException err) {
-                App.logger.error("Coulnd't parse one of the elements");
+                App.logger.error("Couldn't parse one of the elements: {}", err.getMessage());
             }
         }
 
