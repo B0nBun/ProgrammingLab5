@@ -6,9 +6,10 @@ import org.slf4j.LoggerFactory;
 
 import ru.ifmo.app.lib.exceptions.ParsingException;
 
-/*
- * Alternative entry point for manual testing and debugging
-*/
+
+/**
+ * Alternative entry point of the program made for manual testing
+ */
 public class Test {    
     public static void main(String[] args) throws JDOMException, ParsingException {
         Logger logger = LoggerFactory.getLogger("ru.ifmo.app.logger");
