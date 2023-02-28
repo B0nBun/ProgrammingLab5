@@ -7,6 +7,7 @@ import java.util.function.Function;
 
 import ru.ifmo.app.App;
 import ru.ifmo.app.lib.exceptions.ParsingException;
+import ru.ifmo.app.lib.utils.Messages;
 
 
 public class Utils {
@@ -38,7 +39,7 @@ public class Utils {
                     return result;
                 App.logger.error(validationError.get());
             } catch (ParsingException exception) {
-                App.logger.error("Couldn't parse: {}", parsingErrorMessage.apply(exception));
+                App.logger.error(Messages.get("Error.Parsing", parsingErrorMessage.apply(exception)));
             }
         }
     }
