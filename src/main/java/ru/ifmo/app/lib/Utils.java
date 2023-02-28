@@ -11,30 +11,6 @@ import ru.ifmo.app.lib.exceptions.ParsingException;
 
 public class Utils {
 
-    public static ParsingException xmlElementParsingException(
-        VehiclesXmlTag xmlTag,
-        String vehicleUUID,
-        String message
-    ) {
-        return new ParsingException("'" + xmlTag + "' element of vehicle '" + vehicleUUID + "':" + message);
-    }
-
-    public static ParsingException xmlElementParsingException(
-        VehiclesXmlTag tagName,
-        String vehicleUUID,
-        ParsingException exception
-    ) {
-        return xmlElementParsingException(tagName, vehicleUUID, exception.getMessage());
-    }
-
-    public static ParsingException xmlAttributeParsingException(
-        VehiclesXmlTag tagName,
-        String vehicleUUID,
-        String message
-    ) {
-        return new ParsingException("'" + tagName + "' attribute of vehicle '" + vehicleUUID + "':" + message);
-    }
-    
     public static <T> T scanUntilValid(
         ParsingFunction<T> parsingFunction,
         Validator<T> validator,

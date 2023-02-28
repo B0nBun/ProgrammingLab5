@@ -4,7 +4,6 @@ import java.util.Optional;
 
 import org.jdom2.Element;
 
-import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.VehiclesXmlTag;
 import ru.ifmo.app.lib.exceptions.ParsingException;
 import ru.ifmo.app.lib.utils.Messages;
@@ -33,13 +32,19 @@ public record Coordinates(
             x = Long.parseLong(xString);
             var xValidationError = Coordinates.validate.x(x);
             if (xValidationError.isPresent()) {
-                throw Utils.xmlElementParsingException(VehiclesXmlTag.CoordinatesXAttr, vehicleUUID, xValidationError.get());
+                throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.Coordinates, vehicleUUID, xValidationError.get()));
             }
         } catch (NumberFormatException err) {
-            throw Utils.xmlElementParsingException(
-                VehiclesXmlTag.Coordinates,
-                vehicleUUID,
-                Messages.get("Error.XmlAttribute.RequiredButGot", VehiclesXmlTag.CoordinatesXAttr, "Long integer", xString)
+            throw new ParsingException(
+                Messages.get(
+                    "Error.XmlElement.OfVehicle",
+                    VehiclesXmlTag.Coordinates,
+                    vehicleUUID,
+                    Messages.get(
+                        "Error.XmlAttribute",
+                        VehiclesXmlTag.CoordinatesXAttr,
+                        Messages.get("Error.Validation.Required.ButGot", "integer", xString))
+                    )
             );
         }
 
@@ -48,13 +53,20 @@ public record Coordinates(
             y = Integer.parseInt(yString);
             var yValidationError = Coordinates.validate.y(y);
             if (yValidationError.isPresent()) {
-                throw Utils.xmlElementParsingException(VehiclesXmlTag.CoordinatesYAttr, vehicleUUID, yValidationError.get());
+                throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.Coordinates, vehicleUUID, yValidationError.get()));
             }
         } catch (NumberFormatException err) {
-            throw Utils.xmlElementParsingException(
-                VehiclesXmlTag.Coordinates,
-                vehicleUUID,
-                Messages.get("Error.XmlAttribute.RequiredButGot", VehiclesXmlTag.CoordinatesYAttr, "Integer", yString)
+            throw new ParsingException(
+                Messages.get(
+                    "Error.XmlElement.OfVehicle",
+                    VehiclesXmlTag.Coordinates,
+                    vehicleUUID,
+                    Messages.get(
+                        "Error.XmlAttribute",
+                        VehiclesXmlTag.CoordinatesYAttr,
+                        Messages.get("Error.Validation.Required.ButGot", "integer", yString)
+                    )
+                )
             );
         }
 

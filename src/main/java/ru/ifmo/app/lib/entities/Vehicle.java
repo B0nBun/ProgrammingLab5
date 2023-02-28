@@ -8,9 +8,9 @@ import java.util.UUID;
 
 import org.jdom2.Element;
 
-import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.VehiclesXmlTag;
 import ru.ifmo.app.lib.exceptions.ParsingException;
+import ru.ifmo.app.lib.utils.Messages;
 
 public record Vehicle(
     UUID id,
@@ -40,7 +40,7 @@ public record Vehicle(
     public static Vehicle fromXmlElement(Element vehicleElement) throws ParsingException {
         String idString = vehicleElement.getAttributeValue(VehiclesXmlTag.IdAttr.toString());
         if (idString == null) {
-            throw new ParsingException("'" + VehiclesXmlTag.IdAttr + "' attribute: Expected a valid uuid, but got nothing");
+            throw new ParsingException(Messages.get("Error.XmlAttribute.RequiredButGot", VehiclesXmlTag.IdAttr, "uuid", "nothing"));
         }
 
 
@@ -48,7 +48,7 @@ public record Vehicle(
         try {
             id = UUID.fromString(idString);
         } catch (IllegalArgumentException err) {
-            throw new ParsingException("'" + VehiclesXmlTag.IdAttr + "' attribute: Expected a valid uuid, but got '" + idString + "'");
+            throw new ParsingException(Messages.get("Error.XmlAttribute.RequiredButGot", VehiclesXmlTag.IdAttr, "uuid", idString));
         }
         
 
@@ -56,7 +56,7 @@ public record Vehicle(
         String name = nameElement == null ? null : nameElement.getText();
         var nameValidationError = Vehicle.validate.name(name);
         if (nameValidationError.isPresent()) {
-            throw Utils.xmlElementParsingException(VehiclesXmlTag.Name, idString, nameValidationError.get());
+            throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.Name, idString, nameValidationError.get()));
         }
 
 
@@ -64,7 +64,7 @@ public record Vehicle(
         Coordinates coordinates = Coordinates.fromXmlElement(coordinatesElement, idString);
         var coordinatesValidationError = Vehicle.validate.coordinates(coordinates);
         if (coordinatesValidationError.isPresent()) {
-            throw Utils.xmlElementParsingException(VehiclesXmlTag.Coordinates, idString, coordinatesValidationError.get());
+            throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.Coordinates, idString, coordinatesValidationError.get()));
         }
 
 
@@ -72,11 +72,11 @@ public record Vehicle(
         LocalDate creationDate = null;
         try {
             if (creationDateString == null) {
-                throw Utils.xmlAttributeParsingException(VehiclesXmlTag.CreationDateAttr, idString, "date expected, but got nothing");
+                throw new ParsingException(Messages.get("Error.XmlAttribute.OfVehicle", VehiclesXmlTag.CreationDateAttr, idString, Messages.get("Error.Validation.Required.ButGot", "date", "nothing")));
             }
             creationDate = LocalDate.parse(creationDateString);
         } catch (DateTimeParseException err) {
-            throw Utils.xmlAttributeParsingException(VehiclesXmlTag.CreationDateAttr, idString, "date expected, but got '" + creationDateString + "'");
+            throw new ParsingException(Messages.get("Error.XmlAttribute.OfVehicle", VehiclesXmlTag.CreationDateAttr, idString, Messages.get("Error.Validation.Required.ButGot", "date", creationDateString)));
         }
 
         
@@ -87,17 +87,17 @@ public record Vehicle(
             if (enginePowerString == null) {
                 var validationError = Vehicle.validate.enginePower(null);
                 if (validationError.isPresent()) {
-                    throw Utils.xmlElementParsingException(VehiclesXmlTag.EnginePower, idString, validationError.get());
+                    throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.EnginePower, idString, validationError.get()));
                 }
             } else {
                 enginePower = Float.parseFloat(enginePowerString);
                 var enginePowerValidationError = Vehicle.validate.enginePower(enginePower);
                 if (enginePowerValidationError.isPresent()) {
-                    throw Utils.xmlElementParsingException(VehiclesXmlTag.EnginePower, idString, enginePowerValidationError.get());
+                    throw new ParsingException(Messages.get("Error.XMLElement.OfVehicle", VehiclesXmlTag.EnginePower, idString, enginePowerValidationError.get()));
                 }
             }
         } catch (IllegalArgumentException err) {
-            throw Utils.xmlElementParsingException(VehiclesXmlTag.EnginePower, idString, "number with floating point expected, but got '" + enginePowerString + "'");
+            throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.EnginePower, idString, Messages.get("Error.Validation.Required.ButGot", "number", enginePowerString)));
         }
 
 
@@ -108,17 +108,17 @@ public record Vehicle(
             if (vehicleTypeString == null) {
                 var validationError = Vehicle.validate.vehicleType(null);
                 if (validationError.isPresent()) {
-                    throw Utils.xmlElementParsingException(VehiclesXmlTag.VehicleType, idString, validationError.get());
+                    throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.VehicleType, idString, validationError.get()));
                 }
             } else {
                 vehicleType = VehicleType.parse(vehicleTypeString);
                 var validationError = Vehicle.validate.vehicleType(vehicleType);
                 if (validationError.isPresent()) {
-                    throw Utils.xmlElementParsingException(VehiclesXmlTag.VehicleType, idString, validationError.get());
+                    throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.VehicleType, idString, validationError.get()));
                 }
             }
         } catch (ParsingException err) {
-            throw Utils.xmlElementParsingException(VehiclesXmlTag.VehicleType, idString, err);
+            throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.VehicleType, idString, err.getMessage()));
         }
 
 
@@ -129,17 +129,17 @@ public record Vehicle(
             if (fuelTypeString == null) {
                 var validationError = Vehicle.validate.fuelType(null);
                 if (validationError.isPresent()) {
-                    throw Utils.xmlElementParsingException(VehiclesXmlTag.FuelType, idString, validationError.get());
+                    throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.FuelType, idString, validationError.get()));
                 }
             } else {
                 fuelType = FuelType.parse(fuelTypeString);
                 var validationError = Vehicle.validate.fuelType(fuelType);
                 if (validationError.isPresent()) {
-                    throw Utils.xmlElementParsingException(VehiclesXmlTag.FuelType, idString, validationError.get());
+                    throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.FuelType, idString, validationError.get()));
                 }
             }
         } catch (ParsingException err) {
-            throw Utils.xmlElementParsingException(VehiclesXmlTag.FuelType, idString, err);
+            throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", idString, err.getMessage()));
         }
         
         return new Vehicle(
@@ -179,17 +179,17 @@ public record Vehicle(
         
         public static Optional<String> name(String name) {
             if (name == null || name.length() == 0)
-                return Optional.of("'name' can't be empty");
+                return Optional.of(Messages.get("Error.Validation.Required", Messages.get("Vehicle.Name")));
             return Optional.empty();
         }
         public static Optional<String> coordinates(Coordinates coordinates) {
             if (coordinates == null)
-                return Optional.of("'coordinates' can't be empty");
+                return Optional.of(Messages.get("Error.Validation.Required", Messages.get("Vehicle.Coordinates")));
             return Optional.empty();
         }
         public static Optional<String> enginePower(Float enginePower) {
-            if (enginePower == null) return Optional.of("'enginePower' can't be empty");
-            if (enginePower <= 0) return Optional.of("'enginePower' must be greater than 0");
+            if (enginePower == null) return Optional.of(Messages.get("Error.Validation.Required", Messages.get("Vehicle.EnginePower")));
+            if (enginePower <= 0) return Optional.of(Messages.get("Error.Validation.GreaterThan", Messages.get("Vehicle.EnginePower")));
             return Optional.empty();
         }
         public static Optional<String> fuelType(FuelType type) {
