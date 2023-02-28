@@ -9,8 +9,6 @@ import ru.ifmo.app.lib.exceptions.ParsingException;
 /*
  * Alternative entry point for manual testing and debugging
 */
-
-
 public class Test {    
     public static void main(String[] args) throws JDOMException, ParsingException {
         Logger logger = LoggerFactory.getLogger("ru.ifmo.app.logger");
