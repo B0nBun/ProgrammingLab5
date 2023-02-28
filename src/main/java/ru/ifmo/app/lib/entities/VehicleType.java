@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 import ru.ifmo.app.lib.exceptions.ParsingException;
+import ru.ifmo.app.lib.utils.Messages;
 
 public enum VehicleType {
     DRONE,
@@ -21,7 +22,7 @@ public enum VehicleType {
     }
     
     public static VehicleType parse(String string) throws ParsingException {
-        String errorMessage = "VehicleType must be one of the following: \n" + VehicleType.showIndexedList("\n");
+        String errorMessage = Messages.get("Error.Validation.MustBeOneOfTheFollowing", Messages.get("Vehicle.VehicleType"), VehicleType.showIndexedList(", "));
         try {
             Integer index = Integer.parseUnsignedInt(string);
             try {
