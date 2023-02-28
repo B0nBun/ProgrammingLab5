@@ -25,7 +25,7 @@ public class ShowCommand implements Command {
         });
 
         if (isEmpty.value) {
-            App.logger.info("Collection is empty");
+            App.logger.info(Messages.get("CollectionIsEmpty"));
         }
     }
 

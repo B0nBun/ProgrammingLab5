@@ -26,7 +26,7 @@ public class GroupCountingByIdCommand implements Command {
             .collect(Collectors.joining("\n"));
         
         if (joined.equals("")) {
-            App.logger.info("The collection is empty");
+            App.logger.info(Messages.get("CollectionIsEmpty"));
             return;
         }
         App.logger.info(joined);

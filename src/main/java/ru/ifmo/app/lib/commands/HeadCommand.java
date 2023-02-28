@@ -11,7 +11,7 @@ public class HeadCommand implements Command {
     public void execute(CommandContext context) {
         Vehicle head = context.vehicles().stream().sorted().findFirst().orElse(null);
         if (head == null) {
-            App.logger.info("The collection is empty, so there is no first element");
+            App.logger.info(Messages.get("NoFirstElement"));
             return;
         }
         App.logger.info(head.toString());

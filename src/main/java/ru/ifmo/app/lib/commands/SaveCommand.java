@@ -17,7 +17,7 @@ import ru.ifmo.app.lib.utils.Messages;
 
 public class SaveCommand implements Command {
     private File askForFilepath(Writer writer, Scanner scanner) {
-        App.logger.info("Please, provide file for saving a collection (empty to cancel): ");
+        App.logger.info(Messages.get("ProvideFileForSaving"));
         String filepath = scanner.nextLine();
         if (filepath == null || filepath.length() == 0) {
             return null;
@@ -42,7 +42,7 @@ public class SaveCommand implements Command {
                 printWriter.write(vehiclesSerialized);
                 break;
             } catch (FileNotFoundException err) {
-                App.logger.error("Provided file not found: {}", err.getMessage());
+                App.logger.error(Messages.get("Error.FileNotFound", savingFile, err.getMessage()));
                 savingFile = askForFilepath(context.writer(), context.scanner());
                 if (savingFile == null) {
                     break;
@@ -50,10 +50,10 @@ public class SaveCommand implements Command {
             }
         }
         if (savingFile == null) {
-            App.logger.info("Saving canceled...");
+            App.logger.info(Messages.get("SaveCancel"));
             return;
         }
-        App.logger.info("Collection was saved to a file: {}", savingFile.getAbsolutePath());
+        App.logger.info(Messages.get("CollectionWasSaved"), savingFile.getAbsolutePath());
     }
     
     @Override

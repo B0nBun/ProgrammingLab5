@@ -27,7 +27,7 @@ public class FilterGreaterThanFuelTypeCommand implements Command {
                 .trim();
                 
             if (filtered.equals("")) {
-                App.logger.info("There are no elements with greater fuel type");
+                App.logger.info(Messages.get("NoElementsWithGreaterFuelType"));
                 return;
             }
             App.logger.info(filtered);

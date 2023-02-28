@@ -29,10 +29,10 @@ public class UpdateCommand implements Command {
             .orElseGet(() -> null);
         
         if (found == null) {
-            App.logger.warn("Vehicle with id starting with '{}' not found", vehicleUUID);
+            App.logger.warn(Messages.get("Warn.VehicleStartingWithIdNotFound", vehicleUUID));
             return;
         }
-        App.logger.info("Updating vehicle with id='{}'", found.id());
+        App.logger.info(Messages.get("UpdatingVehicleWithId", found.id()));
 
         var updatedSchema = VehicleCreationSchema.createFromScanner(context.scanner(), context.writer(), new VehicleCreationSchema(found));
 

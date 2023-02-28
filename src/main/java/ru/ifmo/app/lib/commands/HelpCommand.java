@@ -20,7 +20,7 @@ public class HelpCommand implements Command {
                 return "- " + commandAliases + " " + argumentsString + "\n" + helpMessage;
             });
         
-        App.logger.info("List of commands:");
+        App.logger.info(Messages.get("Help.CommandListTitle"));
         App.logger.info(commandStrings.collect(Collectors.joining("\n")));
     }
 

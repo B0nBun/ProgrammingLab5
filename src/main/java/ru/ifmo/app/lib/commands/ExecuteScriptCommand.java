@@ -28,10 +28,8 @@ public class ExecuteScriptCommand implements Command{
                 String commandString = fileScanner.nextLine();
                 commandExecutor.executeCommandString(commandString);
             }
-        } catch (FileNotFoundException err) {
-            throw new InvalidArgumentException("filepath", "provided file is not found");
-        } catch (SecurityException err) {
-            throw new InvalidArgumentException("filepath", "provided file denied read access");
+        } catch (FileNotFoundException | SecurityException err) {
+            throw new InvalidArgumentException(Messages.get("Help.Command.Arg.Filepath"), err.getMessage());
         }
     }
 

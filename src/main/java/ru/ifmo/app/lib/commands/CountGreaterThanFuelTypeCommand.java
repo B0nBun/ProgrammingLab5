@@ -21,9 +21,10 @@ public class CountGreaterThanFuelTypeCommand implements Command {
             var count = context.vehicles().stream()
                 .filter(v -> v.fuelType().compareTo(chosenType) > 0)
                 .count();
-            App.logger.info("Number of vehicles with greater fuel type: {}", count);
+            
+            App.logger.info(Messages.get("NumberOfVehiclesWithGreaterFuelType", count));
         } catch (ParsingException err) {
-            throw new InvalidArgumentException("type", err.getMessage());
+            throw new InvalidArgumentException(Messages.get("Vehicle.VehicleType"), err.getMessage());
         }
     }
 

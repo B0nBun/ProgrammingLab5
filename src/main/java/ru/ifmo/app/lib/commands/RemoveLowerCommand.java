@@ -13,7 +13,7 @@ public class RemoveLowerCommand implements Command {
         var notAddedVehicle = creationSchema.generate(context.vehicles().peekNextId(), context.vehicles().peekNextCreationDate());
         context.vehicles().removeIf(vehicle -> {
             if (vehicle.compareTo(notAddedVehicle) < 0) {
-                App.logger.info("Removing vehicle with id='{}'", vehicle.id());
+                App.logger.info(Messages.get("RemovingVehicleWithId", vehicle.id()));
                 return true;
             }
             return false;
