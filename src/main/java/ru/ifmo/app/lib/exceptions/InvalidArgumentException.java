@@ -1,18 +1,12 @@
 package ru.ifmo.app.lib.exceptions;
 
-public class InvalidArgumentException extends Exception {
-    public InvalidArgumentException(
-        String message
-    ) {
-        super("Invalid argument:" + message);
-    }
-    
+import ru.ifmo.app.lib.utils.Messages;
+
+public class InvalidArgumentException extends Exception {    
     public InvalidArgumentException(
         String argumentName,
         String message
     ) {
-        super(
-            "Invalid argument '" + argumentName + "': " + message
-        );
+        super(Messages.get("Error.InvalidArgument", argumentName, message));
     }
 }
