@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.stream.Stream;
 
 import ru.ifmo.app.lib.exceptions.ParsingException;
+import ru.ifmo.app.lib.utils.Messages;
 
 public enum FuelType {
     GASOLINE,
@@ -20,7 +21,7 @@ public enum FuelType {
     }
 
     public static FuelType parse(String string) throws ParsingException {
-        String errorMessage = "FuelType must be one of the following: \n" + FuelType.showIndexedList("\n");
+        String errorMessage = Messages.get("Error.Validation.MustBeOneOfTheFollowing", Messages.get("Vehicle.FuelType"), FuelType.showIndexedList(", "));
         try {
             Integer index = Integer.parseUnsignedInt(string);
             try {

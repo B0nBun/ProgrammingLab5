@@ -38,7 +38,7 @@ public record ValidatedScanner(
             VehicleType::parse,
             Vehicle.validate::vehicleType,
             scanner, writer, inputString,
-            __ -> "Expected one of the following: " + VehicleType.showIndexedList(", ")
+            Exception::getMessage
         );
         return type;
     }
@@ -48,7 +48,7 @@ public record ValidatedScanner(
             FuelType::parse,
             Vehicle.validate::fuelType,
             scanner, writer, inputString,
-            __ -> "Expected one of the following: " + FuelType.showIndexedList(", ")
+            Exception::getMessage
         );
         return type;
     }

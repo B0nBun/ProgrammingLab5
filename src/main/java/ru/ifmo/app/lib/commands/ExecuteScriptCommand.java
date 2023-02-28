@@ -10,6 +10,7 @@ import ru.ifmo.app.lib.CommandExecutor;
 import ru.ifmo.app.lib.exceptions.ExitProgramException;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class ExecuteScriptCommand implements Command{
 
@@ -27,20 +28,20 @@ public class ExecuteScriptCommand implements Command{
                 String commandString = fileScanner.nextLine();
                 commandExecutor.executeCommandString(commandString);
             }
-        } catch (FileNotFoundException err) {
-            throw new InvalidArgumentException("filepath", "provided file is not found");
-        } catch (SecurityException err) {
-            throw new InvalidArgumentException("filepath", "provided file denied read access");
+        } catch (FileNotFoundException | SecurityException err) {
+            throw new InvalidArgumentException(Messages.get("Help.Command.Arg.Filepath"), err.getMessage());
         }
     }
 
     @Override
     public String[] helpArguments() {
-        return new String[] {"filepath"};
+        return new String[] {
+            Messages.get("Help.Command.Arg.Filepath")
+        };
     }
     
     @Override
     public String helpMessage() {
-        return "Executes commands from the provided file";
+        return Messages.get("Help.Command.ExecuteScript");
     }
 }

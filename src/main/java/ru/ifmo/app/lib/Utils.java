@@ -7,34 +7,11 @@ import java.util.function.Function;
 
 import ru.ifmo.app.App;
 import ru.ifmo.app.lib.exceptions.ParsingException;
+import ru.ifmo.app.lib.utils.Messages;
 
 
 public class Utils {
 
-    public static ParsingException xmlElementParsingException(
-        VehiclesXmlTag xmlTag,
-        String vehicleUUID,
-        String message
-    ) {
-        return new ParsingException("'" + xmlTag + "' element of vehicle '" + vehicleUUID + "':" + message);
-    }
-
-    public static ParsingException xmlElementParsingException(
-        VehiclesXmlTag tagName,
-        String vehicleUUID,
-        ParsingException exception
-    ) {
-        return xmlElementParsingException(tagName, vehicleUUID, exception.getMessage());
-    }
-
-    public static ParsingException xmlAttributeParsingException(
-        VehiclesXmlTag tagName,
-        String vehicleUUID,
-        String message
-    ) {
-        return new ParsingException("'" + tagName + "' attribute of vehicle '" + vehicleUUID + "':" + message);
-    }
-    
     public static <T> T scanUntilValid(
         ParsingFunction<T> parsingFunction,
         Validator<T> validator,
@@ -62,7 +39,7 @@ public class Utils {
                     return result;
                 App.logger.error(validationError.get());
             } catch (ParsingException exception) {
-                App.logger.error("Couldn't parse: {}", parsingErrorMessage.apply(exception));
+                App.logger.error(Messages.get("Error.Parsing", parsingErrorMessage.apply(exception)));
             }
         }
     }

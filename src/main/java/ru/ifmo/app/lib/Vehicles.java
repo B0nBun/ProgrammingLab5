@@ -27,6 +27,7 @@ import ru.ifmo.app.lib.entities.VehicleType;
 import ru.ifmo.app.lib.exceptions.ParsingException;
 import ru.ifmo.app.lib.utils.Peekable;
 import ru.ifmo.app.lib.utils.ValidatedScanner;
+import ru.ifmo.app.lib.utils.Messages;
 
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -81,15 +82,16 @@ public class Vehicles {
         String creationDateString = rootElement.getAttributeValue(VehiclesXmlTag.CreationDateAttr.toString());
         if (creationDateString == null) {
             creationDateString = LocalDate.now().toString();
-            App.logger.warn("Expected '{}' attribute in vehicles collection wasn't found, using current date: {}", VehiclesXmlTag.CreationDateAttr, creationDateString);
+            App.logger.warn(Messages.get("Warn.CreationDateNotFound", VehiclesXmlTag.CreationDateAttr));
+            App.logger.warn(Messages.get("Warn.UsingCurrentDay", creationDateString));
         }
         LocalDate creationDate = null;
         try {
             creationDate = LocalDate.parse(creationDateString);
         } catch (DateTimeParseException err) {
-            App.logger.error("Couldn't parse the creation date: {}", err.getMessage());
+            App.logger.error(Messages.get("Error.Parsing.CreationDate", err.getMessage()));
             creationDate = LocalDate.now();
-            App.logger.error("Continuing with the current date: {}", creationDate);
+            App.logger.warn(Messages.get("Warn.UsingCurrentDay", creationDateString));
         }
         List<Element> vehicleElements = rootElement.getChildren();
         var vehicles = new ArrayList<Vehicle>();
@@ -99,7 +101,7 @@ public class Vehicles {
                 Vehicle vehicle = Vehicle.fromXmlElement(vehicleElement);
                 vehicles.add(vehicle);
             } catch (ParsingException err) {
-                App.logger.error("Coulnd't parse one of the elements");
+                App.logger.error(Messages.get("Error.Parsing.CollectionElement", err.getMessage()));
             }
         }
 
@@ -196,37 +198,52 @@ public class Vehicles {
             };
             
             String name = vscanner.string(
-                withExample.apply("Name", example == null ? null : example.name()),
+                withExample.apply(
+                    Messages.get("Vehicle.Name"),
+                    example == null ? null : example.name()
+                ),
                 Vehicle.validate::name
             );
             Long coordinatesX = vscanner.number(
                 Long::parseLong,
                 Coordinates.validate::x,
                 withExample.apply(
-                    "Coordinate X",
+                    Messages.get("Vehicle.Coordinates.X"),
                     example == null || example.coordinates() == null ? null : example.coordinates().x()
                 ),
-                __ -> "Long integer required"
+                __ -> Messages.get("Error.Validation.Required", "Integer")
             );
             Integer coordinatesY = vscanner.number(
                 Integer::parseInt,
                 Coordinates.validate::y,
-                withExample.apply("Coordinate Y", example == null || example.coordinates() == null ? null : example.coordinates().y()),
-                __ -> "Integer required"
+                withExample.apply(
+                    Messages.get("Vehicle.Coordinates.Y"),
+                    example == null || example.coordinates() == null ? null : example.coordinates().y()
+                ),
+                __ -> Messages.get("Error.Validation.Required", "Integer")
             );
             Float enginePower = vscanner.number(
                 Float::parseFloat,
                 Vehicle.validate::enginePower,
-                withExample.apply("Engine Power", example == null ? null : example.enginePower()),
-                __ -> "Float required"
+                withExample.apply(
+                    Messages.get("Vehicle.EnginePower"),
+                    example == null ? null : example.enginePower()
+                ),
+                __ -> Messages.get("Error.Validation.Required", "Number")
             );
             App.logger.info(VehicleType.showIndexedList(", "));
             VehicleType vehicleType = vscanner.vehicleType(
-                withExample.apply("Vehicle Type", example == null ? null : example.type())
+                withExample.apply(
+                    Messages.get("Vehicle.VehicleType"),
+                    example == null ? null : example.type()
+                )
             );
             App.logger.info(FuelType.showIndexedList(", "));
             FuelType fuelType = vscanner.fuelType(
-                withExample.apply("Fuel Type", example == null ? null : example.fuelType())
+                withExample.apply(
+                    Messages.get("Vehicle.FuelType"),
+                    example == null ? null : example.fuelType()
+                )
             );
 
             var coordinates = new Coordinates(coordinatesX, coordinatesY);

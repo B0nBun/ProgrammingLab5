@@ -3,6 +3,7 @@ package ru.ifmo.app.lib;
 import ru.ifmo.app.lib.exceptions.ExitProgramException;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
+import ru.ifmo.app.lib.utils.Messages;
 
 public interface Command {
     public void execute(CommandContext arguments) throws InvalidArgumentException, InvalidNumberOfArgumentsException, ExitProgramException;
@@ -12,6 +13,6 @@ public interface Command {
     }
     
     default public String helpMessage() {
-        return "No 'help' description";
+        return Messages.get("Help.Command.NoHelpDescription");
     }
 }

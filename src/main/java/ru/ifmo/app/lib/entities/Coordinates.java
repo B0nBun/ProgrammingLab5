@@ -4,9 +4,9 @@ import java.util.Optional;
 
 import org.jdom2.Element;
 
-import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.VehiclesXmlTag;
 import ru.ifmo.app.lib.exceptions.ParsingException;
+import ru.ifmo.app.lib.utils.Messages;
 
 public record Coordinates(
     Long x,
@@ -32,10 +32,20 @@ public record Coordinates(
             x = Long.parseLong(xString);
             var xValidationError = Coordinates.validate.x(x);
             if (xValidationError.isPresent()) {
-                throw Utils.xmlAttributeParsingException(VehiclesXmlTag.CoordinatesXAttr, vehicleUUID, xValidationError.get());
+                throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.Coordinates, vehicleUUID, xValidationError.get()));
             }
         } catch (NumberFormatException err) {
-            throw Utils.xmlElementParsingException(VehiclesXmlTag.Coordinates, vehicleUUID, "'" + VehiclesXmlTag.CoordinatesXAttr + "' attribute: Long integer required but got '" + xString + "'");
+            throw new ParsingException(
+                Messages.get(
+                    "Error.XmlElement.OfVehicle",
+                    VehiclesXmlTag.Coordinates,
+                    vehicleUUID,
+                    Messages.get(
+                        "Error.XmlAttribute",
+                        VehiclesXmlTag.CoordinatesXAttr,
+                        Messages.get("Error.Validation.Required.ButGot", "integer", xString))
+                    )
+            );
         }
 
         Integer y = null;
@@ -43,10 +53,21 @@ public record Coordinates(
             y = Integer.parseInt(yString);
             var yValidationError = Coordinates.validate.y(y);
             if (yValidationError.isPresent()) {
-                throw Utils.xmlAttributeParsingException(VehiclesXmlTag.CoordinatesYAttr, vehicleUUID, yValidationError.get());
+                throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.Coordinates, vehicleUUID, yValidationError.get()));
             }
         } catch (NumberFormatException err) {
-            throw Utils.xmlElementParsingException(VehiclesXmlTag.Coordinates, vehicleUUID, "'" + VehiclesXmlTag.CoordinatesYAttr + "' attribute: Integer required but got '" + yString + "'");
+            throw new ParsingException(
+                Messages.get(
+                    "Error.XmlElement.OfVehicle",
+                    VehiclesXmlTag.Coordinates,
+                    vehicleUUID,
+                    Messages.get(
+                        "Error.XmlAttribute",
+                        VehiclesXmlTag.CoordinatesYAttr,
+                        Messages.get("Error.Validation.Required.ButGot", "integer", yString)
+                    )
+                )
+            );
         }
 
         return new Coordinates(x, y);
@@ -56,13 +77,13 @@ public record Coordinates(
         private validate() {}
 
         public static Optional<String> x(Long x) {
-            if (x == null) return Optional.of("'x' coordinate can't be empty");
+            if (x == null) return Optional.of(Messages.get("Error.Validation.Required", Messages.get("Vehicle.Coordinate.X")));
             return Optional.empty();
         }
 
         public static Optional<String> y(Integer y) {
-            if (y == null) return Optional.of("'y' coordinate can't be empty");
-            if (y > -738) return Optional.of("'y' coordinate can't be greater than -738");
+            if (y == null) return Optional.of(Messages.get("Error.Validation.Required", Messages.get("Vehicle.Coordinate.Y")));
+            if (y > -738) return Optional.of(Messages.get("Error.Validation.LowerThan", Messages.get("Vehicle.Coordinate.Y"), -737));
             return Optional.empty();
         }
     }

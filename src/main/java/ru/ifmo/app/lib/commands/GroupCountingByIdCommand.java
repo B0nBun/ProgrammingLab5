@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class GroupCountingByIdCommand implements Command {
     @Override
@@ -25,7 +26,7 @@ public class GroupCountingByIdCommand implements Command {
             .collect(Collectors.joining("\n"));
         
         if (joined.equals("")) {
-            App.logger.info("The collection is empty");
+            App.logger.info(Messages.get("CollectionIsEmpty"));
             return;
         }
         App.logger.info(joined);
@@ -33,6 +34,6 @@ public class GroupCountingByIdCommand implements Command {
 
     @Override
     public String helpMessage() {
-        return "Group elements by the id field and print the number of them in every group";
+        return Messages.get("Help.Command.GroupCountingById");
     }
 }

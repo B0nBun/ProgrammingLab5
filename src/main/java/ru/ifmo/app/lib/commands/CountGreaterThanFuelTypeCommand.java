@@ -7,6 +7,7 @@ import ru.ifmo.app.lib.entities.FuelType;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 import ru.ifmo.app.lib.exceptions.ParsingException;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class CountGreaterThanFuelTypeCommand implements Command {
     @Override
@@ -20,19 +21,22 @@ public class CountGreaterThanFuelTypeCommand implements Command {
             var count = context.vehicles().stream()
                 .filter(v -> v.fuelType().compareTo(chosenType) > 0)
                 .count();
-            App.logger.info("Number of vehicles with greater fuel type: {}", count);
+            
+            App.logger.info(Messages.get("NumberOfVehiclesWithGreaterFuelType", count));
         } catch (ParsingException err) {
-            throw new InvalidArgumentException("type", err.getMessage());
+            throw new InvalidArgumentException(Messages.get("Vehicle.VehicleType"), err.getMessage());
         }
     }
 
     @Override
     public String[] helpArguments() {
-        return new String[] {"fuelType"};
+        return new String[] {
+            Messages.get("Help.Command.Arg.FuelType")
+        };
     }
     
     @Override
     public String helpMessage() {
-        return "Prints out the number of elements, fuel type of which is greater than a provided one";
+        return Messages.get("Help.Command.CountGreaterThanFuelType");
     }
 }

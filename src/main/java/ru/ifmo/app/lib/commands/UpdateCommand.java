@@ -9,6 +9,7 @@ import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.Vehicles.VehicleCreationSchema;
 import ru.ifmo.app.lib.entities.Vehicle;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class UpdateCommand implements Command {
     @Override
@@ -28,10 +29,10 @@ public class UpdateCommand implements Command {
             .orElseGet(() -> null);
         
         if (found == null) {
-            App.logger.warn("Vehicle with id starting with '{}' not found", vehicleUUID);
+            App.logger.warn(Messages.get("Warn.VehicleStartingWithIdNotFound", vehicleUUID));
             return;
         }
-        App.logger.info("Updating vehicle with id='{}'", found.id());
+        App.logger.info(Messages.get("UpdatingVehicleWithId", found.id()));
 
         var updatedSchema = VehicleCreationSchema.createFromScanner(context.scanner(), context.writer(), new VehicleCreationSchema(found));
 
@@ -45,11 +46,13 @@ public class UpdateCommand implements Command {
 
     @Override
     public String[] helpArguments() {
-        return new String[] {"id"};
+        return new String[] {
+            Messages.get("Help.Command.Arg.Id")
+        };
     }
 
     @Override
     public String helpMessage() {
-        return "Update element with specified 'id'";
+        return Messages.get("Help.Command.Update");
     }
 }

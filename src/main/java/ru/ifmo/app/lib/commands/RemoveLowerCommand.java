@@ -4,6 +4,7 @@ import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.Vehicles.VehicleCreationSchema;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class RemoveLowerCommand implements Command {
     @Override
@@ -12,7 +13,7 @@ public class RemoveLowerCommand implements Command {
         var notAddedVehicle = creationSchema.generate(context.vehicles().peekNextId(), context.vehicles().peekNextCreationDate());
         context.vehicles().removeIf(vehicle -> {
             if (vehicle.compareTo(notAddedVehicle) < 0) {
-                App.logger.info("Removing vehicle with id='{}'", vehicle.id());
+                App.logger.info(Messages.get("RemovingVehicleWithId", vehicle.id()));
                 return true;
             }
             return false;
@@ -21,6 +22,6 @@ public class RemoveLowerCommand implements Command {
 
     @Override
     public String helpMessage() {
-        return "Remove from the collection all of the elements, which are lower than a specified one";
+        return Messages.get("Help.Command.RemoveLowerCommand");
     }
 }

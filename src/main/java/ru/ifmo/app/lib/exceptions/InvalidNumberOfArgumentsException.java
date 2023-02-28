@@ -1,7 +1,9 @@
 package ru.ifmo.app.lib.exceptions;
 
+import ru.ifmo.app.lib.utils.Messages;
+
 public class InvalidNumberOfArgumentsException extends Exception {
     public InvalidNumberOfArgumentsException(int requiredNumber, int providedNumber) {
-        super("Command requires " + requiredNumber + " number of arguments, but " + providedNumber + " were provided");
+        super(Messages.get("InvalidNumberOfArguments", requiredNumber, providedNumber));
     }
 }

@@ -9,6 +9,7 @@ import ru.ifmo.app.lib.entities.FuelType;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 import ru.ifmo.app.lib.exceptions.ParsingException;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class FilterGreaterThanFuelTypeCommand implements Command {
     @Override
@@ -26,7 +27,7 @@ public class FilterGreaterThanFuelTypeCommand implements Command {
                 .trim();
                 
             if (filtered.equals("")) {
-                App.logger.info("There are no elements with greater fuel type");
+                App.logger.info(Messages.get("NoElementsWithGreaterFuelType"));
                 return;
             }
             App.logger.info(filtered);
@@ -37,11 +38,13 @@ public class FilterGreaterThanFuelTypeCommand implements Command {
 
     @Override
     public String[] helpArguments() {
-        return new String[] {"fuelType"};
+        return new String[] {
+            Messages.get("Help.Command.Arg.FuelType")
+        };
     }
     
     @Override
     public String helpMessage() {
-        return "Prints out the elements, fuel type of which is greater than a provided one";
+        return Messages.get("Help.Command.FilterGreaterThanFuelType");
     }
 }

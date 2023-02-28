@@ -28,6 +28,7 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 import ru.ifmo.app.lib.utils.CommandRegistery;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class CommandExecutor {
     private Scanner scanner;
@@ -87,7 +88,7 @@ public class CommandExecutor {
     
             Command command = this.commandRegistery.get(commandname);
             if (command == null) {
-                App.logger.warn("Command '{}' not found, input 'help' to see a list of all commands", commandString);
+                App.logger.warn(Messages.get("Error.CommandNotFound", commandString));
                 return;
             }
     
@@ -104,7 +105,7 @@ public class CommandExecutor {
                 App.logger.error(err.getMessage());
             }
         } catch (CommandParseException err) {
-            App.logger.error("Couldn't parse the command: '{}'", commandString);
+            App.logger.error(err.getMessage());
         }
     }
 }

@@ -3,6 +3,7 @@ package ru.ifmo.app.lib.commands;
 import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class ClearCommand implements Command {
     @Override
@@ -13,6 +14,6 @@ public class ClearCommand implements Command {
 
     @Override
     public String helpMessage() {
-        return "Clears the collection";
+        return Messages.get("Help.Command.Clear");
     }
 }

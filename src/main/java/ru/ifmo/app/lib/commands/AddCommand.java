@@ -3,6 +3,7 @@ package ru.ifmo.app.lib.commands;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.Vehicles.VehicleCreationSchema;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class AddCommand implements Command {
     @Override
@@ -13,6 +14,6 @@ public class AddCommand implements Command {
 
     @Override
     public String helpMessage() {
-        return "Add a new vehicle to the collection";
+        return Messages.get("Help.Command.Add");
     }
 }
