@@ -52,7 +52,7 @@ public class SaveCommand implements Command {
             App.logger.info(Messages.get("SaveCancel"));
             return;
         }
-        App.logger.info(Messages.get("CollectionWasSaved"), savingFile.getAbsolutePath());
+        App.logger.info(Messages.get("CollectionWasSaved", savingFile.getAbsolutePath()));
     }
     
     @Override
