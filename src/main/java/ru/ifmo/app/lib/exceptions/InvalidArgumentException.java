@@ -2,6 +2,11 @@ package ru.ifmo.app.lib.exceptions;
 
 import ru.ifmo.app.lib.utils.Messages;
 
+/**
+ * Thrown to indicate that some argument of the command
+ * doesn't represent the necessary type or doesn't satisfy any other requirements
+ * (e.g. passed "asdasd", when Integer was required)
+ */
 public class InvalidArgumentException extends Exception {    
     public InvalidArgumentException(
         String argumentName,
