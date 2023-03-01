@@ -119,7 +119,7 @@ public class Vehicles {
      * @throws IOException Exception that can be thrown from the SaxBuilder::build method
      * @throws JDOMException Exception that can be thrown from the SaxBuilder::build method
      * 
-     * @see SaxBuilder
+     * @see SAXBuilder
      */
     public static Vehicles loadFromXml(InputStream xmlInputStream) throws IOException, JDOMException {
         var sax = new SAXBuilder();
@@ -394,9 +394,9 @@ public class Vehicles {
         }
         
         /**
-         * Same as {@link VehicleCreationSchema#createFromScanenr} but with {@code example} parameter defaulted to {@code null}
+         * Same as {@link VehicleCreationSchema#createFromScanner} but with {@code example} parameter defaulted to {@code null}
          * 
-         * @see VehicleCreationSchema.createFromScanner(Scanner scanner, VehicleCreationSchema example)
+         * @see VehicleCreationSchema#createFromScanner(Scanner, VehicleCreationSchema)
          */
         public static VehicleCreationSchema createFromScanner(
             Scanner scanner

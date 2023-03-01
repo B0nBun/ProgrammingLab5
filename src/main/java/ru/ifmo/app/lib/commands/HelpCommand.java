@@ -10,7 +10,7 @@ import ru.ifmo.app.lib.utils.Messages;
 
 /**
  * Command used to log out the helping message.
- * Help message contains all of the commands in the passed {@link CommandRegistery}
+ * Help message contains all of the commands in the passed {@link ru.ifmo.app.lib.utils.CommandRegistery}
  * with arguments and help descriptions.
  */
 public class HelpCommand implements Command {

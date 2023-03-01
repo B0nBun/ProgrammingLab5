@@ -202,7 +202,7 @@ public record Vehicle(
 
     /**
      * Staic class, which serves as a namespace for Vehicle fields' validation methods.
-     * Every method implements the functional {@link ru.ifmo.app.lib.Utils#Validator Utils.Validator} interface
+     * Every method implements the functional {@link ru.ifmo.app.lib.Utils.Validator Utils.Validator} interface
      */
     public static class validate {
         private validate() {}

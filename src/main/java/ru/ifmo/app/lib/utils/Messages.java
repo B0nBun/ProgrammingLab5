@@ -15,7 +15,7 @@ public class Messages {
      * Get a message string from the "ApplicationMessages" resource bundle and format
      * it with the given arguments. Gets the string using the {@link ResourceBundle#getString} to
      * get the message and formats it with the {@link MessageFormat#format} method. If any of the methods
-     * throw {@link MissingresourceException} or {@link IllegalArgumentException} then returns a string
+     * throw {@link MissingResourceException} or {@link IllegalArgumentException} then returns a string
      * containing given key and a list of arguments (e.g. "NonExistantKey[123, "Other arg"]")
      * 
      * @param key A key of the message from the {@code ApplicationMessages.properties} bundle

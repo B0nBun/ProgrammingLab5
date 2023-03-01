@@ -97,7 +97,7 @@ public record Coordinates(
 
     /**
      * Staic class, which serves as a namespace for Coordinates fields' validation methods.
-     * Every method implements the functional {@link ru.ifmo.app.lib.Utils#Validator Utils.Validator} interface
+     * Every method implements the functional {@link ru.ifmo.app.lib.Utils.Validator Utils.Validator} interface
      */
     public static class validate {
         private validate() {}

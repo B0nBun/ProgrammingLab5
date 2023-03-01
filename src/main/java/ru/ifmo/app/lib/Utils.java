@@ -76,14 +76,13 @@ public class Utils {
     public static interface Validator<T> {
         /**
          * Function, which validates that the value of type {@code T}
-         * is correct
+         * is correct.
+         * <p><i>(I don't remember why I did it with Optional and not with a checked exception)</i></p>
          * 
          * @param value
          * @return An {@link Optional} of a String, which serves as an error signifier.
          *         So if returned optional is empty, then the value is considered validated.
          *         Otherwise, the String in the optional is considered to be an error message.
-         * 
-         * @note (I don't remember why I did it with Optional and not with a checked exception)
          */
         Optional<String> validate(T value);
     }
