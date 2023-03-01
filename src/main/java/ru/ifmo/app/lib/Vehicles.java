@@ -48,12 +48,12 @@ public class Vehicles {
     /**
      * Creation date, that can be specified either during construction or set to LocalDate.now() during construction
      */
-    private LocalDate creationDate;
+    private final LocalDate creationDate;
 
     /**
      * A Peekable iterator, which generates a sequence of ids, which are set to the added vehicles
      */
-    private Peekable<UUID> idGenerator;
+    private final Peekable<UUID> idGenerator;
 
     /**
      * A Deque collection, which holds all of the vehicle elements
@@ -99,6 +99,57 @@ public class Vehicles {
     }
     
     /**
+     * Provided an xml element representing the Vehicles collection, get and parse the
+     * creationDate attribute (the tag can be found in {@link VehiclesXmlTag}).
+     * If the attribute is absent or can't be parsed, warning/error is logged and 
+     * {@code null} is returned.
+     * 
+     * @param vehiclesElement Xml {@link Element} from which attribute is extracted
+     * @return local date extracted from the element (null if it couldn't be done)
+     */
+    private static LocalDate getCreationDateFromVehiclesElement(Element vehiclesElement) {
+        String creationDateString = vehiclesElement.getAttributeValue(VehiclesXmlTag.CreationDateAttr.toString());
+        if (creationDateString == null) {
+            App.logger.warn(Messages.get("Warn.CreationDateNotFound", VehiclesXmlTag.CreationDateAttr));
+        }
+
+        LocalDate creationDate = null;
+        try {
+            creationDate = LocalDate.parse(creationDateString);
+        } catch (DateTimeParseException err) {
+            App.logger.error(Messages.get("Error.Parsing.CreationDate", err.getMessage()));
+        }
+
+        return creationDate;
+    }
+
+    /**
+     * Provided a list of Xml {@link Element elements}, traverses and extracts the Vehicle data from
+     * each of the elements, after which a list of constructed {@link Vehicle vehicles} is returned
+     * <p>
+     * If any element doesn't pass either the data parsing or the validation, the error is logged
+     * and the vehicle is skipped, not getting included in the list.
+     * </p>
+     * 
+     * @param vehicleElements A list of Xml {@link Element elements} from which vehicles are to be derived
+     * @return A list of {@link Vehicle} objects
+     */
+    private static List<Vehicle> getVehicleListFromElements(List<Element> vehicleElements) {
+        var vehicles = new ArrayList<Vehicle>();
+
+        for (var vehicleElement : vehicleElements) {
+            try {
+                Vehicle vehicle = Vehicle.fromXmlElement(vehicleElement);
+                vehicles.add(vehicle);
+            } catch (ParsingException err) {
+                App.logger.error(Messages.get("Error.Parsing.CollectionElement", err.getMessage()));
+            }
+        }
+
+        return vehicles;
+    }
+    
+    /**
      * Constructs a new Vehicles object derived from provided Xml.
      * <p>
      * If during construction all of the Xml is valid, but some vehicle
@@ -132,31 +183,15 @@ public class Vehicles {
         Document doc = sax.build(xmlInputStream);
 
         Element rootElement = doc.getRootElement();
-        String creationDateString = rootElement.getAttributeValue(VehiclesXmlTag.CreationDateAttr.toString());
-        if (creationDateString == null) {
-            creationDateString = LocalDate.now().toString();
-            App.logger.warn(Messages.get("Warn.CreationDateNotFound", VehiclesXmlTag.CreationDateAttr));
-            App.logger.warn(Messages.get("Warn.UsingCurrentDay", creationDateString));
-        }
-        LocalDate creationDate = null;
-        try {
-            creationDate = LocalDate.parse(creationDateString);
-        } catch (DateTimeParseException err) {
-            App.logger.error(Messages.get("Error.Parsing.CreationDate", err.getMessage()));
-            creationDate = LocalDate.now();
-            App.logger.warn(Messages.get("Warn.UsingCurrentDay", creationDateString));
-        }
-        List<Element> vehicleElements = rootElement.getChildren();
-        var vehicles = new ArrayList<Vehicle>();
+        LocalDate creationDate = getCreationDateFromVehiclesElement(rootElement);
 
-        for (var vehicleElement : vehicleElements) {
-            try {
-                Vehicle vehicle = Vehicle.fromXmlElement(vehicleElement);
-                vehicles.add(vehicle);
-            } catch (ParsingException err) {
-                App.logger.error(Messages.get("Error.Parsing.CollectionElement", err.getMessage()));
-            }
+        if (creationDate == null) {
+            creationDate = LocalDate.now();
+            App.logger.warn(Messages.get("Warn.UsingCurrentDay", creationDate));
         }
+        
+        List<Element> vehicleElements = rootElement.getChildren();
+        List<Vehicle> vehicles = getVehicleListFromElements(vehicleElements);
 
         return new Vehicles(vehicles, creationDate);
     }
