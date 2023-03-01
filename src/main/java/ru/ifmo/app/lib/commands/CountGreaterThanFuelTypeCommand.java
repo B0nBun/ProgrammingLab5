@@ -9,6 +9,10 @@ import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 import ru.ifmo.app.lib.exceptions.ParsingException;
 import ru.ifmo.app.lib.utils.Messages;
 
+/**
+ * Command used to log out the count of vehicles, fuel type of which is greater than
+ * the one passed in the arguments.
+ */
 public class CountGreaterThanFuelTypeCommand implements Command {
     @Override
     public void execute(CommandContext context) throws InvalidArgumentException, InvalidNumberOfArgumentsException {

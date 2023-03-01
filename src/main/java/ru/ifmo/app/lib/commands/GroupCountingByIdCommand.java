@@ -8,6 +8,11 @@ import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.utils.Messages;
 
+/**
+ * Command used to log out the count of the elements in the collection
+ * grouped by the id. If the collection is empty, then the appropriate
+ * message is logged.
+ */
 public class GroupCountingByIdCommand implements Command {
     @Override
     public void execute(CommandContext context) {

@@ -5,6 +5,10 @@ import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.utils.Messages;
 
+/**
+ * Command used to log the currently stored collection.
+ * Uses {@link ru.ifmo.app.lib.entities.Vehicle#toString Vehicle#toString} method to log each element in the collection.
+ */
 public class ShowCommand implements Command {
 
     private class BooleanBox {

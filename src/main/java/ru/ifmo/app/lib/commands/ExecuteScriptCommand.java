@@ -12,6 +12,15 @@ import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 import ru.ifmo.app.lib.utils.Messages;
 
+/**
+ * Command used to execute a script. Accepts a path to a file
+ * as an argument.
+ * <p>
+ * A new CommandExecutor is created with the same arguments, except the scanner,
+ * instead of scanning the stdin replace with the scanner of the file, path to which is
+ * passed in the arguments
+ * </p>
+ */
 public class ExecuteScriptCommand implements Command{
 
     @Override

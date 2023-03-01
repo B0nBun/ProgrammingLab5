@@ -8,6 +8,11 @@ import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.utils.Messages;
 
+/**
+ * Command used to log out the helping message.
+ * Help message contains all of the commands in the passed {@link CommandRegistery}
+ * with arguments and help descriptions.
+ */
 public class HelpCommand implements Command {
     @Override
     public void execute(CommandContext context) {
