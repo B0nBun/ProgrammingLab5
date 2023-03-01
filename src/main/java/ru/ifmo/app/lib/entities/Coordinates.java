@@ -2,9 +2,12 @@ package ru.ifmo.app.lib.entities;
 
 import java.util.Optional;
 
+
 import org.jdom2.Element;
 
 import ru.ifmo.app.lib.VehiclesXmlTag;
+import ru.ifmo.app.lib.Utils.NumberParser;
+import ru.ifmo.app.lib.Utils.Validator;
 import ru.ifmo.app.lib.exceptions.ParsingException;
 import ru.ifmo.app.lib.utils.Messages;
 
@@ -25,6 +28,52 @@ public record Coordinates(
         return coordinatesElement;
     }
 
+    /**
+     * Given the string, parses it with parsingFunction
+     * and then validates given number value.
+     * If during any of these steps error occures ParsingException is thrown.
+     * 
+     * @param tagname A tagname which will be specified in the parsing exception message
+     * @param vehicleId uuid which will be specified in the parsing exception message
+     * 
+     * @throws ParsingException Thrown if parsing or validation fails
+     */
+    private static <N> N parseOneCoordinate(
+        String coordinateString,
+        NumberParser<N> numberParse,
+        Validator<N> validator,
+        VehiclesXmlTag tagname,
+        String vehicleUUID
+    ) throws ParsingException {
+        if (coordinateString == null) {
+            var validationError = validator.validate(null);
+            if (validationError.isPresent()) {
+                throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.Coordinates, vehicleUUID, validationError.get()));
+            }
+            return null;
+        }
+        try {
+            var parsed = numberParse.parse(coordinateString);
+            var validationError = validator.validate(parsed);
+            if (validationError.isPresent()) {
+                throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.Coordinates, vehicleUUID, validationError.get()));
+            }
+            return parsed;
+        } catch (NumberFormatException err) {
+            throw new ParsingException(
+                Messages.get(
+                    "Error.XmlElement.OfVehicle",
+                    VehiclesXmlTag.Coordinates,
+                    vehicleUUID,
+                    Messages.get(
+                        "Error.XmlAttribute",
+                        tagname,
+                        Messages.get("Error.Validation.Required.ButGot", "integer", coordinateString))
+                    )
+            );
+        } 
+    }
+    
     /**
      * Create a coordinates from the XML {@link Element}.
      * <p>
@@ -49,48 +98,21 @@ public record Coordinates(
         String xString = coordinatesElement.getAttributeValue(VehiclesXmlTag.CoordinatesXAttr.toString());
         String yString = coordinatesElement.getAttributeValue(VehiclesXmlTag.CoordinatesYAttr.toString());
         
-        Long x = null;
-        try {
-            x = Long.parseLong(xString);
-            var xValidationError = Coordinates.validate.x(x);
-            if (xValidationError.isPresent()) {
-                throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.Coordinates, vehicleUUID, xValidationError.get()));
-            }
-        } catch (NumberFormatException err) {
-            throw new ParsingException(
-                Messages.get(
-                    "Error.XmlElement.OfVehicle",
-                    VehiclesXmlTag.Coordinates,
-                    vehicleUUID,
-                    Messages.get(
-                        "Error.XmlAttribute",
-                        VehiclesXmlTag.CoordinatesXAttr,
-                        Messages.get("Error.Validation.Required.ButGot", "integer", xString))
-                    )
-            );
-        }
+        Long x = parseOneCoordinate(
+            xString,
+            Long::parseLong,
+            Coordinates.validate::x,
+            VehiclesXmlTag.CoordinatesXAttr,
+            vehicleUUID
+        );
 
-        Integer y = null;
-        try {
-            y = Integer.parseInt(yString);
-            var yValidationError = Coordinates.validate.y(y);
-            if (yValidationError.isPresent()) {
-                throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.Coordinates, vehicleUUID, yValidationError.get()));
-            }
-        } catch (NumberFormatException err) {
-            throw new ParsingException(
-                Messages.get(
-                    "Error.XmlElement.OfVehicle",
-                    VehiclesXmlTag.Coordinates,
-                    vehicleUUID,
-                    Messages.get(
-                        "Error.XmlAttribute",
-                        VehiclesXmlTag.CoordinatesYAttr,
-                        Messages.get("Error.Validation.Required.ButGot", "integer", yString)
-                    )
-                )
-            );
-        }
+        Integer y = parseOneCoordinate(
+            yString,
+            Integer::parseInt,
+            Coordinates.validate::y,
+            VehiclesXmlTag.CoordinatesYAttr,
+            vehicleUUID
+        );
 
         return new Coordinates(x, y);
     }
