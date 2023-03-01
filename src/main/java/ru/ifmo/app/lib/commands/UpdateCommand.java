@@ -1,7 +1,6 @@
 package ru.ifmo.app.lib.commands;
 
 import java.util.UUID;
-import java.util.function.BiPredicate;
 
 import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Command;
@@ -18,19 +17,19 @@ import ru.ifmo.app.lib.utils.Messages;
  * Otherwise a warning is logged and command ends.
  */
 public class UpdateCommand implements Command {
+    private static boolean uuidStartsWith (UUID uuid, String string) {
+        return uuid.toString().startsWith(string);
+    }
+    
     @Override
     public void execute(CommandContext context) throws InvalidNumberOfArgumentsException {
         if (context.arguments().length < 1)
             throw new InvalidNumberOfArgumentsException(1, context.arguments().length);
         
         String vehicleUUID = context.arguments()[0];
-
-        BiPredicate<UUID, String> compareUUIDs = (uuid, inputString) -> {
-            return uuid.toString().startsWith(inputString);
-        };
         
         Vehicle found = context.vehicles().stream()
-            .filter(v -> compareUUIDs.test(v.id(), vehicleUUID))
+            .filter(v -> uuidStartsWith(v.id(), vehicleUUID))
             .findFirst()
             .orElseGet(() -> null);
         
@@ -43,7 +42,7 @@ public class UpdateCommand implements Command {
         var updatedSchema = VehicleCreationSchema.createFromScanner(context.scanner(), new VehicleCreationSchema(found));
 
         context.vehicles().mutate(vehicle -> {
-            if (compareUUIDs.test(vehicle.id(), vehicleUUID)) {
+            if (uuidStartsWith(vehicle.id(), vehicleUUID)) {
                 return updatedSchema.generate(vehicle.id(), vehicle.creationDate());
             }
             return vehicle;
