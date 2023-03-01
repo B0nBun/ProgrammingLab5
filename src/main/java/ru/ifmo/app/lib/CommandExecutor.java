@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.io.File;
 import java.util.AbstractMap.SimpleEntry;
-
 import ru.ifmo.app.App;
 import ru.ifmo.app.lib.commands.AddCommand;
 import ru.ifmo.app.lib.commands.AddIfMaxCommand;
@@ -30,57 +29,46 @@ import ru.ifmo.app.lib.utils.CommandRegistery;
 import ru.ifmo.app.lib.utils.Messages;
 
 /**
- * A class that manages the execution of the commands, given the Xml file containing
- * collection elements, the {@link Vehicles} object and a scanner to handle user input.
- * Contains a {@link CommandRegistery} which is added internelly during construction.
+ * A class that manages the execution of the commands, given the Xml file containing collection
+ * elements, the {@link Vehicles} object and a scanner to handle user input. Contains a
+ * {@link CommandRegistery} which is added internelly during construction.
  */
 public class CommandExecutor {
-    private Scanner scanner;
-    private Vehicles vehicles;
-    private File vehiclesFile;
-    
-    /**
-     * A registery which associates certain command strings (e.g. "help", "h")
-     * with {@link Command Commands}. Created during CommandExecutor construction.
-     */
-    private CommandRegistery commandRegistery;
+  private Scanner scanner;
+  private Vehicles vehicles;
+  private File vehiclesFile;
 
-    /**
-     * Class constructor
-     * 
-     * @param scanner Scanner which will be used to get the user input
-     * @param vehicles Initial {@link Vehicles} which will be used
-     * @param vehiclesFile A path to the file which was selected by the user
-     */
-    public CommandExecutor(
-        Scanner scanner,
-        Vehicles vehicles,
-        File vehiclesFile
-    ) {
-        this.scanner = scanner;
-        this.vehicles = vehicles; 
-        this.vehiclesFile = vehiclesFile;
+  /**
+   * A registery which associates certain command strings (e.g. "help", "h") with {@link Command
+   * Commands}. Created during CommandExecutor construction.
+   */
+  private CommandRegistery commandRegistery;
 
-        this.commandRegistery = new CommandRegistery()
-            .put(new HelpCommand(), "help", "h")
-            .put(new InfoCommand(), "info", "i")
-            .put(new AddCommand(), "add", "a")
-            .put(new ShowCommand(), "show", "s")
-            .put(new UpdateCommand(), "update", "u")
-            .put(new RemoveByIdCommand(), "remove_by_id", "r")
-            .put(new ClearCommand(), "clear")
-            .put(new ExitCommand(), "exit", "e", "q")
-            .put(new HeadCommand(), "head")
-            .put(new AddIfMaxCommand(), "add_if_min")
-            .put(new RemoveLowerCommand(), "remove_lower")
-            .put(new ExecuteScriptCommand(), "execute_script")
-            .put(new CountGreaterThanFuelTypeCommand(), "count_greater_than_fuel_type")
-            .put(new FilterGreaterThanFuelTypeCommand(), "filter_greater_than_fuel_type")
-            .put(new GroupCountingByIdCommand(), "group_counting_by_id")
-            .put(new SaveCommand(), "save");
-    }
-    
-    /**
+  /**
+   * Class constructor
+   * 
+   * @param scanner Scanner which will be used to get the user input
+   * @param vehicles Initial {@link Vehicles} which will be used
+   * @param vehiclesFile A path to the file which was selected by the user
+   */
+  public CommandExecutor(Scanner scanner, Vehicles vehicles, File vehiclesFile) {
+    this.scanner = scanner;
+    this.vehicles = vehicles;
+    this.vehiclesFile = vehiclesFile;
+
+    this.commandRegistery = new CommandRegistery().put(new HelpCommand(), "help", "h")
+        .put(new InfoCommand(), "info", "i").put(new AddCommand(), "add", "a")
+        .put(new ShowCommand(), "show", "s").put(new UpdateCommand(), "update", "u")
+        .put(new RemoveByIdCommand(), "remove_by_id", "r").put(new ClearCommand(), "clear")
+        .put(new ExitCommand(), "exit", "e", "q").put(new HeadCommand(), "head")
+        .put(new AddIfMaxCommand(), "add_if_min").put(new RemoveLowerCommand(), "remove_lower")
+        .put(new ExecuteScriptCommand(), "execute_script")
+        .put(new CountGreaterThanFuelTypeCommand(), "count_greater_than_fuel_type")
+        .put(new FilterGreaterThanFuelTypeCommand(), "filter_greater_than_fuel_type")
+        .put(new GroupCountingByIdCommand(), "group_counting_by_id").put(new SaveCommand(), "save");
+  }
+
+  /**
      * Parses a String and returns the command with it's arguments.
      * 
      * @param commandString A string, given to the program as command (e.g. "update 123")
@@ -99,39 +87,36 @@ public class CommandExecutor {
         return new SimpleEntry<>(command, arguments);
     }
 
-    /**
-     * Given a command string this method parses a command with {@link CommandExecutor#parseCommandString(String)} and
-     * then executes the command if it was found in the {@link CommandRegistery} via the {@link Command#execute(CommandContext)} method
-     * 
-     * @param commandString Inputted command string (e.g. "update 123")
-     * @throws ExitProgramException Thrown if the user inputted a command like "exit"
-     */
-    public void executeCommandString(String commandString) throws ExitProgramException {
-        if (commandString.trim().length() == 0) return;
-        try {
-            var pair = CommandExecutor.parseCommandString(commandString);
-            var commandname = pair.getKey();
-            var arguments = pair.getValue();
-    
-            Command command = this.commandRegistery.get(commandname);
-            if (command == null) {
-                App.logger.warn(Messages.get("Error.CommandNotFound", commandString));
-                return;
-            }
-    
-            try {
-                command.execute(new CommandContext(
-                    arguments,
-                    this.vehicles,
-                    this.vehiclesFile,
-                    this.scanner,
-                    this.commandRegistery
-                ));
-            } catch (InvalidNumberOfArgumentsException | InvalidArgumentException err) {
-                App.logger.error(err.getMessage());
-            }
-        } catch (CommandParseException err) {
-            App.logger.error(err.getMessage());
-        }
+  /**
+   * Given a command string this method parses a command with
+   * {@link CommandExecutor#parseCommandString(String)} and then executes the command if it was
+   * found in the {@link CommandRegistery} via the {@link Command#execute(CommandContext)} method
+   * 
+   * @param commandString Inputted command string (e.g. "update 123")
+   * @throws ExitProgramException Thrown if the user inputted a command like "exit"
+   */
+  public void executeCommandString(String commandString) throws ExitProgramException {
+    if (commandString.trim().length() == 0)
+      return;
+    try {
+      var pair = CommandExecutor.parseCommandString(commandString);
+      var commandname = pair.getKey();
+      var arguments = pair.getValue();
+
+      Command command = this.commandRegistery.get(commandname);
+      if (command == null) {
+        App.logger.warn(Messages.get("Error.CommandNotFound", commandString));
+        return;
+      }
+
+      try {
+        command.execute(new CommandContext(arguments, this.vehicles, this.vehiclesFile,
+            this.scanner, this.commandRegistery));
+      } catch (InvalidNumberOfArgumentsException | InvalidArgumentException err) {
+        App.logger.error(err.getMessage());
+      }
+    } catch (CommandParseException err) {
+      App.logger.error(err.getMessage());
     }
+  }
 }

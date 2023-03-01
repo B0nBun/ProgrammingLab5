@@ -5,9 +5,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.jdom2.Element;
-
 import ru.ifmo.app.lib.VehiclesXmlTag;
 import ru.ifmo.app.lib.Utils.ParsingFunction;
 import ru.ifmo.app.lib.Utils.Validator;
@@ -262,5 +260,4 @@ public record Vehicle(
         public static Optional<String> vehicleType(VehicleType type) {
             return Optional.empty();
         }
-    }
-}
+    }}
