@@ -29,12 +29,29 @@ import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 import ru.ifmo.app.lib.utils.CommandRegistery;
 import ru.ifmo.app.lib.utils.Messages;
 
+/**
+ * A class that manages the execution of the commands, given the Xml file containing
+ * collection elements, the {@link Vehicles} object and a scanner to handle user input.
+ * Contains a {@link CommandRegistery} which is added internelly during construction.
+ */
 public class CommandExecutor {
     private Scanner scanner;
     private Vehicles vehicles;
     private File vehiclesFile;
+    
+    /**
+     * A registery which associates certain command strings (e.g. "help", "h")
+     * with {@link Command Commands}. Created during CommandExecutor construction.
+     */
     private CommandRegistery commandRegistery;
 
+    /**
+     * Class constructor
+     * 
+     * @param scanner Scanner which will be used to get the user input
+     * @param vehicles Initial {@link Vehicles} which will be used
+     * @param vehiclesFile A path to the file which was selected by the user
+     */
     public CommandExecutor(
         Scanner scanner,
         Vehicles vehicles,
@@ -63,6 +80,13 @@ public class CommandExecutor {
             .put(new SaveCommand(), "save");
     }
     
+    /**
+     * Parses a String and returns the command with it's arguments.
+     * 
+     * @param commandString A string, given to the program as command (e.g. "update 123")
+     * @return An entry, where the {@link SimpleEntry#getKey key} is the command name and the {@link SimpleEntry#getValue() value} is an array of arguments (represented as strings)
+     * @throws CommandParseException Thrown if the command is empty
+     */
     private static SimpleEntry<String, String[]> parseCommandString(String commandString) throws CommandParseException {
         String[] splitted = commandString.trim().split("\s+");
         if (splitted.length == 0 || splitted[0].length() == 0) {
@@ -75,6 +99,13 @@ public class CommandExecutor {
         return new SimpleEntry<>(command, arguments);
     }
 
+    /**
+     * Given a command string this method parses a command with {@link CommandExecutor#parseCommandString(String)} and
+     * then executes the command if it was found in the {@link CommandRegistery} via the {@link Command#execute(CommandContext)} method
+     * 
+     * @param commandString Inputted command string (e.g. "update 123")
+     * @throws ExitProgramException Thrown if the user inputted a command like "exit"
+     */
     public void executeCommandString(String commandString) throws ExitProgramException {
         if (commandString.trim().length() == 0) return;
         try {

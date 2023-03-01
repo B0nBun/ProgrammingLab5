@@ -11,6 +11,12 @@ import ru.ifmo.app.lib.entities.Vehicle;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 import ru.ifmo.app.lib.utils.Messages;
 
+/**
+ * Command used to update the vehicle in the collection.
+ * Accepts as the arguments a string, which is then interpreted as a start of the chose vehicle's uuid.
+ * If such vehicle is found, the user is asked to fill each field as a prompt.
+ * Otherwise a warning is logged and command ends.
+ */
 public class UpdateCommand implements Command {
     @Override
     public void execute(CommandContext context) throws InvalidNumberOfArgumentsException {

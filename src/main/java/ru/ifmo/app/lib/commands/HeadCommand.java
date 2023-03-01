@@ -6,6 +6,10 @@ import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.entities.Vehicle;
 import ru.ifmo.app.lib.utils.Messages;
 
+/**
+ * Command used to log out the frist element in the collection.
+ * If the collection is empty, then the appropriate message is logged.
+ */
 public class HeadCommand implements Command {
     @Override
     public void execute(CommandContext context) {

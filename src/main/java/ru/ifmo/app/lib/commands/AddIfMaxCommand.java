@@ -6,6 +6,10 @@ import ru.ifmo.app.lib.Vehicles.VehicleCreationSchema;
 import ru.ifmo.app.lib.entities.Vehicle;
 import ru.ifmo.app.lib.utils.Messages;
 
+/**
+ * Command used to create a vehicle (the same way the {@link AddCommand} works) and
+ * add it to the collection only if it's greater than all of the elements.
+ */
 public class AddIfMaxCommand implements Command {
     @Override
     public void execute(CommandContext context) {

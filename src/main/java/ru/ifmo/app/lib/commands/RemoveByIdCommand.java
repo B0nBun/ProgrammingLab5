@@ -6,6 +6,12 @@ import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 import ru.ifmo.app.lib.utils.Messages;
 
+/**
+ * Command used to remove a vehilce by id.
+ * Requiers one argument which is interpreted as a start of vehicle's uuid.
+ * If such elements are not found, the messsage is logged and the command finishes.
+ * Otherwise all of the vehicles, ids of which start with provided string are removed 
+ */
 public class RemoveByIdCommand implements Command {
     @Override
     public void execute(CommandContext context) throws InvalidNumberOfArgumentsException {

@@ -14,6 +14,11 @@ import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.utils.Messages;
 
+/**
+ * Command used to save currently stored collection in the selected file.
+ * If the file is not available for some reason, then the user is asked
+ * to input a new filepath with a cancellable prompt.
+ */
 public class SaveCommand implements Command {
     private File askForFilepath(Scanner scanner) {
         App.logger.info(Messages.get("ProvideFileForSaving"));

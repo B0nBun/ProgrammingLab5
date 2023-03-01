@@ -23,10 +23,20 @@ import ru.ifmo.app.lib.utils.Messages;
 // TODO: Заняться декомпозицией методов (параллельно посмотреть не стоит ли поставить final там, где это возможно)
 // TODO: Занятся форматированием кода
 
+/**
+ * Entry point of a program, which starts the repl loop and loads the xml file.
+ */
 public class App {
 
+	/**
+	 * Static global logger, which is used across all of the classes.
+	 */
 	public static Logger logger = LoggerFactory.getLogger("ru.ifmo.app.logger");
 	
+	/**
+	 * Entry point of a program, which starts the repl loop and loads the xml file.
+	 * @param args Command line arguments, the first one of which can be an XML file.
+	 */
 	public static void main(String[] args) {
 		File vehiclesXmlFile = null;
 		if (args.length > 0) {

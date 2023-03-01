@@ -5,6 +5,10 @@ import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.utils.Messages;
 
+/**
+ * Command used to log the info about the collection.
+ * Logs collection's creation date, type and size
+ */
 public class InfoCommand implements Command {
     @Override
     public void execute(CommandContext context) {
