@@ -3,6 +3,7 @@ package ru.ifmo.app.lib.commands;
 import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
+import ru.ifmo.app.lib.entities.Vehicle;
 import ru.ifmo.app.lib.utils.Messages;
 
 /**
@@ -12,25 +13,18 @@ import ru.ifmo.app.lib.utils.Messages;
  */
 public class ShowCommand implements Command {
 
-  private class BooleanBox {
-    public boolean value;
-
-    public BooleanBox(boolean value) {
-      this.value = value;
-    }
-  }
-
   @Override
   public void execute(CommandContext context) {
+    String searchString = context.arguments().length == 0 ? "" : context.arguments()[0];
+
     var stream = context.vehicles().stream();
 
-    var isEmpty = new BooleanBox(true);
-    stream.forEach(vehicle -> {
-      isEmpty.value = false;
-      App.logger.info(vehicle.toString());
-    });
+    stream.map(Vehicle::toString).filter(vehicle -> vehicle.contains(searchString))
+        .forEach(vehicle -> {
+          App.logger.info(vehicle.toString());
+        });
 
-    if (isEmpty.value) {
+    if (context.vehicles().stream().findAny().isEmpty()) {
       App.logger.info(Messages.get("CollectionIsEmpty"));
     }
   }
