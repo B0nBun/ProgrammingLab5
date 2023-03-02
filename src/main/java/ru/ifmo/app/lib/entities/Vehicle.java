@@ -112,10 +112,6 @@ public record Vehicle(
 
         var nameElement = vehicleElement.getChild(VehiclesXmlTag.Name.toString());
         String name = nameElement == null ? null : nameElement.getText();
-        var nameValidationError = Vehicle.validate.name(name);
-        if (nameValidationError.isPresent()) {
-            throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.Name, id, nameValidationError.get()));
-        }
 
         Element coordinatesElement = vehicleElement.getChild(VehiclesXmlTag.Coordinates.toString());
         Coordinates coordinates = Coordinates.fromXmlElement(coordinatesElement, idString);
@@ -202,7 +198,7 @@ public record Vehicle(
     public int compareTo(Vehicle other) {
         return this.enginePower.compareTo(other.enginePower);
     }
-
+    
     /**
      * Staic class, which serves as a namespace for Vehicle fields' validation methods.
      * Every method implements the functional {@link ru.ifmo.app.lib.Utils.Validator Utils.Validator} interface
@@ -229,6 +225,10 @@ public record Vehicle(
         public static Optional<String> coordinates(Coordinates coordinates) {
             if (coordinates == null)
                 return Optional.of(Messages.get("Error.Validation.Required", Messages.get("Vehicle.Coordinates")));
+            var vx = Coordinates.validate.x(coordinates.x());
+            if (vx.isPresent()) return vx;
+            var vy = Coordinates.validate.y(coordinates.y());
+            if (vy.isPresent()) return vy;
             return Optional.empty();
         }
         

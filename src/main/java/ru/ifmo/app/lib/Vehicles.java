@@ -247,8 +247,6 @@ public class Vehicles {
     this.collection.add(newVehicle.generate(this.idGenerator.next(), this.peekNextCreationDate()));
   }
 
-  // TODO: Изменить Vehicles.mutate чтобы он также пог выступать в качестве removeIf, если
-  // возвращемое из каллбэка значение является null
   /**
    * Mutate each element in the collection (basically the same as Stream.map but it isn't pure and
    * has to return the same type).
