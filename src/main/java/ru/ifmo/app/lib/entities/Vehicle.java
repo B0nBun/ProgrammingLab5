@@ -83,6 +83,14 @@ public record Vehicle(
     }
 
 
+    /**
+     * Get name from the vehicle Xml {@link Element}
+     * 
+     * @param vehicleElement vehicle element with the name as it's child
+     * @param vehicleId id of the vehicle needed for error message
+     * @return Validated name
+     * @throws ParsingException Thrown if validation fails
+     */
     private static String getNameFromVehicleXmlElement(Element vehicleElement, UUID vehicleId) throws ParsingException {
         var nameElement = vehicleElement.getChild(VehiclesXmlTag.NAME.toString());
         String name = nameElement == null ? null : nameElement.getText();
@@ -93,6 +101,14 @@ public record Vehicle(
         return name;
     }
 
+    /**
+     * Get coordinates from the vehicle Xml {@link Element}
+     * 
+     * @param vehicleElement vehicle element with coordinates element as it's child
+     * @param vehicleId id of the vehicle needed for error message
+     * @return Validated and parsed coordinates
+     * @throws ParsingException Thrown if validation fails
+     */
     private static Coordinates getCoordinatesFromVehicleXmlElement(Element vehicleElement, UUID vehicleId) throws ParsingException {
         Element coordinatesElement = vehicleElement.getChild(VehiclesXmlTag.COORDINATES.toString());
         Coordinates coordinates = Coordinates.fromXmlElement(coordinatesElement, vehicleId.toString());
@@ -103,6 +119,14 @@ public record Vehicle(
         return coordinates;
     }
 
+    /**
+     * Get creationDate from the vehicle Xml {@link Element}
+     * 
+     * @param vehicleElement vehicle element with creation date element as it's child
+     * @param vehicleId id of the vehicle needed for error message
+     * @return Parsed creation date
+     * @throws ParsingException Thrown if validation fails
+     */
     private static LocalDate getCreationDateFromVehicleXmlElement(Element vehicleElement, UUID vehicleId) throws ParsingException {
         String creationDateString = vehicleElement.getAttributeValue(VehiclesXmlTag.CREATION_DATE_ATTR.toString());
         LocalDate creationDate = null;
@@ -117,6 +141,14 @@ public record Vehicle(
         return creationDate;
     }
 
+    /**
+     * Get engine power from the vehicle Xml {@link Element}
+     * 
+     * @param vehicleElement vehicle element with engine power element as it's child
+     * @param vehicleId id of the vehicle needed for error message
+     * @return Parsed and validated engine power
+     * @throws ParsingException Thrown if validation fails
+     */
     private static Float getEnginePowerFromVehicleXmlElement(Element vehicleElement, UUID id) throws ParsingException {
         Element enginePowerElement = vehicleElement.getChild(VehiclesXmlTag.ENGINE_POWER.toString());
         Float enginePower = parseAndValidateElementContent(
@@ -135,6 +167,14 @@ public record Vehicle(
         return enginePower;
     }
 
+    /**
+     * Get vehicle type from the vehicle Xml {@link Element}
+     * 
+     * @param vehicleElement vehicle element with vehicle type element as it's child
+     * @param vehicleId id of the vehicle needed for error message
+     * @return Parsed and validated vehicle type
+     * @throws ParsingException Thrown if validation fails
+     */
     private static VehicleType getVehicleTypeFromVehicleXmlElement(Element vehicleElement, UUID id) throws ParsingException {
         Element vehicleTypeElement = vehicleElement.getChild(VehiclesXmlTag.VEHICLE_TYPE.toString());
         VehicleType vehicleType = parseAndValidateElementContent(
@@ -147,6 +187,14 @@ public record Vehicle(
         return vehicleType;
     }
 
+    /**
+     * Get fuel type from the vehicle Xml {@link Element}
+     * 
+     * @param vehicleElement vehicle element with fuel type element as it's child
+     * @param vehicleId id of the fuel needed for error message
+     * @return Parsed and validated fuel type
+     * @throws ParsingException Thrown if validation fails
+     */
     private static FuelType getFuelTypeFromVehicleXmlElement(Element vehicleElement, UUID id) throws ParsingException {
         Element fuelTypeElement = vehicleElement.getChild(VehiclesXmlTag.FUEL_TYPE.toString());
         FuelType fuelType = parseAndValidateElementContent(
