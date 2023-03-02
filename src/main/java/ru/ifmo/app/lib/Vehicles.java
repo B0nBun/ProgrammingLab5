@@ -89,8 +89,8 @@ public class Vehicles {
    *         children
    */
   public Element toXmlElement() {
-    var rootVehicles = new Element(VehiclesXmlTag.Vehicles.toString())
-        .setAttribute(VehiclesXmlTag.CreationDateAttr.toString(), this.creationDate.toString());
+    var rootVehicles = new Element(VehiclesXmlTag.VEHICLES.toString())
+        .setAttribute(VehiclesXmlTag.CREATION_DATE_ATTR.toString(), this.creationDate.toString());
 
     List<Element> vehicleElements = this.stream().map(Vehicle::toXmlElement).toList();
     rootVehicles.addContent(vehicleElements);
@@ -108,9 +108,9 @@ public class Vehicles {
    */
   private static LocalDate getCreationDateFromVehiclesElement(Element vehiclesElement) {
     String creationDateString =
-        vehiclesElement.getAttributeValue(VehiclesXmlTag.CreationDateAttr.toString());
+        vehiclesElement.getAttributeValue(VehiclesXmlTag.CREATION_DATE_ATTR.toString());
     if (creationDateString == null) {
-      App.logger.warn(Messages.get("Warn.CreationDateNotFound", VehiclesXmlTag.CreationDateAttr));
+      App.logger.warn(Messages.get("Warn.CreationDateNotFound", VehiclesXmlTag.CREATION_DATE_ATTR));
     }
 
     LocalDate creationDate = null;

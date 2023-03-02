@@ -31,15 +31,15 @@ public record Vehicle(
      * @return The XML element with all of the data stored as it's children
      */
     public Element toXmlElement() {
-        Element vehicleElement = new Element(VehiclesXmlTag.Vehicle.toString())
-            .setAttribute(VehiclesXmlTag.IdAttr.toString(), this.id.toString())
-            .setAttribute(VehiclesXmlTag.CreationDateAttr.toString(), this.creationDate.toString())
+        Element vehicleElement = new Element(VehiclesXmlTag.VEHICLE.toString())
+            .setAttribute(VehiclesXmlTag.ID_ATTR.toString(), this.id.toString())
+            .setAttribute(VehiclesXmlTag.CREATION_DATE_ATTR.toString(), this.creationDate.toString())
             .addContent(List.of(
                 new Element(VehiclesXmlTag.Name.toString()).setText(this.name()),
                 this.coordinates().toXmlElement(),
-                new Element(VehiclesXmlTag.EnginePower.toString()).setText(this.enginePower().toString()),
-                new Element(VehiclesXmlTag.VehicleType.toString()).setText(this.type().toString()),
-                new Element(VehiclesXmlTag.FuelType.toString()).setText(this.fuelType().toString())
+                new Element(VehiclesXmlTag.ENGINE_POWER.toString()).setText(this.enginePower().toString()),
+                new Element(VehiclesXmlTag.VEHICLE_TYPE.toString()).setText(this.type().toString()),
+                new Element(VehiclesXmlTag.FUEL_TYPE.toString()).setText(this.fuelType().toString())
             ));
 
         return vehicleElement;
@@ -98,43 +98,43 @@ public record Vehicle(
      * @throws ParsingException Thrown if any of the data doesn't pass the parsing or the validation processes
      */
     public static Vehicle fromXmlElement(Element vehicleElement) throws ParsingException {
-        String idString = vehicleElement.getAttributeValue(VehiclesXmlTag.IdAttr.toString());
+        String idString = vehicleElement.getAttributeValue(VehiclesXmlTag.ID_ATTR.toString());
         if (idString == null) {
-            throw new ParsingException(Messages.get("Error.XmlAttribute.RequiredButGot", VehiclesXmlTag.IdAttr, "uuid", "nothing"));
+            throw new ParsingException(Messages.get("Error.XmlAttribute.RequiredButGot", VehiclesXmlTag.ID_ATTR, "uuid", "nothing"));
         }
 
         UUID id = null;
         try {
             id = UUID.fromString(idString);
         } catch (IllegalArgumentException err) {
-            throw new ParsingException(Messages.get("Error.XmlAttribute.RequiredButGot", VehiclesXmlTag.IdAttr, "uuid", idString));
+            throw new ParsingException(Messages.get("Error.XmlAttribute.RequiredButGot", VehiclesXmlTag.ID_ATTR, "uuid", idString));
         }
 
         var nameElement = vehicleElement.getChild(VehiclesXmlTag.Name.toString());
         String name = nameElement == null ? null : nameElement.getText();
 
-        Element coordinatesElement = vehicleElement.getChild(VehiclesXmlTag.Coordinates.toString());
+        Element coordinatesElement = vehicleElement.getChild(VehiclesXmlTag.COORDINATES.toString());
         Coordinates coordinates = Coordinates.fromXmlElement(coordinatesElement, idString);
         var coordinatesValidationError = Vehicle.validate.coordinates(coordinates);
         if (coordinatesValidationError.isPresent()) {
-            throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.Coordinates, id, coordinatesValidationError.get()));
+            throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.COORDINATES, id, coordinatesValidationError.get()));
         }
 
-        String creationDateString = vehicleElement.getAttributeValue(VehiclesXmlTag.CreationDateAttr.toString());
+        String creationDateString = vehicleElement.getAttributeValue(VehiclesXmlTag.CREATION_DATE_ATTR.toString());
         LocalDate creationDate = null;
         try {
             if (creationDateString == null) {
-                throw new ParsingException(Messages.get("Error.XmlAttribute.OfVehicle", VehiclesXmlTag.CreationDateAttr, idString, Messages.get("Error.Validation.Required.ButGot", "date", "nothing")));
+                throw new ParsingException(Messages.get("Error.XmlAttribute.OfVehicle", VehiclesXmlTag.CREATION_DATE_ATTR, idString, Messages.get("Error.Validation.Required.ButGot", "date", "nothing")));
             }
             creationDate = LocalDate.parse(creationDateString);
         } catch (DateTimeParseException err) {
-            throw new ParsingException(Messages.get("Error.XmlAttribute.OfVehicle", VehiclesXmlTag.CreationDateAttr, id, Messages.get("Error.Validation.Required.ButGot", "date", creationDateString)));
+            throw new ParsingException(Messages.get("Error.XmlAttribute.OfVehicle", VehiclesXmlTag.CREATION_DATE_ATTR, id, Messages.get("Error.Validation.Required.ButGot", "date", creationDateString)));
         }
        
-        Element enginePowerElement = vehicleElement.getChild(VehiclesXmlTag.EnginePower.toString());
+        Element enginePowerElement = vehicleElement.getChild(VehiclesXmlTag.ENGINE_POWER.toString());
         Float enginePower = parseAndValidateElementContent(
             enginePowerElement,
-            VehiclesXmlTag.EnginePower,
+            VehiclesXmlTag.ENGINE_POWER,
             Vehicle.validate::enginePower,
             str -> {
                 try {
@@ -146,19 +146,19 @@ public record Vehicle(
             id
         );
 
-        Element vehicleTypeElement = vehicleElement.getChild(VehiclesXmlTag.VehicleType.toString());
+        Element vehicleTypeElement = vehicleElement.getChild(VehiclesXmlTag.VEHICLE_TYPE.toString());
         VehicleType vehicleType = parseAndValidateElementContent(
             vehicleTypeElement,
-            VehiclesXmlTag.VehicleType,
+            VehiclesXmlTag.VEHICLE_TYPE,
             Vehicle.validate::vehicleType,
             VehicleType::parse, 
             id
         );
 
-        Element fuelTypeElement = vehicleElement.getChild(VehiclesXmlTag.FuelType.toString());
+        Element fuelTypeElement = vehicleElement.getChild(VehiclesXmlTag.FUEL_TYPE.toString());
         FuelType fuelType = parseAndValidateElementContent(
             fuelTypeElement,
-            VehiclesXmlTag.FuelType,
+            VehiclesXmlTag.FUEL_TYPE,
             Vehicle.validate::fuelType,
             FuelType::parse,
             id

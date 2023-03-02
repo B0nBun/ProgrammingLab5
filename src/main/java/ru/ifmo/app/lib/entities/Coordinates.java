@@ -22,9 +22,9 @@ public record Coordinates(
      * Converts the coordinates to an XML {@link Element}
      */
     public Element toXmlElement() {
-        Element coordinatesElement = new Element(VehiclesXmlTag.Coordinates.toString())
-            .setAttribute(VehiclesXmlTag.CoordinatesXAttr.toString(), this.x().toString())
-            .setAttribute(VehiclesXmlTag.CoordinatesYAttr.toString(), this.y().toString());
+        Element coordinatesElement = new Element(VehiclesXmlTag.COORDINATES.toString())
+            .setAttribute(VehiclesXmlTag.COORDINATES_X_ATTR.toString(), this.x().toString())
+            .setAttribute(VehiclesXmlTag.COORDINATES_Y_ATTR.toString(), this.y().toString());
         return coordinatesElement;
     }
 
@@ -48,7 +48,7 @@ public record Coordinates(
         if (coordinateString == null) {
             var validationError = validator.validate(null);
             if (validationError.isPresent()) {
-                throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.Coordinates, vehicleUUID, validationError.get()));
+                throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.COORDINATES, vehicleUUID, validationError.get()));
             }
             return null;
         }
@@ -56,14 +56,14 @@ public record Coordinates(
             var parsed = numberParse.parse(coordinateString);
             var validationError = validator.validate(parsed);
             if (validationError.isPresent()) {
-                throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.Coordinates, vehicleUUID, validationError.get()));
+                throw new ParsingException(Messages.get("Error.XmlElement.OfVehicle", VehiclesXmlTag.COORDINATES, vehicleUUID, validationError.get()));
             }
             return parsed;
         } catch (NumberFormatException err) {
             throw new ParsingException(
                 Messages.get(
                     "Error.XmlElement.OfVehicle",
-                    VehiclesXmlTag.Coordinates,
+                    VehiclesXmlTag.COORDINATES,
                     vehicleUUID,
                     Messages.get(
                         "Error.XmlAttribute",
@@ -95,14 +95,14 @@ public record Coordinates(
             return null;
         }
 
-        String xString = coordinatesElement.getAttributeValue(VehiclesXmlTag.CoordinatesXAttr.toString());
-        String yString = coordinatesElement.getAttributeValue(VehiclesXmlTag.CoordinatesYAttr.toString());
+        String xString = coordinatesElement.getAttributeValue(VehiclesXmlTag.COORDINATES_X_ATTR.toString());
+        String yString = coordinatesElement.getAttributeValue(VehiclesXmlTag.COORDINATES_Y_ATTR.toString());
         
         Long x = parseOneCoordinate(
             xString,
             Long::parseLong,
             Coordinates.validate::x,
-            VehiclesXmlTag.CoordinatesXAttr,
+            VehiclesXmlTag.COORDINATES_X_ATTR,
             vehicleUUID
         );
 
@@ -110,7 +110,7 @@ public record Coordinates(
             yString,
             Integer::parseInt,
             Coordinates.validate::y,
-            VehiclesXmlTag.CoordinatesYAttr,
+            VehiclesXmlTag.COORDINATES_Y_ATTR,
             vehicleUUID
         );
 
