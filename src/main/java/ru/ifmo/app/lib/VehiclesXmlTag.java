@@ -5,9 +5,10 @@ package ru.ifmo.app.lib;
  * collection.
  */
 public enum VehiclesXmlTag {
-  VEHICLES("vehicles"), VEHICLE("vehicle"), ID_ATTR("id"), CREATION_DATE_ATTR("creation-date"), Name(
-      "name"), COORDINATES("coordinates"), COORDINATES_X_ATTR("x"), COORDINATES_Y_ATTR(
-          "y"), ENGINE_POWER("engine-power"), VEHICLE_TYPE("vehicle-type"), FUEL_TYPE("fuel-type");
+  VEHICLES("vehicles"), VEHICLE("vehicle"), ID_ATTR("id"), CREATION_DATE_ATTR(
+      "creation-date"), NAME("name"), COORDINATES("coordinates"), COORDINATES_X_ATTR(
+          "x"), COORDINATES_Y_ATTR("y"), ENGINE_POWER(
+              "engine-power"), VEHICLE_TYPE("vehicle-type"), FUEL_TYPE("fuel-type");
 
   private final String tagName;
 
