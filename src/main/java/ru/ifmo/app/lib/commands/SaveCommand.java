@@ -27,6 +27,9 @@ public class SaveCommand implements Command {
     return new File(filepath);
   }
 
+  // TODO: Если прокинуть пустую строку в ответ на промпт, то вылетает ошибка NullPointer
+  // TODO: trim название фала
+  // TODO: Не позволятьь сохранять файл с названием \ (и попробовать найти еще подобных)
   @Override
   public void execute(CommandContext context) {
     File savingFile = context.vehiclesFile();

@@ -16,6 +16,8 @@ import ru.ifmo.app.lib.utils.Messages;
 
 // ВАРИАНТ: 863200
 
+// TODO: Имплементировать Levenshtein distance и использовать ее для предложений "исправленных" команд 
+
 /** Entry point of a program, which starts the repl loop and loads the xml file. */
 public class App {
 
@@ -79,6 +81,7 @@ public class App {
           }
         }
       } catch (NoSuchElementException err) {
+        // TODO: Нормальное сообщение об ошибке (возникает при Ctrl+C)
         App.logger.error(Messages.get("Error.NoSuchElement", err.getMessage()));
       } catch (IllegalStateException err) {
         App.logger.error(Messages.get("Error.IllegalState", err.getMessage()));
