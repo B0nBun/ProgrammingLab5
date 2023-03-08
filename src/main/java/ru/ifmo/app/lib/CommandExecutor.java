@@ -26,6 +26,7 @@ import ru.ifmo.app.lib.exceptions.CommandParseException;
 import ru.ifmo.app.lib.exceptions.ExitProgramException;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
+import ru.ifmo.app.lib.exceptions.MaximumScriptExecutionDepthException;
 import ru.ifmo.app.lib.utils.CommandRegistery;
 import ru.ifmo.app.lib.utils.Levenshtein;
 import ru.ifmo.app.lib.utils.Messages;
@@ -39,6 +40,7 @@ public class CommandExecutor {
   private Scanner scanner;
   private Vehicles vehicles;
   private File vehiclesFile;
+  private int scriptExecutionDepth;
 
   /**
    * A registery which associates certain command strings (e.g. "help", "h") with {@link Command
@@ -53,10 +55,12 @@ public class CommandExecutor {
    * @param vehicles Initial {@link Vehicles} which will be used
    * @param vehiclesFile A path to the file which was selected by the user
    */
-  public CommandExecutor(Scanner scanner, Vehicles vehicles, File vehiclesFile) {
+  public CommandExecutor(Scanner scanner, Vehicles vehicles, File vehiclesFile,
+      int scriptExecutionDepth) {
     this.scanner = scanner;
     this.vehicles = vehicles;
     this.vehiclesFile = vehiclesFile;
+    this.scriptExecutionDepth = scriptExecutionDepth;
 
     this.commandRegistery = new CommandRegistery().put(new HelpCommand(), "help", "h")
         .put(new InfoCommand(), "info", "i").put(new AddCommand(), "add", "a")
@@ -105,8 +109,11 @@ public class CommandExecutor {
    * 
    * @param commandString Inputted command string (e.g. "update 123")
    * @throws ExitProgramException Thrown if the user inputted a command like "exit"
+   * @throws MaximumScriptExecutionDepthException Thrown if the execute_script command depth exceeds
+   *         maximum
    */
-  public void executeCommandString(String commandString) throws ExitProgramException {
+  public void executeCommandString(String commandString)
+      throws ExitProgramException, MaximumScriptExecutionDepthException {
     if (commandString.trim().length() == 0)
       return;
     try {
@@ -133,7 +140,7 @@ public class CommandExecutor {
 
       try {
         command.execute(new CommandContext(arguments, this.vehicles, this.vehiclesFile,
-            this.scanner, this.commandRegistery));
+            this.scanner, this.commandRegistery, this.scriptExecutionDepth));
       } catch (InvalidNumberOfArgumentsException | InvalidArgumentException err) {
         App.logger.error(err.getMessage());
       }

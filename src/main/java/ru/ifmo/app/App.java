@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import ru.ifmo.app.lib.CommandExecutor;
 import ru.ifmo.app.lib.Vehicles;
 import ru.ifmo.app.lib.exceptions.ExitProgramException;
+import ru.ifmo.app.lib.exceptions.MaximumScriptExecutionDepthException;
 import ru.ifmo.app.lib.utils.Messages;
 
 // ВАРИАНТ: 863200
@@ -67,7 +68,7 @@ public class App {
         vehicles = new Vehicles();
       }
 
-      var executor = new CommandExecutor(scanner, vehicles, vehiclesXmlFile);
+      var executor = new CommandExecutor(scanner, vehicles, vehiclesXmlFile, 0);
 
       try {
         while (true) {
@@ -75,6 +76,9 @@ public class App {
           var commandString = scanner.nextLine();
           try {
             executor.executeCommandString(commandString);
+          } catch (MaximumScriptExecutionDepthException err) {
+            App.logger
+                .warn(Messages.get("Warn.ScriptExecutionDepthExceededMaximum", err.maximumDepth));
           } catch (ExitProgramException err) {
             System.exit(0);
           }

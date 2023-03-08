@@ -3,6 +3,7 @@ package ru.ifmo.app.lib;
 import ru.ifmo.app.lib.exceptions.ExitProgramException;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
+import ru.ifmo.app.lib.exceptions.MaximumScriptExecutionDepthException;
 import ru.ifmo.app.lib.utils.Messages;
 
 /** Interface which signifies that the given class can be used to exexcute some kind of command. */
@@ -16,9 +17,11 @@ public interface Command {
    *         missing
    * @throws ExitProgramException Thrown if the command signifies the exit from the program (e.g.
    *         {@link ru.ifmo.app.lib.commands.ExitCommand ExitCommand})
+   * @throws MaximumScriptExecutionDepthException Thrown if the scirpt execution depth exceeds
+   *         maximum allowed value in {@link ru.ifmo.app.lib.commands.ExecuteScriptCommand}
    */
-  public void execute(CommandContext context)
-      throws InvalidArgumentException, InvalidNumberOfArgumentsException, ExitProgramException;
+  public void execute(CommandContext context) throws InvalidArgumentException,
+      InvalidNumberOfArgumentsException, ExitProgramException, MaximumScriptExecutionDepthException;
 
   /**
    * A method which is called in the {@link ru.ifmo.app.lib.commands.HelpCommand HelpCommand} to

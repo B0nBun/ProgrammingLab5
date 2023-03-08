@@ -9,6 +9,7 @@ import ru.ifmo.app.lib.CommandExecutor;
 import ru.ifmo.app.lib.exceptions.ExitProgramException;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
+import ru.ifmo.app.lib.exceptions.MaximumScriptExecutionDepthException;
 import ru.ifmo.app.lib.utils.Messages;
 
 /**
@@ -22,15 +23,21 @@ public class ExecuteScriptCommand implements Command {
 
   @Override
   public void execute(CommandContext context)
-      throws InvalidArgumentException, InvalidNumberOfArgumentsException, ExitProgramException {
+      throws InvalidArgumentException, InvalidNumberOfArgumentsException, ExitProgramException,
+      MaximumScriptExecutionDepthException {
+    int maximumScriptExecutionDepth = 100;
+    if (context.scriptExecutionDepth() >= maximumScriptExecutionDepth) {
+      throw new MaximumScriptExecutionDepthException(maximumScriptExecutionDepth);
+    }
+
     if (context.arguments().length < 1)
       throw new InvalidNumberOfArgumentsException(1, context.arguments().length);
 
     String scriptFilepath = context.arguments()[0];
 
     try (Scanner fileScanner = new Scanner(new FileInputStream(scriptFilepath))) {
-      var commandExecutor =
-          new CommandExecutor(fileScanner, context.vehicles(), context.vehiclesFile());
+      var commandExecutor = new CommandExecutor(fileScanner, context.vehicles(),
+          context.vehiclesFile(), context.scriptExecutionDepth() + 1);
 
       while (fileScanner.hasNextLine()) {
         String commandString = fileScanner.nextLine();

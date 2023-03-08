@@ -18,5 +18,6 @@ public record CommandContext(
     Vehicles vehicles,
     File vehiclesFile,
     Scanner scanner,
-    CommandRegistery commandRegistery
+    CommandRegistery commandRegistery,
+    int scriptExecutionDepth
 ) {}
