@@ -84,8 +84,7 @@ public class App {
           }
         }
       } catch (NoSuchElementException err) {
-        // TODO: Нормальное сообщение об ошибке (возникает при Ctrl+C)
-        App.logger.error(Messages.get("Error.NoSuchElement", err.getMessage()));
+        App.logger.error(Messages.get("Error.NoSuchElement.CtrlD"));
       } catch (IllegalStateException err) {
         App.logger.error(Messages.get("Error.IllegalState", err.getMessage()));
       }
