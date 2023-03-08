@@ -16,7 +16,6 @@ import ru.ifmo.app.lib.utils.Messages;
 
 // ВАРИАНТ: 863200
 
-// TODO: Имплементировать Levenshtein distance и использовать ее для предложений "исправленных" команд 
 
 /** Entry point of a program, which starts the repl loop and loads the xml file. */
 public class App {

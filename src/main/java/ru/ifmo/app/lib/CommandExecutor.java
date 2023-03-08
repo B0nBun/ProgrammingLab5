@@ -1,6 +1,7 @@
 package ru.ifmo.app.lib;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 import java.io.File;
 import java.util.AbstractMap.SimpleEntry;
@@ -26,6 +27,7 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 import ru.ifmo.app.lib.utils.CommandRegistery;
+import ru.ifmo.app.lib.utils.Levenshtein;
 import ru.ifmo.app.lib.utils.Messages;
 
 /**
@@ -87,6 +89,15 @@ public class CommandExecutor {
         return new SimpleEntry<>(command, arguments);
     }
 
+  private List<String> getPossiblyMeantCommands(String inputtedCommandname) {
+    return this.commandRegistery.getAllCommands().stream()
+        .filter(possibleCommand -> possibleCommand.getKey().size() > 0)
+        .map(possibleCommand -> possibleCommand.getKey().iterator().next())
+        .filter(possibleCommandName -> {
+          return Levenshtein.distance(inputtedCommandname, possibleCommandName) < 3;
+        }).toList();
+  }
+
   /**
    * Given a command string this method parses a command with
    * {@link CommandExecutor#parseCommandString(String)} and then executes the command if it was
@@ -106,6 +117,17 @@ public class CommandExecutor {
       Command command = this.commandRegistery.get(commandname);
       if (command == null) {
         App.logger.warn(Messages.get("Error.CommandNotFound", commandString));
+
+        var possibleCommands = getPossiblyMeantCommands(commandString);
+
+        if (!possibleCommands.isEmpty()) {
+          App.logger.warn(Messages.get("Error.MaybeYouMeant", ""));
+
+          possibleCommands.forEach(possibleCommand -> {
+            App.logger.info("  " + possibleCommand);
+          });
+        }
+
         return;
       }
 
