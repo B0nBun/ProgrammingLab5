@@ -130,7 +130,7 @@ public record Coordinates(
          * @return Optional with the string, representing an error. If the optional is empty, then the value is valid. Otherwise string should be interpreted as the validation erorr message.
          */
         public static Optional<String> x(Long x) {
-            if (x == null) return Optional.of(Messages.get("Error.Validation.Required", Messages.get("Vehicle.Coordinate.X")));
+            if (x == null) return Optional.of(Messages.get("Error.Validation.Required", Messages.get("Vehicle.Coordinates.X")));
             return Optional.empty();
         }
 
@@ -140,8 +140,8 @@ public record Coordinates(
          * @return Optional with the string, representing an error. If the optional is empty, then the value is valid. Otherwise string should be interpreted as the validation erorr message.
          */
         public static Optional<String> y(Integer y) {
-            if (y == null) return Optional.of(Messages.get("Error.Validation.Required", Messages.get("Vehicle.Coordinate.Y")));
-            if (y > -738) return Optional.of(Messages.get("Error.Validation.LowerThan", Messages.get("Vehicle.Coordinate.Y"), -737));
+            if (y == null) return Optional.of(Messages.get("Error.Validation.Required", Messages.get("Vehicle.Coordinates.Y")));
+            if (y > -738) return Optional.of(Messages.get("Error.Validation.LowerThan", Messages.get("Vehicle.Coordinates.Y"), -737));
             return Optional.empty();
         }
     }
