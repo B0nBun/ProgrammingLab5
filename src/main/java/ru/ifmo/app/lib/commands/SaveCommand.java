@@ -21,44 +21,39 @@ public class SaveCommand implements Command {
   private File askForFilepath(Scanner scanner) {
     App.logger.info(Messages.get("ProvideFileForSaving"));
     String filepath = scanner.nextLine();
-    if (filepath == null || filepath.length() == 0) {
+    if (filepath == null || filepath.trim().length() == 0) {
       return null;
     }
-    return new File(filepath);
+    return new File(filepath.trim());
   }
 
-  // TODO: Если прокинуть пустую строку в ответ на промпт, то вылетает ошибка NullPointer
-  // TODO: trim название фала
   // TODO: Не позволятьь сохранять файл с названием \ (и попробовать найти еще подобных)
   @Override
   public void execute(CommandContext context) {
-    File savingFile = context.vehiclesFile();
 
     var xmlOutputter = new XMLOutputter();
     xmlOutputter.setFormat(Format.getPrettyFormat());
     Element vehiclesRootElement = context.vehicles().toXmlElement();
     String vehiclesSerialized = xmlOutputter.outputString(vehiclesRootElement);
 
-    if (savingFile == null) {
-      savingFile = askForFilepath(context.scanner());
-    }
     while (true) {
+      File savingFile = context.vehiclesFile() == null ? askForFilepath(context.scanner())
+          : context.vehiclesFile();
+
+      if (savingFile == null) {
+        App.logger.info(Messages.get("SaveCancel"));
+        break;
+      }
+
       try (var printWriter = new PrintWriter(savingFile)) {
         printWriter.write(vehiclesSerialized);
+        App.logger.info(Messages.get("CollectionWasSaved", savingFile.getAbsolutePath()));
         break;
       } catch (FileNotFoundException err) {
         App.logger.error(Messages.get("Error.FileNotFound", savingFile, err.getMessage()));
-        savingFile = askForFilepath(context.scanner());
-        if (savingFile == null) {
-          break;
-        }
+        continue;
       }
     }
-    if (savingFile == null) {
-      App.logger.info(Messages.get("SaveCancel"));
-      return;
-    }
-    App.logger.info(Messages.get("CollectionWasSaved", savingFile.getAbsolutePath()));
   }
 
   @Override
