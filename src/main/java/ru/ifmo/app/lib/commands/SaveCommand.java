@@ -10,6 +10,7 @@ import org.jdom2.output.XMLOutputter;
 import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
+import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.utils.Messages;
 
 /**
@@ -27,7 +28,6 @@ public class SaveCommand implements Command {
     return new File(filepath.trim());
   }
 
-  // TODO: Не позволятьь сохранять файл с названием \ (и попробовать найти еще подобных)
   @Override
   public void execute(CommandContext context) {
 
@@ -43,6 +43,12 @@ public class SaveCommand implements Command {
       if (savingFile == null) {
         App.logger.info(Messages.get("SaveCancel"));
         break;
+      }
+
+      var validationError = Utils.validateFilename(savingFile.getName());
+      if (validationError.isPresent() && !savingFile.exists()) {
+        App.logger.error(validationError.get());
+        continue;
       }
 
       try (var printWriter = new PrintWriter(savingFile)) {

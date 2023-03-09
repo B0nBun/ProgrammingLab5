@@ -54,6 +54,21 @@ public class Utils {
     }
   }
 
+  public static Optional<String> validateFilename(String filename) {
+    if (filename.contains(" ")) {
+      return Optional.of(Messages.get("Error.Validation.FilenameContainsSpaces", filename));
+    }
+    String illegalCharacters = "#%&{}\\<>*?/ $!'\":@+`|=";
+    boolean illegalCharacterFound =
+        illegalCharacters.chars().map(c -> filename.indexOf(c)).anyMatch(i -> i != -1);
+    if (illegalCharacterFound) {
+      return Optional.of(
+          Messages.get("Error.Validation.FilenameIllegalCharacter", illegalCharacters, filename));
+    }
+
+    return Optional.empty();
+  }
+
   /**
    * Functional interface which implements the {@code validate} method. See
    * {@link Validator#validate} for more detailed description.
