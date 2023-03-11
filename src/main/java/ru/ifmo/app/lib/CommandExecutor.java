@@ -123,9 +123,9 @@ public class CommandExecutor {
 
       Command command = this.commandRegistery.get(commandname);
       if (command == null) {
-        App.logger.warn(Messages.get("Error.CommandNotFound", commandString));
+        App.logger.warn(Messages.get("Error.CommandNotFound", commandname));
 
-        var possibleCommands = getPossiblyMeantCommands(commandString);
+        var possibleCommands = getPossiblyMeantCommands(commandname);
 
         if (!possibleCommands.isEmpty()) {
           App.logger.warn(Messages.get("Error.MaybeYouMeant", ""));
