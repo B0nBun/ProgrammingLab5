@@ -15,7 +15,8 @@ import ru.ifmo.app.lib.utils.Messages;
 public class RemoveLowerCommand implements Command {
   @Override
   public void execute(CommandContext context) {
-    var creationSchema = VehicleCreationSchema.createFromScanner(context.scanner());
+    var creationSchema =
+        VehicleCreationSchema.createFromScanner(context.scanner(), context.executedByScript());
     var notAddedVehicle = creationSchema.generate(context.vehicles().peekNextId(),
         context.vehicles().peekNextCreationDate());
     context.vehicles().removeIf(vehicle -> {

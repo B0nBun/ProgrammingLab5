@@ -18,7 +18,8 @@ import ru.ifmo.app.lib.exceptions.ParsingException;
  * 
  */
 public record ValidatedScanner(
-    Scanner scanner
+    Scanner scanner,
+    boolean logScanned
 ) {
     /**
      * Scans the lines from input, until scanned string passes the validation function.
@@ -28,7 +29,7 @@ public record ValidatedScanner(
      * @return First string from scanner, which passed validation 
      */
     public String string(String inputString, Validator<String> validator) {
-        return Utils.scanUntilValid(line -> line, validator, scanner, inputString, Exception::getMessage);
+        return Utils.scanUntilValid(line -> line, validator, scanner, inputString, Exception::getMessage, this.logScanned);
     }
 
     /**
@@ -50,7 +51,7 @@ public record ValidatedScanner(
                     throw new ParsingException(err.getMessage());
                 }
             },
-            validator, scanner, inputString, parsingErrorMessage
+            validator, scanner, inputString, parsingErrorMessage, this.logScanned
         );
     }
 
@@ -66,7 +67,8 @@ public record ValidatedScanner(
             Vehicle.validate::vehicleType,
             scanner,
             inputString,
-            Exception::getMessage
+            Exception::getMessage,
+            this.logScanned
         );
         return type;
     }
@@ -83,7 +85,8 @@ public record ValidatedScanner(
             Vehicle.validate::fuelType,
             scanner,
             inputString,
-            Exception::getMessage
+            Exception::getMessage,
+            this.logScanned
         );
         return type;
     }

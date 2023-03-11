@@ -36,7 +36,7 @@ public class UpdateCommand implements Command {
     App.logger.info(Messages.get("UpdatingVehicleWithId", found.id()));
 
     var updatedSchema = VehicleCreationSchema.createFromScanner(context.scanner(),
-        new VehicleCreationSchema(found));
+        new VehicleCreationSchema(found), context.executedByScript());
 
     context.vehicles().mutate(vehicle -> {
       if (uuidStartsWith(vehicle.id(), vehicleUUID)) {

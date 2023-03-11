@@ -375,9 +375,10 @@ public class Vehicles {
          */
         public static VehicleCreationSchema createFromScanner(
             Scanner scanner,
-            VehicleCreationSchema example
+            VehicleCreationSchema example,
+            boolean logScanned
         ) {
-            var vscanner = new ValidatedScanner(scanner);
+            var vscanner = new ValidatedScanner(scanner, logScanned);
 
             BiFunction<String, Object, String> withExample = (str1, exampleAttribute) -> {
                 if (example == null) {
@@ -445,9 +446,10 @@ public class Vehicles {
          * @see VehicleCreationSchema#createFromScanner(Scanner, VehicleCreationSchema)
          */
         public static VehicleCreationSchema createFromScanner(
-            Scanner scanner
+            Scanner scanner,
+            boolean logScanned
         ) {
-            return VehicleCreationSchema.createFromScanner(scanner, null);
+            return VehicleCreationSchema.createFromScanner(scanner, null, logScanned);
         }
     }
 }

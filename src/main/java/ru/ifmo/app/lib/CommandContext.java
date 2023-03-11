@@ -20,4 +20,8 @@ public record CommandContext(
     Scanner scanner,
     CommandRegistery commandRegistery,
     int scriptExecutionDepth
-) {}
+) {
+    public boolean executedByScript() {
+        return this.scriptExecutionDepth > 0;
+    }
+}

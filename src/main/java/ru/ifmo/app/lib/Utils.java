@@ -29,10 +29,14 @@ public class Utils {
    *         guaranteed to have passed the parsing and validation processes
    */
   public static <T> T scanUntilValid(ParsingFunction<T> parsingFunction, Validator<T> validator,
-      Scanner scanner, String inputString, Function<ParsingException, String> parsingErrorMessage) {
+      Scanner scanner, String inputString, Function<ParsingException, String> parsingErrorMessage,
+      boolean logScanned) {
     while (true) {
       App.logger.info(inputString);
       String line = scanner.nextLine().trim();
+      if (logScanned) {
+        App.logger.info(line);
+      }
 
       if (line.length() == 0) {
         var validationError = validator.validate(null);

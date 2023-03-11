@@ -2,7 +2,9 @@ package ru.ifmo.app.lib.commands;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
+import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.CommandExecutor;
@@ -41,11 +43,14 @@ public class ExecuteScriptCommand implements Command {
 
       while (fileScanner.hasNextLine()) {
         String commandString = fileScanner.nextLine();
+        App.logger.info(commandString);
         commandExecutor.executeCommandString(commandString);
       }
     } catch (FileNotFoundException | SecurityException err) {
       throw new InvalidArgumentException(Messages.get("Help.Command.Arg.Filepath"),
           err.getMessage());
+    } catch (NoSuchElementException err) {
+      App.logger.error(Messages.get("Error.NoSuchElement.ScriptEnded"));
     }
   }
 

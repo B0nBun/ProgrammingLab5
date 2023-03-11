@@ -18,7 +18,7 @@ public class AddCommand implements Command {
   @Override
   public void execute(CommandContext context) {
     VehicleCreationSchema creationSchema =
-        VehicleCreationSchema.createFromScanner(context.scanner());
+        VehicleCreationSchema.createFromScanner(context.scanner(), context.executedByScript());
     context.vehicles().add(creationSchema);
   }
 
