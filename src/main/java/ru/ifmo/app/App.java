@@ -17,7 +17,6 @@ import ru.ifmo.app.lib.utils.Messages;
 
 // ВАРИАНТ: 863200
 
-// TODO: Не правильно отформатированный вывод info
 /** Entry point of a program, which starts the repl loop and loads the xml file. */
 public class App {
 

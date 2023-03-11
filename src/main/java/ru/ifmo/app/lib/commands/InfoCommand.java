@@ -11,11 +11,11 @@ import ru.ifmo.app.lib.utils.Messages;
 public class InfoCommand implements Command {
   @Override
   public void execute(CommandContext context) {
-    App.logger.info(Messages.get("InfoCommand.CreationDate"), context.vehicles().creationDate());
-    App.logger.info(Messages.get("InfoCommand.CollectionType"),
-        context.vehicles().collectionType());
-    App.logger.info(Messages.get("InfoCommand.CollectionSize"),
-        context.vehicles().stream().count());
+    App.logger.info(Messages.get("InfoCommand.CreationDate", context.vehicles().creationDate()));
+    App.logger
+        .info(Messages.get("InfoCommand.CollectionType", context.vehicles().collectionType()));
+    App.logger
+        .info(Messages.get("InfoCommand.CollectionSize", context.vehicles().stream().count()));
   }
 
   @Override
