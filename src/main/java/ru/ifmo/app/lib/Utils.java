@@ -1,5 +1,7 @@
 package ru.ifmo.app.lib;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.Function;
@@ -9,6 +11,38 @@ import ru.ifmo.app.lib.utils.Messages;
 
 /** A class that serves as a namespace for utility methods and functional interfaces */
 public class Utils {
+
+  /**
+   * A function, which expands the given path by reading the output from the subprocess command
+   * `bash -c 'echo {path}'`
+   * <p>
+   * Source: https://stackoverflow.com/questions/7163364/how-to-handle-in-file-paths
+   * </p>
+   * <i> Replaced `ls` with `echo` command, because it didn't work with non-existant files </i>
+   * 
+   * @param path
+   * @return
+   */
+  public static String expandPath(String path) {
+    try {
+      String command = "echo " + path;
+      Process shellExec = Runtime.getRuntime().exec(new String[] {"bash", "-c", command});
+
+      BufferedReader reader = new BufferedReader(new InputStreamReader(shellExec.getInputStream()));
+      String expandedPath = reader.readLine();
+
+      // Only return a new value if expansion worked.
+      // We're reading from stdin. If there was a problem, it was written
+      // to stderr and our result will be null.
+      if (expandedPath != null) {
+        path = expandedPath;
+      }
+    } catch (java.io.IOException ex) {
+      // Just consider it unexpandable and return original path.
+    }
+
+    return path;
+  }
 
   /**
    * Using the passed scanner, starts a loop which prmopts the user, scans the next line and breaks

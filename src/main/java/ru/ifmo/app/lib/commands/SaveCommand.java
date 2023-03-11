@@ -1,9 +1,7 @@
 package ru.ifmo.app.lib.commands;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.Scanner;
 import org.jdom2.Element;
@@ -21,37 +19,13 @@ import ru.ifmo.app.lib.utils.Messages;
  * prompt.
  */
 public class SaveCommand implements Command {
-  // https://stackoverflow.com/questions/7163364/how-to-handle-in-file-paths
-  // Replaced `ls` with `echo` command, because it didn't work with non-existant files
-  private String expandPath(String path) {
-    try {
-      String command = "echo " + path;
-      Process shellExec = Runtime.getRuntime().exec(new String[] {"bash", "-c", command});
-
-      BufferedReader reader = new BufferedReader(new InputStreamReader(shellExec.getInputStream()));
-      String expandedPath = reader.readLine();
-
-      // Only return a new value if expansion worked.
-      // We're reading from stdin. If there was a problem, it was written
-      // to stderr and our result will be null.
-      if (expandedPath != null) {
-        path = expandedPath;
-      }
-    } catch (java.io.IOException ex) {
-      // Just consider it unexpandable and return original path.
-    }
-
-    return path;
-  }
-
-
   private File askForFilepath(Scanner scanner) {
     App.logger.info(Messages.get("ProvideFileForSaving"));
     String filepath = scanner.nextLine();
     if (filepath == null || filepath.trim().length() == 0) {
       return null;
     }
-    String expanded = expandPath(filepath);
+    String expanded = Utils.expandPath(filepath);
     return new File(expanded.trim());
   }
 

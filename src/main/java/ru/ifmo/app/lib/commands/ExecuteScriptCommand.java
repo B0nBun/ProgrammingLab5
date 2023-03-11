@@ -8,6 +8,7 @@ import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Command;
 import ru.ifmo.app.lib.CommandContext;
 import ru.ifmo.app.lib.CommandExecutor;
+import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.exceptions.ExitProgramException;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
@@ -35,7 +36,7 @@ public class ExecuteScriptCommand implements Command {
     if (context.arguments().length < 1)
       throw new InvalidNumberOfArgumentsException(1, context.arguments().length);
 
-    String scriptFilepath = context.arguments()[0];
+    String scriptFilepath = Utils.expandPath(context.arguments()[0]);
 
     try (Scanner fileScanner = new Scanner(new FileInputStream(scriptFilepath))) {
       var commandExecutor = new CommandExecutor(fileScanner, context.vehicles(),
