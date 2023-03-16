@@ -111,16 +111,16 @@ public class Vehicles {
         vehiclesElement.getAttributeValue(VehiclesXmlTag.CREATION_DATE_ATTR.toString());
     if (creationDateString == null) {
       App.logger.warn(Messages.get("Warn.CreationDateNotFound", VehiclesXmlTag.CREATION_DATE_ATTR));
+      return null;
     }
 
-    LocalDate creationDate = null;
     try {
-      creationDate = LocalDate.parse(creationDateString);
+      var creationDate = LocalDate.parse(creationDateString);
+      return creationDate;
     } catch (DateTimeParseException err) {
       App.logger.error(Messages.get("Error.Parsing.CreationDate", err.getMessage()));
+      return null;
     }
-
-    return creationDate;
   }
 
   /**
