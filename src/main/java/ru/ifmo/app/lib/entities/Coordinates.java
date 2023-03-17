@@ -7,7 +7,7 @@ import org.jdom2.Element;
 
 import ru.ifmo.app.lib.VehiclesXmlTag;
 import ru.ifmo.app.lib.Utils.NumberParser;
-import ru.ifmo.app.lib.Utils.Validator;
+import ru.ifmo.app.lib.Utils.DeprecatedValidator;
 import ru.ifmo.app.lib.exceptions.ParsingException;
 import ru.ifmo.app.lib.utils.Messages;
 
@@ -41,7 +41,7 @@ public record Coordinates(
     private static <N> N parseOneCoordinate(
         String coordinateString,
         NumberParser<N> numberParse,
-        Validator<N> validator,
+        DeprecatedValidator<N> validator,
         VehiclesXmlTag tagname,
         String vehicleUUID
     ) throws ParsingException {
@@ -119,7 +119,7 @@ public record Coordinates(
 
     /**
      * Staic class, which serves as a namespace for Coordinates fields' validation methods.
-     * Every method implements the functional {@link ru.ifmo.app.lib.Utils.Validator Utils.Validator} interface
+     * Every method implements the functional {@link ru.ifmo.app.lib.Utils.DeprecatedValidator Utils.Validator} interface
      */
     public static class validate {
         private validate() {}

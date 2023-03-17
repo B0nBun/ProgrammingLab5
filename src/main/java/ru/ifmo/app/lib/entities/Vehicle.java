@@ -8,7 +8,7 @@ import java.util.UUID;
 import org.jdom2.Element;
 import ru.ifmo.app.lib.VehiclesXmlTag;
 import ru.ifmo.app.lib.Utils.ParsingFunction;
-import ru.ifmo.app.lib.Utils.Validator;
+import ru.ifmo.app.lib.Utils.DeprecatedValidator;
 import ru.ifmo.app.lib.exceptions.ParsingException;
 import ru.ifmo.app.lib.utils.Messages;
 
@@ -57,7 +57,7 @@ public record Vehicle(
     private static <T> T parseAndValidateElementContent(
         Element element,
         VehiclesXmlTag tagname,
-        Validator<T> validator,
+        DeprecatedValidator<T> validator,
         ParsingFunction<T> parsingFunction,
         UUID vehicleId
     ) throws ParsingException {
@@ -279,7 +279,7 @@ public record Vehicle(
     
     /**
      * Staic class, which serves as a namespace for Vehicle fields' validation methods.
-     * Every method implements the functional {@link ru.ifmo.app.lib.Utils.Validator Utils.Validator} interface
+     * Every method implements the functional {@link ru.ifmo.app.lib.Utils.DeprecatedValidator Utils.Validator} interface
      */
     public static class validate {
         private validate() {}

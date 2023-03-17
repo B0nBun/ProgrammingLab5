@@ -52,7 +52,7 @@ public class Utils {
    * @param parsingFunction A function that accepts a String and returns a value of a generic type
    *        {@code T} (can throw a ParsingException to signify that the parsing failed)
    * @param validator A function that accepts a value of type {@code T} and returns an
-   *        {@link Optional} of a String. See functional interface {@link Validator} for more
+   *        {@link Optional} of a String. See functional interface {@link DeprecatedValidator} for more
    *        detailed description
    * @param scanner A Scanner which is used to get the input by calling the
    *        {@link Scanner#nextLine()}
@@ -62,7 +62,7 @@ public class Utils {
    * @return A value of type {@code T} scanned from the line in the Scanner. This value is
    *         guaranteed to have passed the parsing and validation processes
    */
-  public static <T> T scanUntilValid(ParsingFunction<T> parsingFunction, Validator<T> validator,
+  public static <T> T scanUntilValid(ParsingFunction<T> parsingFunction, DeprecatedValidator<T> validator,
       Scanner scanner, String inputString, Function<ParsingException, String> parsingErrorMessage,
       boolean logScanned) {
     while (true) {
@@ -109,10 +109,10 @@ public class Utils {
 
   /**
    * Functional interface which implements the {@code validate} method. See
-   * {@link Validator#validate} for more detailed description.
+   * {@link DeprecatedValidator#validate} for more detailed description.
    */
   @FunctionalInterface
-  public static interface Validator<T> {
+  public static interface DeprecatedValidator<T> {
     /**
      * Function, which validates that the value of type {@code T} is correct.
      *

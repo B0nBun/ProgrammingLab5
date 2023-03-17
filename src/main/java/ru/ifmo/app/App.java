@@ -15,7 +15,9 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 import ru.ifmo.app.lib.exceptions.MaximumScriptExecutionDepthException;
 import ru.ifmo.app.lib.utils.Messages;
 
-// ВАРИАНТ: 863200
+// ВАРИАНТ: 1251262 
+
+// TODO: Переделать систему парсинга и валидации на систему с классами Field { parse(), validate(), propmpt() }
 
 /** Entry point of a program, which starts the repl loop and loads the xml file. */
 public class App {

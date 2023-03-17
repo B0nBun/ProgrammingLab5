@@ -5,7 +5,7 @@ import java.util.function.Function;
 
 import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.Utils.NumberParser;
-import ru.ifmo.app.lib.Utils.Validator;
+import ru.ifmo.app.lib.Utils.DeprecatedValidator;
 import ru.ifmo.app.lib.entities.FuelType;
 import ru.ifmo.app.lib.entities.Vehicle;
 import ru.ifmo.app.lib.entities.VehicleType;
@@ -28,7 +28,7 @@ public record ValidatedScanner(
      * @param validator A validator to which scanned strings are passed
      * @return First string from scanner, which passed validation 
      */
-    public String string(String inputString, Validator<String> validator) {
+    public String string(String inputString, DeprecatedValidator<String> validator) {
         return Utils.scanUntilValid(line -> line, validator, scanner, inputString, Exception::getMessage, this.logScanned);
     }
 
@@ -42,7 +42,7 @@ public record ValidatedScanner(
      * @param parsingErrorMessage A method which converts ParsingException to the string, which the will be logged
      * @return Parsed and validated value of T type
      */
-    public <T> T number(NumberParser<T> numberParser, Validator<T> validator, String inputString, Function<ParsingException, String> parsingErrorMessage) {
+    public <T> T number(NumberParser<T> numberParser, DeprecatedValidator<T> validator, String inputString, Function<ParsingException, String> parsingErrorMessage) {
         return Utils.scanUntilValid(
             string -> {
                 try {
