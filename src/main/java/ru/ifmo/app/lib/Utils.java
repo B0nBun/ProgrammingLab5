@@ -5,8 +5,10 @@ import java.io.InputStreamReader;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import ru.ifmo.app.App;
 import ru.ifmo.app.lib.exceptions.ParsingException;
+import ru.ifmo.app.lib.exceptions.ValidationException;
 import ru.ifmo.app.lib.utils.Messages;
 
 /** A class that serves as a namespace for utility methods and functional interfaces */
@@ -52,8 +54,8 @@ public class Utils {
    * @param parsingFunction A function that accepts a String and returns a value of a generic type
    *        {@code T} (can throw a ParsingException to signify that the parsing failed)
    * @param validator A function that accepts a value of type {@code T} and returns an
-   *        {@link Optional} of a String. See functional interface {@link DeprecatedValidator} for more
-   *        detailed description
+   *        {@link Optional} of a String. See functional interface {@link DeprecatedValidator} for
+   *        more detailed description
    * @param scanner A Scanner which is used to get the input by calling the
    *        {@link Scanner#nextLine()}
    * @param inputString A String which is logged before the prompt
@@ -62,9 +64,9 @@ public class Utils {
    * @return A value of type {@code T} scanned from the line in the Scanner. This value is
    *         guaranteed to have passed the parsing and validation processes
    */
-  public static <T> T scanUntilValid(ParsingFunction<T> parsingFunction, DeprecatedValidator<T> validator,
-      Scanner scanner, String inputString, Function<ParsingException, String> parsingErrorMessage,
-      boolean logScanned) {
+  public static <T> T scanUntilValid(ParsingFunction<T> parsingFunction,
+      DeprecatedValidator<T> validator, Scanner scanner, String inputString,
+      Function<ParsingException, String> parsingErrorMessage, boolean logScanned) {
     while (true) {
       App.logger.info(inputString);
       String line = scanner.nextLine().trim();
@@ -125,6 +127,35 @@ public class Utils {
      *         the optional is considered to be an error message.
      */
     Optional<String> validate(T value);
+  }
+
+  /**
+   * Functional interface which implements the {@code validate} method. See
+   * {@link Validator#validate} for more detailed description
+   */
+  @FunctionalInterface
+  public static interface Validator<T> {
+    /**
+     * Function, which validates that the value of type {@code T} is correct
+     * 
+     * @param value Value to validate
+     * @return The same value if it is valid, otherwise throws
+     * @throws ValidationException Thrown if the validation failed
+     */
+    T validate(T value) throws ValidationException;
+
+    public static <T> Validator<T> from(Predicate<T> predicate, Function<T, String> messageGetter) {
+      return value -> {
+        boolean valid = predicate.test(value);
+        if (valid)
+          return value;
+        throw new ValidationException(messageGetter.apply(value));
+      };
+    }
+
+    public static <T> Validator<T> from(Predicate<T> predicate, String failMessage) {
+      return Validator.from(predicate, __ -> failMessage);
+    }
   }
 
   /**
