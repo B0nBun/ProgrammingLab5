@@ -7,11 +7,12 @@ import ru.ifmo.app.lib.Utils.Validator;
 import ru.ifmo.app.lib.exceptions.ParsingException;
 
 public class FieldSchemaNum<N extends Comparable<N>>
-    implements FieldSchemaOrd<N, FieldSchemaNum<N>> {
+    implements FieldSchemaComparable<N, FieldSchemaNum<N>> {
   private List<Validator<N>> validators;
   private NumberParser<N> parser;
 
   private FieldSchemaNum(NumberParser<N> numberParser, List<Validator<N>> initValidators) {
+    this.parser = numberParser;
     this.validators = initValidators;
   }
 
@@ -20,6 +21,9 @@ public class FieldSchemaNum<N extends Comparable<N>>
   }
 
   public N parse(String input) throws ParsingException {
+    if (input == null)
+      return null;
+
     try {
       N parsed = parser.parse(input);
       return parsed;

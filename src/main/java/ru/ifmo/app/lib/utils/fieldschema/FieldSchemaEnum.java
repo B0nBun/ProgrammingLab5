@@ -7,7 +7,7 @@ import ru.ifmo.app.lib.Utils.Validator;
 import ru.ifmo.app.lib.exceptions.ParsingException;
 
 public class FieldSchemaEnum<TEnum extends Enum<TEnum>>
-    implements FieldSchemaOrd<TEnum, FieldSchemaEnum<TEnum>> {
+    implements FieldSchemaComparable<TEnum, FieldSchemaEnum<TEnum>> {
   private List<Validator<TEnum>> validators;
   private boolean allowIndex;
   private Class<TEnum> enumClass;
@@ -28,6 +28,9 @@ public class FieldSchemaEnum<TEnum extends Enum<TEnum>>
   }
 
   public TEnum parse(String input) throws ParsingException {
+    if (input == null)
+      return null;
+
     var value = Arrays.stream(enumClass.getEnumConstants())
         .filter(e -> e.name().equalsIgnoreCase(input)).findAny().orElse(null);
 
@@ -35,15 +38,17 @@ public class FieldSchemaEnum<TEnum extends Enum<TEnum>>
       try {
         Integer index = Integer.parseUnsignedInt(input);
         return enumClass.getEnumConstants()[index - 1];
-      } catch (ArrayIndexOutOfBoundsException | NumberFormatException _err) {
-        // TODO: Log the error
-        throw new ParsingException("");
+      } catch (ArrayIndexOutOfBoundsException _err) {
+        throw new ParsingException("Invalid enumeration index, maximum enumeration index is "
+            + enumClass.getEnumConstants().length);
+      } catch (NumberFormatException _err) {
+        throw new ParsingException("Couldn't parse '" + input + "'");
       }
     }
 
     if (value == null) {
-      // TODO: Log the error
-      throw new ParsingException("");
+      throw new ParsingException(
+          "Couldn't find specified enumeration value with name '" + input + "'");
     }
 
     return value;

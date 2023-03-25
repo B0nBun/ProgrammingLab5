@@ -9,6 +9,11 @@ public interface FieldSchemaComparable<T extends Comparable<T>, Self extends Fie
         "value can not be greater than " + maxValue));
   }
 
+  default public Self greaterThan(T minValue) {
+    return this.refine(Validator.from(value -> value.compareTo(minValue) > 0,
+        "value must be greater than " + minValue));
+  }
+
   default public Self min(T minValue) {
     return this.refine(Validator.from(value -> value.compareTo(minValue) >= 0,
         "value can not be lesser than " + minValue));

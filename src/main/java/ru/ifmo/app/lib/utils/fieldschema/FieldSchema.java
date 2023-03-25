@@ -8,9 +8,9 @@ import ru.ifmo.app.lib.exceptions.ParsingException;
 import ru.ifmo.app.lib.exceptions.ValidationException;
 
 // TODO: Заменить все захардкоженные строки на Message.get
-// TODO: Проверить что будет если без nonnull валидировать null
-// TODO: Добавить FieldSchemaFilepath
-public interface FieldSchema<T, Self extends FieldSchema<T, Self>> {
+// TODO: Исправить логирование ошибок
+// TODO: Документация (не только по FieldSchema, но и по всем измененным методам)
+public interface FieldSchema<T, Self extends FieldSchema<T, Self>> extends Validator<T> {
 
   public T parse(String input) throws ParsingException;
 
@@ -73,6 +73,10 @@ public interface FieldSchema<T, Self extends FieldSchema<T, Self>> {
   default public Self mustequal(T eqvalue) {
     return this.refine(
         Validator.from(value -> value.equals(eqvalue), "value must be equal to " + eqvalue));
+  }
+
+  public static FieldSchemaLocalDate localdate() {
+    return new FieldSchemaLocalDate();
   }
 
   public static <TEnum extends Enum<TEnum>> FieldSchemaEnum<TEnum> enumeration(

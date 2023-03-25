@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import ru.ifmo.app.lib.Utils.Validator;
 
-public class FieldSchemaString implements FieldSchemaOrd<String, FieldSchemaString> {
+public class FieldSchemaString implements FieldSchemaComparable<String, FieldSchemaString> {
   private List<Validator<String>> validators;
 
   private FieldSchemaString(List<Validator<String>> initValidators) {
