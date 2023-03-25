@@ -28,7 +28,7 @@ public class FieldSchemaEnum<TEnum extends Enum<TEnum>>
   }
 
   public TEnum parse(String input) throws ParsingException {
-    if (input == null)
+    if (input == null || input.equals(""))
       return null;
 
     var value = Arrays.stream(enumClass.getEnumConstants())

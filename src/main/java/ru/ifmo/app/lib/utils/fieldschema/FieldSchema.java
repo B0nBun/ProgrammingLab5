@@ -2,6 +2,7 @@ package ru.ifmo.app.lib.utils.fieldschema;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Function;
 import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Utils.Validator;
 import ru.ifmo.app.lib.exceptions.ParsingException;
@@ -48,15 +49,16 @@ public interface FieldSchema<T, Self extends FieldSchema<T, Self>> extends Valid
     return this.fromString(input);
   }
 
-  default public T promptUntilValid(String promptMessage, Scanner scanner, boolean inputLog) {
+  default public T promptUntilValid(String promptMessage, Scanner scanner,
+      String parsingErrorMessage, boolean inputLog) {
     while (true) {
       try {
         var scannedValue = this.prompt(promptMessage, scanner, inputLog);
         return scannedValue;
       } catch (ParsingException err) {
-        App.logger.error("Couldn't parse: " + err.getMessage());
+        App.logger.error(parsingErrorMessage);
       } catch (ValidationException err) {
-        App.logger.error("Invalid value: " + err.getMessage());
+        App.logger.error(err.getMessage());
       }
     }
   }

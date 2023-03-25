@@ -24,6 +24,10 @@ public class FieldSchemaString implements FieldSchemaComparable<String, FieldSch
             + Arrays.stream(strings).map(s -> "'" + s + "'").collect(Collectors.joining(", "))));
   }
 
+  public FieldSchemaString nonempty() {
+    return this.refine(Validator.from(s -> s.length() != 0, "string can't be empty"));
+  }
+
   public String parse(String input) {
     return input;
   }

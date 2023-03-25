@@ -100,7 +100,7 @@ public record Vehicle(
     
             String creationDateString = vehicleElement.getAttributeValue(VehiclesXmlTag.CREATION_DATE_ATTR.toString());
             if (creationDateString == null) {
-                throw new ValidationException(Messages.get("Error.XmlAttribute.ReuiredButGot", VehiclesXmlTag.CREATION_DATE_ATTR, "date", "nothing"));
+                throw new ValidationException(Messages.get("Error.XmlAttribute.RequiredButGot", VehiclesXmlTag.CREATION_DATE_ATTR, "date", "nothing"));
             }
             LocalDate creationDate = FieldSchema.localdate().parse(creationDateString);
     
@@ -152,7 +152,7 @@ public record Vehicle(
      * Static class, which serves as a namespace for {@link FieldSchema FieldSchemas} representing the fields stored in the Vehicle class.
      */
     public static final class fields {
-        public static final FieldSchemaString name = FieldSchema.str().nonnull().notequals("");
+        public static final FieldSchemaString name = FieldSchema.str().nonnull().nonempty();
         public static final FieldSchemaNum<Float> enginePower = FieldSchema.floating().nonnull().greaterThan(0f);
         public static final FieldSchemaEnum<FuelType> fuelType = FieldSchema.enumeration(FuelType.class);
         public static final FieldSchemaEnum<VehicleType> vehicleType = FieldSchema.enumeration(VehicleType.class);

@@ -384,12 +384,42 @@ public class Vehicles {
             return promptString + " (" + exampleField.apply(example) + ")";
           };
 
-          String name = Vehicle.fields.name.promptUntilValid(withExample.apply("name", v -> v.name()), scanner, logScanned);
-          Long coordinateX = Coordinates.fields.x.promptUntilValid(withExample.apply("X coordinate", v -> v.coordinates().x()), scanner, logScanned);
-          Integer coordinateY = Coordinates.fields.y.promptUntilValid(withExample.apply("Y coordinate", v -> v.coordinates().y()), scanner, logScanned);
-          Float enginePower = Vehicle.fields.enginePower.promptUntilValid(withExample.apply("engine power", v -> v.enginePower()), scanner, logScanned);
-          VehicleType vehicleType = Vehicle.fields.vehicleType.promptUntilValid(withExample.apply("vehicle type", v -> v.type()), scanner, logScanned);
-          FuelType fuelType = Vehicle.fields.fuelType.promptUntilValid(withExample.apply("fuel type", v -> v.fuelType()), scanner, logScanned);
+          String name = Vehicle.fields.name.promptUntilValid(
+            withExample.apply("name", v -> v.name()),
+            scanner,
+            "unreachable",
+            logScanned
+          );
+          Long coordinateX = Coordinates.fields.x.promptUntilValid(
+            withExample.apply("X coordinate", v -> v.coordinates().x()),
+            scanner,
+            "long integer required",
+            logScanned
+          );
+          Integer coordinateY = Coordinates.fields.y.promptUntilValid(
+            withExample.apply("Y coordinate", v -> v.coordinates().y()),
+            scanner,
+            "integer required",
+            logScanned
+          );
+          Float enginePower = Vehicle.fields.enginePower.promptUntilValid(
+            withExample.apply("engine power", v -> v.enginePower()),
+            scanner,
+            "float required",
+            logScanned
+          );
+          VehicleType vehicleType = Vehicle.fields.vehicleType.promptUntilValid(
+            withExample.apply("vehicle type", v -> v.type()),
+            scanner,
+            "one of the following required: " + VehicleType.showIndexedList(", "),
+            logScanned
+          );
+          FuelType fuelType = Vehicle.fields.fuelType.promptUntilValid(
+            withExample.apply("fuel type", v -> v.fuelType()),
+            scanner,
+            "one of the following required: " + VehicleType.showIndexedList(", "),
+            logScanned
+          );
 
           return new VehicleCreationSchema(name, new Coordinates(coordinateX, coordinateY), enginePower, vehicleType, fuelType);
         }
