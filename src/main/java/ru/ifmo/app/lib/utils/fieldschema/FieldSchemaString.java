@@ -1,10 +1,9 @@
 package ru.ifmo.app.lib.utils.fieldschema;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import ru.ifmo.app.lib.Utils.Validator;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class FieldSchemaString implements FieldSchemaComparable<String, FieldSchemaString> {
   private List<Validator<String>> validators;
@@ -17,15 +16,9 @@ public class FieldSchemaString implements FieldSchemaComparable<String, FieldSch
     this(new ArrayList<>());
   }
 
-  public FieldSchemaString notcontains(String... strings) {
-    return this.refine(Validator.from(
-        value -> !Arrays.stream(strings).anyMatch(str -> value.contains(str)),
-        "string can't contain the strings from list: "
-            + Arrays.stream(strings).map(s -> "'" + s + "'").collect(Collectors.joining(", "))));
-  }
-
   public FieldSchemaString nonempty() {
-    return this.refine(Validator.from(s -> s.length() != 0, "string can't be empty"));
+    return this
+        .refine(Validator.from(s -> s.length() != 0, Messages.get("FieldSchemaString.NotEmpty")));
   }
 
   public String parse(String input) {

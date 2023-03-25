@@ -2,14 +2,13 @@ package ru.ifmo.app.lib.utils.fieldschema;
 
 import java.util.List;
 import java.util.Scanner;
-import java.util.function.Function;
 import ru.ifmo.app.App;
 import ru.ifmo.app.lib.Utils.Validator;
 import ru.ifmo.app.lib.exceptions.ParsingException;
 import ru.ifmo.app.lib.exceptions.ValidationException;
+import ru.ifmo.app.lib.utils.Messages;
 
 // TODO: Заменить все захардкоженные строки на Message.get
-// TODO: Исправить логирование ошибок
 // TODO: Документация (не только по FieldSchema, но и по всем измененным методам)
 public interface FieldSchema<T, Self extends FieldSchema<T, Self>> extends Validator<T> {
 
@@ -39,7 +38,6 @@ public interface FieldSchema<T, Self extends FieldSchema<T, Self>> extends Valid
     }
   }
 
-  // TODO: nextLine скорее всего тоже может выкинуть какую-то ошибку, надо уточнить
   default public T prompt(String promptMessage, Scanner scanner, boolean inputLog)
       throws ValidationException, ParsingException {
     App.logger.info(promptMessage + ":");
@@ -64,17 +62,18 @@ public interface FieldSchema<T, Self extends FieldSchema<T, Self>> extends Valid
   }
 
   default public Self nonnull() {
-    return this.refine(Validator.from(value -> value != null, "value is required"));
+    return this
+        .refine(Validator.from(value -> value != null, Messages.get("FieldSchema.Required")));
   }
 
   default public Self notequals(T neqvalue) {
-    return this.refine(
-        Validator.from(value -> !value.equals(neqvalue), "value can not be equal to " + neqvalue));
+    return this.refine(Validator.from(value -> !value.equals(neqvalue),
+        Messages.get("FieldSchema.NotEquals", neqvalue)));
   }
 
   default public Self mustequal(T eqvalue) {
-    return this.refine(
-        Validator.from(value -> value.equals(eqvalue), "value must be equal to " + eqvalue));
+    return this.refine(Validator.from(value -> value.equals(eqvalue),
+        Messages.get("FieldSchema.MustEqual", eqvalue)));
   }
 
   public static FieldSchemaLocalDate localdate() {

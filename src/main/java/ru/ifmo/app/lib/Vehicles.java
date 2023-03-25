@@ -385,39 +385,39 @@ public class Vehicles {
           };
 
           String name = Vehicle.fields.name.promptUntilValid(
-            withExample.apply("name", v -> v.name()),
+            withExample.apply(Messages.get("Vehicle.Name"), v -> v.name()),
             scanner,
             "unreachable",
             logScanned
           );
           Long coordinateX = Coordinates.fields.x.promptUntilValid(
-            withExample.apply("X coordinate", v -> v.coordinates().x()),
+            withExample.apply(Messages.get("Vehicle.Coordinates.X"), v -> v.coordinates().x()),
             scanner,
-            "long integer required",
+            Messages.get("Error.Validation.Required", "long integer"),
             logScanned
           );
           Integer coordinateY = Coordinates.fields.y.promptUntilValid(
-            withExample.apply("Y coordinate", v -> v.coordinates().y()),
+            withExample.apply(Messages.get("Vehicle.Coordinates.Y"), v -> v.coordinates().y()),
             scanner,
-            "integer required",
+            Messages.get("Error.Validation.Required", "integer"),
             logScanned
           );
           Float enginePower = Vehicle.fields.enginePower.promptUntilValid(
-            withExample.apply("engine power", v -> v.enginePower()),
+            withExample.apply(Messages.get("Vehicle.EnginePower"), v -> v.enginePower()),
             scanner,
-            "float required",
+            Messages.get("Error.Validation.Required", "float"),
             logScanned
           );
           VehicleType vehicleType = Vehicle.fields.vehicleType.promptUntilValid(
-            withExample.apply("vehicle type", v -> v.type()),
+            withExample.apply(Messages.get("Vehicle.VehicleType"), v -> v.type()),
             scanner,
-            "one of the following required: " + VehicleType.showIndexedList(", "),
+            Messages.get("Error.Validation.MustBeOneOfTheFollowing", "vehicle type", VehicleType.showIndexedList(", ")),
             logScanned
           );
           FuelType fuelType = Vehicle.fields.fuelType.promptUntilValid(
-            withExample.apply("fuel type", v -> v.fuelType()),
+            withExample.apply(Messages.get("Vehicle.FuelType"), v -> v.fuelType()),
             scanner,
-            "one of the following required: " + VehicleType.showIndexedList(", "),
+            Messages.get("Error.Validation.MustBeOneOfTheFollowing", "fuel type", FuelType.showIndexedList(", ")),
             logScanned
           );
 

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import ru.ifmo.app.lib.Utils.Validator;
 import ru.ifmo.app.lib.exceptions.ParsingException;
+import ru.ifmo.app.lib.utils.Messages;
 
 public class FieldSchemaEnum<TEnum extends Enum<TEnum>>
     implements FieldSchemaComparable<TEnum, FieldSchemaEnum<TEnum>> {
@@ -39,16 +40,15 @@ public class FieldSchemaEnum<TEnum extends Enum<TEnum>>
         Integer index = Integer.parseUnsignedInt(input);
         return enumClass.getEnumConstants()[index - 1];
       } catch (ArrayIndexOutOfBoundsException _err) {
-        throw new ParsingException("Invalid enumeration index, maximum enumeration index is "
-            + enumClass.getEnumConstants().length);
-      } catch (NumberFormatException _err) {
-        throw new ParsingException("Couldn't parse '" + input + "'");
+        throw new ParsingException(
+            Messages.get("FieldSchemaEnum.OutOfBounds", enumClass.getEnumConstants().length));
+      } catch (NumberFormatException err) {
+        throw new ParsingException(err.getMessage());
       }
     }
 
     if (value == null) {
-      throw new ParsingException(
-          "Couldn't find specified enumeration value with name '" + input + "'");
+      throw new ParsingException(Messages.get("FieldSchemaEnum.InvalidValue", input));
     }
 
     return value;
