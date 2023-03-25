@@ -8,8 +8,6 @@ import ru.ifmo.app.lib.exceptions.ParsingException;
 import ru.ifmo.app.lib.exceptions.ValidationException;
 import ru.ifmo.app.lib.utils.Messages;
 
-// TODO: Заменить все захардкоженные строки на Message.get
-// TODO: Документация (не только по FieldSchema, но и по всем измененным методам)
 public interface FieldSchema<T, Self extends FieldSchema<T, Self>> extends Validator<T> {
 
   public T parse(String input) throws ParsingException;
