@@ -10,7 +10,7 @@ public class ClearCommand implements Command {
   @Override
   public void execute(CommandContext context) {
     context.vehicles().clear();
-    App.logger.info("Collection cleared!");
+    App.logger.info(Messages.get("CollectionCleared"));
   }
 
   @Override

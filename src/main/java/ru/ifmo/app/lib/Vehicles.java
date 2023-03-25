@@ -22,8 +22,8 @@ import ru.ifmo.app.lib.entities.FuelType;
 import ru.ifmo.app.lib.entities.Vehicle;
 import ru.ifmo.app.lib.entities.VehicleType;
 import ru.ifmo.app.lib.exceptions.ParsingException;
+import ru.ifmo.app.lib.exceptions.ValidationException;
 import ru.ifmo.app.lib.utils.Peekable;
-import ru.ifmo.app.lib.utils.ValidatedScanner;
 import ru.ifmo.app.lib.utils.Messages;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -142,7 +142,7 @@ public class Vehicles {
       try {
         Vehicle vehicle = Vehicle.fromXmlElement(vehicleElement);
         vehicles.add(vehicle);
-      } catch (ParsingException err) {
+      } catch (ParsingException | ValidationException err) {
         App.logger.error(Messages.get("Error.Parsing.CollectionElement", err.getMessage()));
       }
     }
@@ -361,9 +361,8 @@ public class Vehicles {
         /**
          * Create a VehicleCreationSchema from an input gotten from provided scanner.
          * <p>
-         * Method gets each value by getting a String from Scanner::nextLine method for every field in VehicleCreationSchema,
-         * validating and parsing the input. If the provided input is incorrect, then it asks the same prompt again, until 
-         * a valid value is provided.
+         * Each value is gotten with fields from {@link Vehicle.fields} or {@link Coordinates.fields ru.ifmo.app.lib.entities.Coordinates.fields}
+         * via {@link FieldSchema#promptUntilValid ru.ifmo.app.lib.utils.fieldschema.FieldSchema#promptUntilValid(String, Scanner, boolean)} method
          * </p>
          * 
          * @param scanner A Scanner which will be used to get the input line by line
@@ -374,70 +373,55 @@ public class Vehicles {
          * @return A {@code VehicleCreationSchema} created from the input from the scanner with already validated data
          */
         public static VehicleCreationSchema createFromScanner(
-            Scanner scanner,
-            VehicleCreationSchema example,
-            boolean logScanned
+          Scanner scanner,
+          VehicleCreationSchema example,
+          boolean logScanned
         ) {
-            var vscanner = new ValidatedScanner(scanner, logScanned);
+          BiFunction<String, Function<VehicleCreationSchema, Object>, String> withExample = (promptString, exampleField) -> {
+            if (example == null) {
+              return promptString;
+            }
+            return promptString + " (" + exampleField.apply(example) + ")";
+          };
 
-            BiFunction<String, Object, String> withExample = (str1, exampleAttribute) -> {
-                if (example == null) {
-                    return str1 + ": ";
-                }
-                return str1 + " (" + exampleAttribute + ")" + ": ";
-            };
-            
-            String name = vscanner.string(
-                withExample.apply(
-                    Messages.get("Vehicle.Name"),
-                    example == null ? null : example.name()
-                ),
-                Vehicle.validate::name
-            );
-            Long coordinatesX = vscanner.number(
-                Long::parseLong,
-                Coordinates.validate::x,
-                withExample.apply(
-                    Messages.get("Vehicle.Coordinates.X"),
-                    example == null || example.coordinates() == null ? null : example.coordinates().x()
-                ),
-                __ -> Messages.get("Error.Validation.Required", "Integer")
-            );
-            Integer coordinatesY = vscanner.number(
-                Integer::parseInt,
-                Coordinates.validate::y,
-                withExample.apply(
-                    Messages.get("Vehicle.Coordinates.Y"),
-                    example == null || example.coordinates() == null ? null : example.coordinates().y()
-                ),
-                __ -> Messages.get("Error.Validation.Required", "Integer")
-            );
-            Float enginePower = vscanner.number(
-                Float::parseFloat,
-                Vehicle.validate::enginePower,
-                withExample.apply(
-                    Messages.get("Vehicle.EnginePower"),
-                    example == null ? null : example.enginePower()
-                ),
-                __ -> Messages.get("Error.Validation.Required", "Number")
-            );
-            App.logger.info(VehicleType.showIndexedList(", "));
-            VehicleType vehicleType = vscanner.vehicleType(
-                withExample.apply(
-                    Messages.get("Vehicle.VehicleType"),
-                    example == null ? null : example.type()
-                )
-            );
-            App.logger.info(FuelType.showIndexedList(", "));
-            FuelType fuelType = vscanner.fuelType(
-                withExample.apply(
-                    Messages.get("Vehicle.FuelType"),
-                    example == null ? null : example.fuelType()
-                )
-            );
+          String name = Vehicle.fields.name.promptUntilValid(
+            withExample.apply(Messages.get("Vehicle.Name"), v -> v.name()),
+            scanner,
+            "unreachable",
+            logScanned
+          );
+          Long coordinateX = Coordinates.fields.x.promptUntilValid(
+            withExample.apply(Messages.get("Vehicle.Coordinates.X"), v -> v.coordinates().x()),
+            scanner,
+            Messages.get("Error.Validation.Required", "long integer"),
+            logScanned
+          );
+          Integer coordinateY = Coordinates.fields.y.promptUntilValid(
+            withExample.apply(Messages.get("Vehicle.Coordinates.Y"), v -> v.coordinates().y()),
+            scanner,
+            Messages.get("Error.Validation.Required", "integer"),
+            logScanned
+          );
+          Float enginePower = Vehicle.fields.enginePower.promptUntilValid(
+            withExample.apply(Messages.get("Vehicle.EnginePower"), v -> v.enginePower()),
+            scanner,
+            Messages.get("Error.Validation.Required", "float"),
+            logScanned
+          );
+          VehicleType vehicleType = Vehicle.fields.vehicleType.promptUntilValid(
+            withExample.apply(Messages.get("Vehicle.VehicleType"), v -> v.type()),
+            scanner,
+            Messages.get("Error.Validation.MustBeOneOfTheFollowing", "vehicle type", VehicleType.showIndexedList(", ")),
+            logScanned
+          );
+          FuelType fuelType = Vehicle.fields.fuelType.promptUntilValid(
+            withExample.apply(Messages.get("Vehicle.FuelType"), v -> v.fuelType()),
+            scanner,
+            Messages.get("Error.Validation.MustBeOneOfTheFollowing", "fuel type", FuelType.showIndexedList(", ")),
+            logScanned
+          );
 
-            var coordinates = new Coordinates(coordinatesX, coordinatesY);
-            return new VehicleCreationSchema(name, coordinates, enginePower, vehicleType, fuelType);
+          return new VehicleCreationSchema(name, new Coordinates(coordinateX, coordinateY), enginePower, vehicleType, fuelType);
         }
         
         /**
