@@ -145,7 +145,7 @@ public record Vehicle(
      */
     @Override
     public int compareTo(Vehicle other) {
-        return this.enginePower.compareTo(other.enginePower);
+        return this.name.compareTo(other.name);
     }
 
     /**
