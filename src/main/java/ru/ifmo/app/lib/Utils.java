@@ -1,7 +1,14 @@
 package ru.ifmo.app.lib;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.ReadableByteChannel;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -11,6 +18,39 @@ import ru.ifmo.app.lib.utils.Messages;
 
 /** A class that serves as a namespace for utility methods and functional interfaces */
 public class Utils {
+
+  public static <T> ByteBuffer objectToBuffer(T object) throws IOException {
+    try (var byteOut = new ByteArrayOutputStream();
+        var objectStream = new ObjectOutputStream(byteOut);) {
+      objectStream.writeObject(object);
+      byte[] objectBytes = byteOut.toByteArray();
+
+      int objectSize = objectBytes.length;
+      var buffer = ByteBuffer.allocate(Integer.BYTES + objectSize);
+      buffer.putInt(objectSize);
+      buffer.put(objectBytes);
+      buffer.flip();
+
+      return buffer;
+    }
+  }
+
+  public static <T> T objectFromChannel(ReadableByteChannel channel, Function<Object, T> converter)
+      throws IOException, ClassNotFoundException {
+    var objectSizeBuffer = ByteBuffer.allocate(Integer.BYTES);
+    channel.read(objectSizeBuffer);
+    objectSizeBuffer.position(0);
+    int objectSize = objectSizeBuffer.getInt();
+
+    var objectBuffer = ByteBuffer.allocate(Integer.BYTES + objectSize);
+    channel.read(objectBuffer);
+    objectBuffer.position(Integer.BYTES); // Skipping the part with the object size
+    try (var objectInputStream =
+        new ObjectInputStream(new ByteArrayInputStream(objectBuffer.array()));) {
+      T got = converter.apply(objectInputStream.readObject());
+      return got;
+    }
+  }
 
   /**
    * A function, which expands the given path by reading the output from the subprocess command
