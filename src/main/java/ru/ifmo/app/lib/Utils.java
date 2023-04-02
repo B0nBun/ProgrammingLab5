@@ -29,8 +29,6 @@ public class Utils {
       var buffer = ByteBuffer.allocate(Integer.BYTES + objectSize);
       buffer.putInt(objectSize);
       buffer.put(objectBytes);
-      buffer.flip();
-
       return buffer;
     }
   }
@@ -39,14 +37,13 @@ public class Utils {
       throws IOException, ClassNotFoundException {
     var objectSizeBuffer = ByteBuffer.allocate(Integer.BYTES);
     channel.read(objectSizeBuffer);
-    objectSizeBuffer.position(0);
+    objectSizeBuffer.flip();
     int objectSize = objectSizeBuffer.getInt();
 
     var objectBuffer = ByteBuffer.allocate(Integer.BYTES + objectSize);
     channel.read(objectBuffer);
-    objectBuffer.position(Integer.BYTES); // Skipping the part with the object size
-    try (var objectInputStream =
-        new ObjectInputStream(new ByteArrayInputStream(objectBuffer.array()));) {
+    try (var objectInputStream = new ObjectInputStream(
+        new ByteArrayInputStream(objectBuffer.slice(Integer.BYTES, objectSize).array()));) {
       T got = converter.apply(objectInputStream.readObject());
       return got;
     }
