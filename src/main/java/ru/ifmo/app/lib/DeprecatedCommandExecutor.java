@@ -36,7 +36,7 @@ import ru.ifmo.app.lib.utils.Messages;
  * elements, the {@link Vehicles} object and a scanner to handle user input. Contains a
  * {@link DeprecatedCommandRegistery} which is added internelly during construction.
  */
-public class CommandExecutor {
+public class DeprecatedCommandExecutor {
   private Scanner scanner;
   private Vehicles vehicles;
   private File vehiclesFile;
@@ -55,7 +55,7 @@ public class CommandExecutor {
    * @param vehicles Initial {@link Vehicles} which will be used
    * @param vehiclesFile A path to the file which was selected by the user
    */
-  public CommandExecutor(Scanner scanner, Vehicles vehicles, File vehiclesFile,
+  public DeprecatedCommandExecutor(Scanner scanner, Vehicles vehicles, File vehiclesFile,
       int scriptExecutionDepth) {
     this.scanner = scanner;
     this.vehicles = vehicles;
@@ -104,7 +104,7 @@ public class CommandExecutor {
 
   /**
    * Given a command string this method parses a command with
-   * {@link CommandExecutor#parseCommandString(String)} and then executes the command if it was
+   * {@link DeprecatedCommandExecutor#parseCommandString(String)} and then executes the command if it was
    * found in the {@link DeprecatedCommandRegistery} via the {@link DeprecatedCommand#execute(DeprecatedCommandContext)} method
    * 
    * @param commandString Inputted command string (e.g. "update 123")
@@ -117,7 +117,7 @@ public class CommandExecutor {
     if (commandString.trim().length() == 0)
       return;
     try {
-      var pair = CommandExecutor.parseCommandString(commandString);
+      var pair = DeprecatedCommandExecutor.parseCommandString(commandString);
       var commandname = pair.getKey();
       var arguments = pair.getValue();
 

@@ -9,7 +9,7 @@ import java.util.Scanner;
 import org.jdom2.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.ifmo.app.lib.CommandExecutor;
+import ru.ifmo.app.lib.DeprecatedCommandExecutor;
 import ru.ifmo.app.lib.Vehicles;
 import ru.ifmo.app.lib.exceptions.ExitProgramException;
 import ru.ifmo.app.lib.exceptions.MaximumScriptExecutionDepthException;
@@ -94,7 +94,7 @@ public class App {
         vehicles = new Vehicles();
       }
 
-      var executor = new CommandExecutor(scanner, vehicles, vehiclesXmlFile, 0);
+      var executor = new DeprecatedCommandExecutor(scanner, vehicles, vehiclesXmlFile, 0);
 
       try {
         while (true) {
