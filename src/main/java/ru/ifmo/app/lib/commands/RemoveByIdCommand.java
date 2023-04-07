@@ -1,8 +1,8 @@
 package ru.ifmo.app.lib.commands;
 
 import ru.ifmo.app.App;
-import ru.ifmo.app.lib.Command;
-import ru.ifmo.app.lib.CommandContext;
+import ru.ifmo.app.lib.DeprecatedCommand;
+import ru.ifmo.app.lib.DeprecatedCommandContext;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 import ru.ifmo.app.lib.utils.Messages;
 
@@ -11,9 +11,9 @@ import ru.ifmo.app.lib.utils.Messages;
  * vehicle's uuid. If such elements are not found, the messsage is logged and the command finishes.
  * Otherwise all of the vehicles, ids of which start with provided string are removed
  */
-public class RemoveByIdCommand implements Command {
+public class RemoveByIdCommand implements DeprecatedCommand {
   @Override
-  public void execute(CommandContext context) throws InvalidNumberOfArgumentsException {
+  public void execute(DeprecatedCommandContext context) throws InvalidNumberOfArgumentsException {
     if (context.arguments().length < 1)
       throw new InvalidNumberOfArgumentsException(1, context.arguments().length);
 

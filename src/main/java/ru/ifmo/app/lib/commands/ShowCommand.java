@@ -1,8 +1,8 @@
 package ru.ifmo.app.lib.commands;
 
 import ru.ifmo.app.App;
-import ru.ifmo.app.lib.Command;
-import ru.ifmo.app.lib.CommandContext;
+import ru.ifmo.app.lib.DeprecatedCommand;
+import ru.ifmo.app.lib.DeprecatedCommandContext;
 import ru.ifmo.app.lib.entities.Vehicle;
 import ru.ifmo.app.lib.utils.Messages;
 
@@ -11,10 +11,10 @@ import ru.ifmo.app.lib.utils.Messages;
  * {@link ru.ifmo.app.lib.entities.Vehicle#toString Vehicle#toString} method to log each element in
  * the collection.
  */
-public class ShowCommand implements Command {
+public class ShowCommand implements DeprecatedCommand {
 
   @Override
-  public void execute(CommandContext context) {
+  public void execute(DeprecatedCommandContext context) {
     String searchString = context.arguments().length == 0 ? "" : context.arguments()[0];
 
     var stream = context.vehicles().stream();

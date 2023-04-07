@@ -8,8 +8,8 @@ import org.jdom2.Element;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import ru.ifmo.app.App;
-import ru.ifmo.app.lib.Command;
-import ru.ifmo.app.lib.CommandContext;
+import ru.ifmo.app.lib.DeprecatedCommand;
+import ru.ifmo.app.lib.DeprecatedCommandContext;
 import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.utils.Messages;
 
@@ -18,7 +18,7 @@ import ru.ifmo.app.lib.utils.Messages;
  * available for some reason, then the user is asked to input a new filepath with a cancellable
  * prompt.
  */
-public class SaveCommand implements Command {
+public class SaveCommand implements DeprecatedCommand {
   private File askForFilepath(Scanner scanner) {
     App.logger.info(Messages.get("ProvideFileForSaving"));
     String filepath = scanner.nextLine();
@@ -30,7 +30,7 @@ public class SaveCommand implements Command {
   }
 
   @Override
-  public void execute(CommandContext context) {
+  public void execute(DeprecatedCommandContext context) {
 
     var xmlOutputter = new XMLOutputter();
     xmlOutputter.setFormat(Format.getPrettyFormat());

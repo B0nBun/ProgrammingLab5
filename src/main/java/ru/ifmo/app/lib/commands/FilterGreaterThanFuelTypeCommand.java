@@ -2,8 +2,8 @@ package ru.ifmo.app.lib.commands;
 
 import java.util.stream.Collectors;
 import ru.ifmo.app.App;
-import ru.ifmo.app.lib.Command;
-import ru.ifmo.app.lib.CommandContext;
+import ru.ifmo.app.lib.DeprecatedCommand;
+import ru.ifmo.app.lib.DeprecatedCommandContext;
 import ru.ifmo.app.lib.entities.FuelType;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
@@ -14,9 +14,9 @@ import ru.ifmo.app.lib.utils.Messages;
  * Command used to log out all of the elements, fuel type of which is greater than the one passed in
  * the arguments
  */
-public class FilterGreaterThanFuelTypeCommand implements Command {
+public class FilterGreaterThanFuelTypeCommand implements DeprecatedCommand {
   @Override
-  public void execute(CommandContext context)
+  public void execute(DeprecatedCommandContext context)
       throws InvalidArgumentException, InvalidNumberOfArgumentsException {
     if (context.arguments().length < 1)
       throw new InvalidNumberOfArgumentsException(1, context.arguments().length);

@@ -2,8 +2,8 @@ package ru.ifmo.app.lib.commands;
 
 import java.util.UUID;
 import ru.ifmo.app.App;
-import ru.ifmo.app.lib.Command;
-import ru.ifmo.app.lib.CommandContext;
+import ru.ifmo.app.lib.DeprecatedCommand;
+import ru.ifmo.app.lib.DeprecatedCommandContext;
 import ru.ifmo.app.lib.Vehicles.VehicleCreationSchema;
 import ru.ifmo.app.lib.entities.Vehicle;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
@@ -14,13 +14,13 @@ import ru.ifmo.app.lib.utils.Messages;
  * then interpreted as a start of the chose vehicle's uuid. If such vehicle is found, the user is
  * asked to fill each field as a prompt. Otherwise a warning is logged and command ends.
  */
-public class UpdateCommand implements Command {
+public class UpdateCommand implements DeprecatedCommand {
   private static boolean uuidStartsWith(UUID uuid, String string) {
     return uuid.toString().startsWith(string);
   }
 
   @Override
-  public void execute(CommandContext context) throws InvalidNumberOfArgumentsException {
+  public void execute(DeprecatedCommandContext context) throws InvalidNumberOfArgumentsException {
     if (context.arguments().length < 1)
       throw new InvalidNumberOfArgumentsException(1, context.arguments().length);
 

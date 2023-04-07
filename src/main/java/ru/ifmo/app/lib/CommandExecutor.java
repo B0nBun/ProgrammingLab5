@@ -27,14 +27,14 @@ import ru.ifmo.app.lib.exceptions.ExitProgramException;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
 import ru.ifmo.app.lib.exceptions.InvalidNumberOfArgumentsException;
 import ru.ifmo.app.lib.exceptions.MaximumScriptExecutionDepthException;
-import ru.ifmo.app.lib.utils.CommandRegistery;
+import ru.ifmo.app.lib.utils.DeprecatedCommandRegistery;
 import ru.ifmo.app.lib.utils.Levenshtein;
 import ru.ifmo.app.lib.utils.Messages;
 
 /**
  * A class that manages the execution of the commands, given the Xml file containing collection
  * elements, the {@link Vehicles} object and a scanner to handle user input. Contains a
- * {@link CommandRegistery} which is added internelly during construction.
+ * {@link DeprecatedCommandRegistery} which is added internelly during construction.
  */
 public class CommandExecutor {
   private Scanner scanner;
@@ -43,10 +43,10 @@ public class CommandExecutor {
   private int scriptExecutionDepth;
 
   /**
-   * A registery which associates certain command strings (e.g. "help", "h") with {@link Command
+   * A registery which associates certain command strings (e.g. "help", "h") with {@link DeprecatedCommand
    * Commands}. Created during CommandExecutor construction.
    */
-  private CommandRegistery commandRegistery;
+  private DeprecatedCommandRegistery commandRegistery;
 
   /**
    * Class constructor
@@ -62,7 +62,7 @@ public class CommandExecutor {
     this.vehiclesFile = vehiclesFile;
     this.scriptExecutionDepth = scriptExecutionDepth;
 
-    this.commandRegistery = new CommandRegistery().put(new HelpCommand(), "help", "h")
+    this.commandRegistery = new DeprecatedCommandRegistery().put(new HelpCommand(), "help", "h")
         .put(new InfoCommand(), "info", "i").put(new AddCommand(), "add", "a")
         .put(new ShowCommand(), "show", "s").put(new UpdateCommand(), "update", "u")
         .put(new RemoveByIdCommand(), "remove_by_id", "r").put(new ClearCommand(), "clear")
@@ -105,7 +105,7 @@ public class CommandExecutor {
   /**
    * Given a command string this method parses a command with
    * {@link CommandExecutor#parseCommandString(String)} and then executes the command if it was
-   * found in the {@link CommandRegistery} via the {@link Command#execute(CommandContext)} method
+   * found in the {@link DeprecatedCommandRegistery} via the {@link DeprecatedCommand#execute(DeprecatedCommandContext)} method
    * 
    * @param commandString Inputted command string (e.g. "update 123")
    * @throws ExitProgramException Thrown if the user inputted a command like "exit"
@@ -121,7 +121,7 @@ public class CommandExecutor {
       var commandname = pair.getKey();
       var arguments = pair.getValue();
 
-      Command command = this.commandRegistery.get(commandname);
+      DeprecatedCommand command = this.commandRegistery.get(commandname);
       if (command == null) {
         App.logger.warn(Messages.get("Error.CommandNotFound", commandname));
 
@@ -139,7 +139,7 @@ public class CommandExecutor {
       }
 
       try {
-        command.execute(new CommandContext(arguments, this.vehicles, this.vehiclesFile,
+        command.execute(new DeprecatedCommandContext(arguments, this.vehicles, this.vehiclesFile,
             this.scanner, this.commandRegistery, this.scriptExecutionDepth));
       } catch (InvalidNumberOfArgumentsException | InvalidArgumentException err) {
         App.logger.error(err.getMessage());

@@ -7,9 +7,9 @@ import ru.ifmo.app.lib.exceptions.MaximumScriptExecutionDepthException;
 import ru.ifmo.app.lib.utils.Messages;
 
 /** Interface which signifies that the given class can be used to exexcute some kind of command. */
-public interface Command {
+public interface DeprecatedCommand {
   /**
-   * @param context A {@link CommandContext} object, which contains all the data needed by the
+   * @param context A {@link DeprecatedCommandContext} object, which contains all the data needed by the
    *        commands
    * @throws InvalidArgumentException Thrown if the command argument couldn't be parsed or has the
    *         wrong "type" (e.g. "count_greater_than_fuel_type asdasdasdasd")
@@ -20,7 +20,7 @@ public interface Command {
    * @throws MaximumScriptExecutionDepthException Thrown if the scirpt execution depth exceeds
    *         maximum allowed value in {@link ru.ifmo.app.lib.commands.ExecuteScriptCommand}
    */
-  public void execute(CommandContext context) throws InvalidArgumentException,
+  public void execute(DeprecatedCommandContext context) throws InvalidArgumentException,
       InvalidNumberOfArgumentsException, ExitProgramException, MaximumScriptExecutionDepthException;
 
   /**

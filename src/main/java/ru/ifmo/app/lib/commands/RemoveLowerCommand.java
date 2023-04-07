@@ -1,8 +1,8 @@
 package ru.ifmo.app.lib.commands;
 
 import ru.ifmo.app.App;
-import ru.ifmo.app.lib.Command;
-import ru.ifmo.app.lib.CommandContext;
+import ru.ifmo.app.lib.DeprecatedCommand;
+import ru.ifmo.app.lib.DeprecatedCommandContext;
 import ru.ifmo.app.lib.Vehicles.VehicleCreationSchema;
 import ru.ifmo.app.lib.utils.Messages;
 
@@ -12,9 +12,9 @@ import ru.ifmo.app.lib.utils.Messages;
  * Vehicle#compareTo} method, every vehicle in the collection, that has lower value than the created
  * one is removed.
  */
-public class RemoveLowerCommand implements Command {
+public class RemoveLowerCommand implements DeprecatedCommand {
   @Override
-  public void execute(CommandContext context) {
+  public void execute(DeprecatedCommandContext context) {
     var creationSchema =
         VehicleCreationSchema.createFromScanner(context.scanner(), context.executedByScript());
     var notAddedVehicle = creationSchema.generate(context.vehicles().peekNextId(),

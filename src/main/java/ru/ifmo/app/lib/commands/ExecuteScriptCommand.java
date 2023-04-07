@@ -5,8 +5,8 @@ import java.io.FileNotFoundException;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import ru.ifmo.app.App;
-import ru.ifmo.app.lib.Command;
-import ru.ifmo.app.lib.CommandContext;
+import ru.ifmo.app.lib.DeprecatedCommand;
+import ru.ifmo.app.lib.DeprecatedCommandContext;
 import ru.ifmo.app.lib.CommandExecutor;
 import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.exceptions.ExitProgramException;
@@ -22,10 +22,10 @@ import ru.ifmo.app.lib.utils.Messages;
  * A new CommandExecutor is created with the same arguments, except the scanner, instead of scanning
  * the stdin replace with the scanner of the file, path to which is passed in the arguments
  */
-public class ExecuteScriptCommand implements Command {
+public class ExecuteScriptCommand implements DeprecatedCommand {
 
   @Override
-  public void execute(CommandContext context)
+  public void execute(DeprecatedCommandContext context)
       throws InvalidArgumentException, InvalidNumberOfArgumentsException, ExitProgramException,
       MaximumScriptExecutionDepthException {
     int maximumScriptExecutionDepth = 100;
