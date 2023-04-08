@@ -7,10 +7,10 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.net.ServerSocket;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-
 import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.Vehicles;
 import ru.ifmo.app.server.exceptions.ExitProgramException;
@@ -20,7 +20,7 @@ import ru.ifmo.app.shared.ServerResponse;
 
 // TODO: Ctrl+C on client causes BufferUnderflowException
 public class Server {
-  private static ClientRequest<Object> getClientMessageFromStream(InputStream in)
+  private static ClientRequest<Serializable> getClientMessageFromStream(InputStream in)
       throws IOException, ClassNotFoundException {
     byte[] sizeBytes = in.readNBytes(Integer.BYTES);
     int objectSize = ByteBuffer.wrap(sizeBytes).getInt();

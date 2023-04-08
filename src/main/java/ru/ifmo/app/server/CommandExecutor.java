@@ -1,7 +1,7 @@
 package ru.ifmo.app.server;
 
 import java.io.PrintWriter;
-
+import java.io.Serializable;
 import ru.ifmo.app.lib.Vehicles;
 import ru.ifmo.app.shared.ClientRequest;
 import ru.ifmo.app.shared.CommandRegistery;
@@ -16,7 +16,7 @@ public class CommandExecutor {
     this.vehicles = vehicles;
   }
 
-  public void execute(ClientRequest<Object> clientMessage, PrintWriter outputWriter)
+  public void execute(ClientRequest<Serializable> clientMessage, PrintWriter outputWriter)
       throws InvalidCommandParametersException, ExitProgramException {
     String commandName = clientMessage.commandName();
     var command = this.commandRegistery.get(commandName);
