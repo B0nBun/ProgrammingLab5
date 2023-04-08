@@ -1,4 +1,4 @@
-package ru.ifmo.app.lib;
+package ru.ifmo.app.shared;
 
 import java.io.Serializable;
 

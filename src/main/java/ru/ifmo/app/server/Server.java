@@ -10,12 +10,13 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import ru.ifmo.app.lib.ClientMessage;
-import ru.ifmo.app.lib.ServerResponse;
+
 import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.Vehicles;
 import ru.ifmo.app.server.exceptions.ExitProgramException;
 import ru.ifmo.app.server.exceptions.InvalidCommandParametersException;
+import ru.ifmo.app.shared.ClientMessage;
+import ru.ifmo.app.shared.ServerResponse;
 
 // TODO: Ctrl+C on client causes BufferUnderflowException
 public class Server {

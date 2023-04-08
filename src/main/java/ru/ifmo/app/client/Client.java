@@ -7,9 +7,10 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Scanner;
-import ru.ifmo.app.lib.ClientMessage;
-import ru.ifmo.app.lib.ServerResponse;
+
 import ru.ifmo.app.lib.Utils;
+import ru.ifmo.app.shared.ClientMessage;
+import ru.ifmo.app.shared.ServerResponse;
 
 // TODO: Ctrl+C on client causes BufferUnderflowException
 public class Client {
