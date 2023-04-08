@@ -9,7 +9,7 @@ import java.nio.channels.SocketChannel;
 import java.util.Scanner;
 
 import ru.ifmo.app.lib.Utils;
-import ru.ifmo.app.shared.ClientMessage;
+import ru.ifmo.app.shared.ClientRequest;
 import ru.ifmo.app.shared.ServerResponse;
 
 // TODO: Ctrl+C on client causes BufferUnderflowException
@@ -41,7 +41,7 @@ public class Client {
             keys.remove();
 
             if (key.isWritable()) {
-              var clientMessage = ClientMessage.withoutParams("help");
+              var clientMessage = ClientRequest.withoutParams("help");
               ByteBuffer buffer = Utils.objectToBuffer(clientMessage);
               buffer.flip();
               client.write(buffer);

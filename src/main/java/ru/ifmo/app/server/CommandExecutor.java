@@ -3,7 +3,7 @@ package ru.ifmo.app.server;
 import java.io.PrintWriter;
 
 import ru.ifmo.app.lib.Vehicles;
-import ru.ifmo.app.shared.ClientMessage;
+import ru.ifmo.app.shared.ClientRequest;
 import ru.ifmo.app.shared.CommandRegistery;
 import ru.ifmo.app.server.exceptions.ExitProgramException;
 import ru.ifmo.app.server.exceptions.InvalidCommandParametersException;
@@ -16,7 +16,7 @@ public class CommandExecutor {
     this.vehicles = vehicles;
   }
 
-  public void execute(ClientMessage<Object> clientMessage, PrintWriter outputWriter)
+  public void execute(ClientRequest<Object> clientMessage, PrintWriter outputWriter)
       throws InvalidCommandParametersException, ExitProgramException {
     String commandName = clientMessage.commandName();
     var command = this.commandRegistery.get(commandName);

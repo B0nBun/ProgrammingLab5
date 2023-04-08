@@ -15,19 +15,19 @@ import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.Vehicles;
 import ru.ifmo.app.server.exceptions.ExitProgramException;
 import ru.ifmo.app.server.exceptions.InvalidCommandParametersException;
-import ru.ifmo.app.shared.ClientMessage;
+import ru.ifmo.app.shared.ClientRequest;
 import ru.ifmo.app.shared.ServerResponse;
 
 // TODO: Ctrl+C on client causes BufferUnderflowException
 public class Server {
-  private static ClientMessage<Object> getClientMessageFromStream(InputStream in)
+  private static ClientRequest<Object> getClientMessageFromStream(InputStream in)
       throws IOException, ClassNotFoundException {
     byte[] sizeBytes = in.readNBytes(Integer.BYTES);
     int objectSize = ByteBuffer.wrap(sizeBytes).getInt();
     byte[] objectBytes = in.readNBytes(objectSize);
     var bytesInput = new ByteArrayInputStream(objectBytes);
     var objectInput = new ObjectInputStream(bytesInput);
-    var message = ClientMessage.uncheckedCast(objectInput.readObject());
+    var message = ClientRequest.uncheckedCast(objectInput.readObject());
     bytesInput.close();
     objectInput.close();
     return message;
