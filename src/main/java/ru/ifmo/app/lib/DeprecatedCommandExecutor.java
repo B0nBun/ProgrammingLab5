@@ -43,8 +43,8 @@ public class DeprecatedCommandExecutor {
   private int scriptExecutionDepth;
 
   /**
-   * A registery which associates certain command strings (e.g. "help", "h") with {@link DeprecatedCommand
-   * Commands}. Created during CommandExecutor construction.
+   * A registery which associates certain command strings (e.g. "help", "h") with
+   * {@link DeprecatedCommand Commands}. Created during CommandExecutor construction.
    */
   private DeprecatedCommandRegistery commandRegistery;
 
@@ -104,8 +104,9 @@ public class DeprecatedCommandExecutor {
 
   /**
    * Given a command string this method parses a command with
-   * {@link DeprecatedCommandExecutor#parseCommandString(String)} and then executes the command if it was
-   * found in the {@link DeprecatedCommandRegistery} via the {@link DeprecatedCommand#execute(DeprecatedCommandContext)} method
+   * {@link DeprecatedCommandExecutor#parseCommandString(String)} and then executes the command if
+   * it was found in the {@link DeprecatedCommandRegistery} via the
+   * {@link DeprecatedCommand#execute(DeprecatedCommandContext)} method
    * 
    * @param commandString Inputted command string (e.g. "update 123")
    * @throws ExitProgramException Thrown if the user inputted a command like "exit"

@@ -7,7 +7,7 @@ import java.util.Scanner;
 import ru.ifmo.app.App;
 import ru.ifmo.app.lib.DeprecatedCommand;
 import ru.ifmo.app.lib.DeprecatedCommandContext;
-import ru.ifmo.app.lib.CommandExecutor;
+import ru.ifmo.app.lib.DeprecatedCommandExecutor;
 import ru.ifmo.app.lib.Utils;
 import ru.ifmo.app.lib.exceptions.ExitProgramException;
 import ru.ifmo.app.lib.exceptions.InvalidArgumentException;
@@ -39,7 +39,7 @@ public class ExecuteScriptCommand implements DeprecatedCommand {
     String scriptFilepath = Utils.expandPath(context.arguments()[0]);
 
     try (Scanner fileScanner = new Scanner(new FileInputStream(scriptFilepath))) {
-      var commandExecutor = new CommandExecutor(fileScanner, context.vehicles(),
+      var commandExecutor = new DeprecatedCommandExecutor(fileScanner, context.vehicles(),
           context.vehiclesFile(), context.scriptExecutionDepth() + 1);
 
       while (fileScanner.hasNextLine()) {

@@ -40,7 +40,7 @@ public class Client {
             keys.remove();
 
             if (key.isWritable()) {
-              var clientMessage = new ClientMessage(messageContent, (int) (100 * Math.random()));
+              var clientMessage = ClientMessage.withoutParams("help");
               ByteBuffer buffer = Utils.objectToBuffer(clientMessage);
               buffer.flip();
               client.write(buffer);

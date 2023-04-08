@@ -1,18 +1,19 @@
-package ru.ifmo.app.lib.utils;
+package ru.ifmo.app.shared;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.Map.Entry;
 import java.util.Set;
-import ru.ifmo.app.lib.DeprecatedCommand;
+import java.util.Map.Entry;
+import ru.ifmo.app.shared.commands.ExitCommand;
+import ru.ifmo.app.shared.commands.HelpCommand;
+import ru.ifmo.app.shared.commands.RemoveByIdCommand;
 
-/**
- * Class used to associate names of commands with the Command objects. Was implemented to add
- * "aliases" of the commands, so that different keys could return literally the same Command Object.
- */
-public class DeprecatedCommandRegistery {
-  private LinkedHashMap<Collection<String>, DeprecatedCommand> commandsMap = new LinkedHashMap<>();
+public class CommandRegistery {
+  public static CommandRegistery global = new CommandRegistery().put(new HelpCommand(), "h", "help")
+      .put(new RemoveByIdCommand(), "remove_by_id", "r").put(new ExitCommand(), "exit", "e", "q");
+
+  private LinkedHashMap<Collection<String>, Command> commandsMap = new LinkedHashMap<>();
 
   /**
    * Put a command entry in the internal map
@@ -21,8 +22,7 @@ public class DeprecatedCommandRegistery {
    * @param command
    * @return {@code this} for method chaining
    */
-  public DeprecatedCommandRegistery put(Collection<String> commandAliases,
-      DeprecatedCommand command) {
+  private CommandRegistery put(Collection<String> commandAliases, Command command) {
     this.commandsMap.put(commandAliases, command);
     return this;
   }
@@ -34,7 +34,7 @@ public class DeprecatedCommandRegistery {
    * @param command
    * @return {@code this} for method chaining
    */
-  public DeprecatedCommandRegistery put(DeprecatedCommand command, String... commandAliases) {
+  private CommandRegistery put(Command command, String... commandAliases) {
     return this.put(Arrays.asList(commandAliases), command);
   }
 
@@ -46,7 +46,7 @@ public class DeprecatedCommandRegistery {
    * @param commandName
    * @return Found command
    */
-  public DeprecatedCommand get(String commandName) {
+  public Command get(String commandName) {
     for (var entry : this.commandsMap.entrySet()) {
       if (entry.getKey().contains(commandName)) {
         return entry.getValue();
@@ -60,7 +60,7 @@ public class DeprecatedCommandRegistery {
    *
    * @return
    */
-  public Set<Entry<Collection<String>, DeprecatedCommand>> getAllCommands() {
+  public Set<Entry<Collection<String>, Command>> getAllCommands() {
     return this.commandsMap.entrySet();
   }
 }
