@@ -17,6 +17,17 @@ public class RemoveByIdCommand implements Command {
   }
 
   @Override
+  public RemoveByIdCommand.Parameters parametersObjectFromStrings(String[] strings)
+      throws InvalidCommandParametersException {
+    if (strings.length < 1)
+      throw new InvalidCommandParametersException("Expected 1 'id' parameter");
+
+    String vehicleUUID = strings[0];
+
+    return new RemoveByIdCommand.Parameters(vehicleUUID);
+  }
+
+  @Override
   public void execute(CommandContext context, Object commandParameters)
       throws InvalidCommandParametersException, ExitProgramException {
     try {

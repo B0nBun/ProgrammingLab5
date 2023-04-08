@@ -13,6 +13,6 @@ public record ClientRequest<T extends Serializable>(
     }
 
     public static ClientRequest<Serializable> withoutParams(String commandName) {
-        return new ClientRequest<Serializable>(commandName, new Serializable() {});
+        return new ClientRequest<Serializable>(commandName, SerializableDummy.singletone);
     }
 }
