@@ -10,13 +10,13 @@ import java.nio.channels.SocketChannel;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-import ru.ifmo.app.lib.Utils;
-import ru.ifmo.app.lib.exceptions.CommandParseException;
+import ru.ifmo.app.client.exceptions.CommandParseException;
 import ru.ifmo.app.server.exceptions.InvalidCommandParametersException;
 import ru.ifmo.app.shared.ClientRequest;
 import ru.ifmo.app.shared.Command;
 import ru.ifmo.app.shared.CommandRegistery;
 import ru.ifmo.app.shared.ServerResponse;
+import ru.ifmo.app.shared.Utils;
 
 // TODO: Ctrl+C on client causes BufferUnderflowException
 public class Client {

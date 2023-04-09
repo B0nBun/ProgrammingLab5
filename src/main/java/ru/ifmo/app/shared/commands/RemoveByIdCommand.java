@@ -1,11 +1,11 @@
 package ru.ifmo.app.shared.commands;
 
 import java.io.Serializable;
-import ru.ifmo.app.lib.utils.Messages;
 import ru.ifmo.app.server.CommandContext;
 import ru.ifmo.app.server.exceptions.ExitProgramException;
 import ru.ifmo.app.server.exceptions.InvalidCommandParametersException;
 import ru.ifmo.app.shared.Command;
+import ru.ifmo.app.shared.utils.Messages;
 
 public class RemoveByIdCommand implements Command {
   public static class Parameters implements Serializable {

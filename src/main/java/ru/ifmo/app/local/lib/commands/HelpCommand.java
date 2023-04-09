@@ -1,17 +1,20 @@
-package ru.ifmo.app.shared.commands;
+package ru.ifmo.app.local.lib.commands;
 
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import ru.ifmo.app.server.CommandContext;
-import ru.ifmo.app.server.exceptions.ExitProgramException;
-import ru.ifmo.app.server.exceptions.InvalidCommandParametersException;
-import ru.ifmo.app.shared.Command;
+import ru.ifmo.app.local.App;
+import ru.ifmo.app.local.lib.DeprecatedCommand;
+import ru.ifmo.app.local.lib.DeprecatedCommandContext;
 import ru.ifmo.app.shared.utils.Messages;
 
-public class HelpCommand implements Command {
+/**
+ * Command used to log out the helping message. Help message contains all of the commands in the
+ * passed {@link ru.ifmo.app.shared.utils.DeprecatedCommandRegistery} with arguments and help
+ * descriptions.
+ */
+public class HelpCommand implements DeprecatedCommand {
   @Override
-  public void execute(CommandContext context, Object _commandParameters)
-      throws InvalidCommandParametersException, ExitProgramException {
+  public void execute(DeprecatedCommandContext context) {
     Stream<String> commandStrings =
         context.commandRegistery().getAllCommands().stream().map(entry -> {
           var command = entry.getValue();
@@ -21,8 +24,8 @@ public class HelpCommand implements Command {
           return "- " + commandAliases + " " + argumentsString + "\n" + helpMessage;
         });
 
-    context.outputWriter().println(Messages.get("Help.CommandListTitle"));
-    context.outputWriter().println(commandStrings.collect(Collectors.joining("\n")));
+    App.logger.info(Messages.get("Help.CommandListTitle"));
+    App.logger.info(commandStrings.collect(Collectors.joining("\n")));
   }
 
   @Override

@@ -2,9 +2,9 @@ package ru.ifmo.app.server;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
-import ru.ifmo.app.lib.Vehicles;
 import ru.ifmo.app.shared.ClientRequest;
 import ru.ifmo.app.shared.CommandRegistery;
+import ru.ifmo.app.shared.Vehicles;
 import ru.ifmo.app.server.exceptions.ExitProgramException;
 import ru.ifmo.app.server.exceptions.InvalidCommandParametersException;
 

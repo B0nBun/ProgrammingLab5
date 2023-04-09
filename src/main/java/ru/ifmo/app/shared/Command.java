@@ -1,10 +1,10 @@
 package ru.ifmo.app.shared;
 
 import java.io.Serializable;
-import ru.ifmo.app.lib.utils.Messages;
 import ru.ifmo.app.server.CommandContext;
 import ru.ifmo.app.server.exceptions.ExitProgramException;
 import ru.ifmo.app.server.exceptions.InvalidCommandParametersException;
+import ru.ifmo.app.shared.utils.Messages;
 
 public interface Command {
   default public Serializable parametersObjectFromStrings(String[] strings)
@@ -16,8 +16,8 @@ public interface Command {
       throws InvalidCommandParametersException, ExitProgramException;
 
   /**
-   * A method which is called in the {@link ru.ifmo.app.lib.commands.HelpCommand HelpCommand} to
-   * show what kind of arguments are needed. By default returns an empty array.
+   * A method which is called in the {@link ru.ifmo.app.local.lib.commands.HelpCommand HelpCommand}
+   * to show what kind of arguments are needed. By default returns an empty array.
    *
    * @return an array of arguments, with strings as the arguments' names/types (e.g. {@code [ "id"
    *     ]})
@@ -27,8 +27,8 @@ public interface Command {
   }
 
   /**
-   * A method which is called in the {@link ru.ifmo.app.lib.commands.HelpCommand HelpCommand} to
-   * describe the use of the command. By default returns a "no description" message
+   * A method which is called in the {@link ru.ifmo.app.local.lib.commands.HelpCommand HelpCommand}
+   * to describe the use of the command. By default returns a "no description" message
    *
    * @return A description of the command
    */
