@@ -3,6 +3,7 @@ package ru.ifmo.app.client;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
+import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
@@ -18,7 +19,6 @@ import ru.ifmo.app.shared.CommandRegistery;
 import ru.ifmo.app.shared.ServerResponse;
 import ru.ifmo.app.shared.Utils;
 
-// TODO: Ctrl+C on client causes BufferUnderflowException
 public class Client {
   private static ClientRequest<Serializable> requestFromCommandString(String commandString) throws CommandParseException, InvalidCommandParametersException {
     var splitted = Arrays.asList(commandString.trim().split("\s+"));
@@ -68,9 +68,14 @@ public class Client {
               client.write(buffer);
               key.interestOps(SelectionKey.OP_READ);
             } else if (key.isReadable()) {
-              ServerResponse response = Utils.objectFromChannel(client, ServerResponse.class::cast);
-              System.out.println("Response: \n" + response.output());
-              key.interestOps(SelectionKey.OP_WRITE);
+              try {
+                ServerResponse response =
+                    Utils.objectFromChannel(client, ServerResponse.class::cast);
+                System.out.println("Response: \n" + response.output());
+                key.interestOps(SelectionKey.OP_WRITE);
+              } catch (BufferUnderflowException err) {
+                System.out.println("Couldn't connect to the server...");
+              }
               break keysHandling;
             }
           }
