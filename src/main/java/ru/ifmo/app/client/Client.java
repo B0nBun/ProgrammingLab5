@@ -22,8 +22,8 @@ import ru.ifmo.app.shared.commands.Command;
 import ru.ifmo.app.shared.commands.CommandParameters;
 
 /**
- * Commands TODO: add; add if max; clear; count greater than fuel type; execute script; filetr
- * greater than fuel type; group counting by id; head; info; remove; lower; save; show; update
+ * Commands TODO: add; add if max; execute script; filetr greater than fuel type; group counting by
+ * id; head; info; remove; lower; save; show; update
  */
 
 public class Client {

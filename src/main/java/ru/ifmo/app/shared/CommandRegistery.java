@@ -5,7 +5,9 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.Map.Entry;
+import ru.ifmo.app.shared.commands.ClearCommand;
 import ru.ifmo.app.shared.commands.Command;
+import ru.ifmo.app.shared.commands.CountGreaterThanFuelTypeCommand;
 import ru.ifmo.app.shared.commands.ExitCommand;
 import ru.ifmo.app.shared.commands.HelpCommand;
 import ru.ifmo.app.shared.commands.RemoveByIdCommand;
@@ -14,7 +16,8 @@ import ru.ifmo.app.shared.commands.ShowCommand;
 public class CommandRegistery {
   public static CommandRegistery global = new CommandRegistery().put(new HelpCommand(), "h", "help")
       .put(new RemoveByIdCommand(), "remove_by_id", "r").put(new ExitCommand(), "exit", "e", "q")
-      .put(new ShowCommand(), "show", "s");
+      .put(new ShowCommand(), "show", "s").put(new ClearCommand(), "clear")
+      .put(new CountGreaterThanFuelTypeCommand(), "count_greater_than_fuel_type");
 
   private LinkedHashMap<Collection<String>, Command> commandsMap = new LinkedHashMap<>();
 

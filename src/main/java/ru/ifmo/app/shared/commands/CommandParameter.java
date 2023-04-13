@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 public @interface CommandParameter {
   public String name();
 
-  public String desc();
+  public String desc() default "";
 }
