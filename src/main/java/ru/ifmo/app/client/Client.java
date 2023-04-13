@@ -11,6 +11,8 @@ import java.nio.channels.SocketChannel;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.ifmo.app.client.exceptions.CommandParseException;
 import ru.ifmo.app.server.exceptions.InvalidCommandParametersException;
 import ru.ifmo.app.shared.ClientRequest;
@@ -20,6 +22,8 @@ import ru.ifmo.app.shared.Utils;
 import ru.ifmo.app.shared.commands.Command;
 
 public class Client {
+  public static final Logger logger = LoggerFactory.getLogger("ru.ifmo.app.client.logger");
+
   private static ClientRequest<Serializable> requestFromCommandString(String commandString) throws CommandParseException, InvalidCommandParametersException {
     var splitted = Arrays.asList(commandString.trim().split("\s+"));
     if (splitted.size() == 0) {
@@ -47,10 +51,10 @@ public class Client {
       client.configureBlocking(false);
       int ops = client.validOps();
       client.register(selector, ops);
-      System.out.println("Connected to " + addr + "...");
+      Client.logger.info("Connected to " + addr + "...");
 
       while (true) {
-        System.out.print("Input the message for the server: ");
+        Client.logger.info("Input the message for the server: ");
         var commandString = scanner.nextLine();
         var requestObject = Client.requestFromCommandString(commandString);
 
@@ -71,10 +75,10 @@ public class Client {
               try {
                 ServerResponse response =
                     Utils.objectFromChannel(client, ServerResponse.class::cast);
-                System.out.println("Response: \n" + response.output());
+                Client.logger.info("Response: \n" + response.output());
                 key.interestOps(SelectionKey.OP_WRITE);
               } catch (BufferUnderflowException err) {
-                System.out.println("Couldn't connect to the server...");
+                Client.logger.warn("Couldn't connect to the server...");
               }
               break keysHandling;
             }

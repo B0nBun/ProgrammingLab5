@@ -48,7 +48,7 @@ import ru.ifmo.app.shared.utils.Messages;
 public class App {
 
   /** Static global logger, which is used across all of the classes. */
-  public static final Logger logger = LoggerFactory.getLogger("ru.ifmo.app.logger");
+  public static final Logger logger = LoggerFactory.getLogger("ru.ifmo.app.local.logger");
 
   /**
    * Gets vehicles from the xml file. If JDOMException occures during parsing or

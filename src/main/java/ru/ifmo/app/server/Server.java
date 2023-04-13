@@ -12,6 +12,8 @@ import java.net.ServerSocket;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.ifmo.app.server.exceptions.ExitProgramException;
 import ru.ifmo.app.server.exceptions.InvalidCommandParametersException;
 import ru.ifmo.app.shared.ClientRequest;
@@ -24,6 +26,8 @@ class NoClientRequestException extends Exception {
 
 
 public class Server {
+  public static final Logger logger = LoggerFactory.getLogger("ru.ifmo.app.server.logger");
+
   private static ClientRequest<Serializable> getClientRequestFromStream(InputStream in)
       throws IOException, ClassNotFoundException, NoClientRequestException {
     try {
@@ -61,7 +65,7 @@ public class Server {
 
       var error = writer.checkError();
       if (error) {
-        System.out.println("Error in print writer occured");
+        Server.logger.error("Error in print writer occured");
       }
 
       writer.flush();
@@ -77,12 +81,12 @@ public class Server {
   public static void main(String[] args) throws IOException, ClassNotFoundException {
     int port = 1111;
     try (var server = new ServerSocket(port);) {
-      System.out.println("Server started at port: " + port);
+      Server.logger.info("Server started at port: " + port);
       while (true) {
         try (var client = server.accept();
             var out = client.getOutputStream();
             var in = client.getInputStream();) {
-          System.out.println("Client connected: " + client.getInetAddress());
+          Server.logger.info("Client connected: " + client.getInetAddress());
 
           Vehicles vehicles = new Vehicles();
           var executor = new CommandExecutor(vehicles);
