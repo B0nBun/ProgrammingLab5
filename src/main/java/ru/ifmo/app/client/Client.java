@@ -55,7 +55,7 @@ public class Client {
         var requestObject = Client.requestFromCommandString(commandString);
 
         // TODO: Add timeout to avoid infinite loop
-        handleLoop: while (true) {
+        keysHandling: while (true) {
           selector.select();
           var keys = selector.selectedKeys().iterator();
           while (keys.hasNext()) {
@@ -71,7 +71,7 @@ public class Client {
               ServerResponse response = Utils.objectFromChannel(client, ServerResponse.class::cast);
               System.out.println("Response: \n" + response.output());
               key.interestOps(SelectionKey.OP_WRITE);
-              break handleLoop;
+              break keysHandling;
             }
           }
         }

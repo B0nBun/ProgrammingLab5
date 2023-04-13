@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.net.ServerSocket;
+import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import ru.ifmo.app.server.exceptions.ExitProgramException;
@@ -18,33 +19,43 @@ import ru.ifmo.app.shared.ServerResponse;
 import ru.ifmo.app.shared.Utils;
 import ru.ifmo.app.shared.Vehicles;
 
-// TODO: Ctrl+C on client causes BufferUnderflowException
+class NoClientRequestException extends Exception {
+}
+
+
 public class Server {
-  private static ClientRequest<Serializable> getClientMessageFromStream(InputStream in)
-      throws IOException, ClassNotFoundException {
-    byte[] sizeBytes = in.readNBytes(Integer.BYTES);
-    int objectSize = ByteBuffer.wrap(sizeBytes).getInt();
-    byte[] objectBytes = in.readNBytes(objectSize);
-    var bytesInput = new ByteArrayInputStream(objectBytes);
-    var objectInput = new ObjectInputStream(bytesInput);
-    var message = ClientRequest.uncheckedCast(objectInput.readObject());
-    bytesInput.close();
-    objectInput.close();
-    return message;
+  private static ClientRequest<Serializable> getClientRequestFromStream(InputStream in)
+      throws IOException, ClassNotFoundException, NoClientRequestException {
+    try {
+      byte[] sizeBytes = in.readNBytes(Integer.BYTES);
+      int objectSize = ByteBuffer.wrap(sizeBytes).getInt();
+      byte[] objectBytes = in.readNBytes(objectSize);
+      var bytesInput = new ByteArrayInputStream(objectBytes);
+      var objectInput = new ObjectInputStream(bytesInput);
+      var message = ClientRequest.uncheckedCast(objectInput.readObject());
+      bytesInput.close();
+      objectInput.close();
+      return message;
+    } catch (BufferUnderflowException err) {
+      throw new NoClientRequestException();
+    }
   }
 
   private static boolean handleClient(InputStream in, OutputStream out, CommandExecutor executor)
       throws IOException, ClassNotFoundException {
-
-    var message = Server.getClientMessageFromStream(in);
-
     try (var byteOutput = new ByteArrayOutputStream(); var writer = new PrintWriter(byteOutput)) {
+      ClientRequest<Serializable> request = null;
+
       try {
-        executor.execute(message, writer);
+        request = Server.getClientRequestFromStream(in);
+        executor.execute(request, writer);
       } catch (InvalidCommandParametersException err) {
         writer.println("Invalid parameter object was passed to the command: " + err);
       } catch (ExitProgramException err) {
         writer.println("Exiting");
+        return true;
+      } catch (NoClientRequestException err) {
+        writer.println("No message from client, disconnecting...");
         return true;
       }
 
