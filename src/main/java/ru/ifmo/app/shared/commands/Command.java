@@ -1,15 +1,14 @@
-package ru.ifmo.app.shared;
+package ru.ifmo.app.shared.commands;
 
-import java.io.Serializable;
 import ru.ifmo.app.server.CommandContext;
 import ru.ifmo.app.server.exceptions.ExitProgramException;
 import ru.ifmo.app.server.exceptions.InvalidCommandParametersException;
 import ru.ifmo.app.shared.utils.Messages;
 
 public interface Command {
-  default public Serializable parametersObjectFromStrings(String[] strings)
+  default public CommandParameters parametersObjectFromStrings(String[] strings)
       throws InvalidCommandParametersException {
-    return SerializableDummy.singletone;
+    return CommandParameters.dummy;
   };
 
   public void execute(CommandContext context, Object commandParameters)
@@ -22,8 +21,8 @@ public interface Command {
    * @return an array of arguments, with strings as the arguments' names/types (e.g. {@code [ "id"
    *     ]})
    */
-  public default String[] helpArguments() {
-    return new String[0];
+  public default String helpArguments() {
+    return "";
   }
 
   /**

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Set;
 import java.util.Map.Entry;
+import ru.ifmo.app.shared.commands.Command;
 import ru.ifmo.app.shared.commands.ExitCommand;
 import ru.ifmo.app.shared.commands.HelpCommand;
 import ru.ifmo.app.shared.commands.RemoveByIdCommand;

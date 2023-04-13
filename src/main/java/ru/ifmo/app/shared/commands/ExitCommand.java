@@ -3,7 +3,6 @@ package ru.ifmo.app.shared.commands;
 import ru.ifmo.app.server.CommandContext;
 import ru.ifmo.app.server.exceptions.ExitProgramException;
 import ru.ifmo.app.server.exceptions.InvalidCommandParametersException;
-import ru.ifmo.app.shared.Command;
 import ru.ifmo.app.shared.utils.Messages;
 
 public class ExitCommand implements Command {

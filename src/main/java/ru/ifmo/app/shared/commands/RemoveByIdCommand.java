@@ -1,14 +1,14 @@
 package ru.ifmo.app.shared.commands;
 
-import java.io.Serializable;
 import ru.ifmo.app.server.CommandContext;
 import ru.ifmo.app.server.exceptions.ExitProgramException;
 import ru.ifmo.app.server.exceptions.InvalidCommandParametersException;
-import ru.ifmo.app.shared.Command;
 import ru.ifmo.app.shared.utils.Messages;
 
 public class RemoveByIdCommand implements Command {
-  public static class Parameters implements Serializable {
+  public static class Parameters extends CommandParameters {
+    @CommandParameter(name = "id",
+        desc = "The start of the id of the vehicle that is to be removed")
     String idString;
 
     public Parameters(String idString) {
@@ -52,8 +52,8 @@ public class RemoveByIdCommand implements Command {
   }
 
   @Override
-  public String[] helpArguments() {
-    return new String[] {Messages.get("Help.Command.Arg.Id")};
+  public String helpArguments() {
+    return CommandParameters.description(RemoveByIdCommand.Parameters.class);
   }
 
   @Override

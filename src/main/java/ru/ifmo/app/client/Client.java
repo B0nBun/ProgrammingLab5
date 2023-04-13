@@ -14,10 +14,10 @@ import java.util.Scanner;
 import ru.ifmo.app.client.exceptions.CommandParseException;
 import ru.ifmo.app.server.exceptions.InvalidCommandParametersException;
 import ru.ifmo.app.shared.ClientRequest;
-import ru.ifmo.app.shared.Command;
 import ru.ifmo.app.shared.CommandRegistery;
 import ru.ifmo.app.shared.ServerResponse;
 import ru.ifmo.app.shared.Utils;
+import ru.ifmo.app.shared.commands.Command;
 
 public class Client {
   private static ClientRequest<Serializable> requestFromCommandString(String commandString) throws CommandParseException, InvalidCommandParametersException {
