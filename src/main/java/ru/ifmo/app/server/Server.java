@@ -19,7 +19,11 @@ import ru.ifmo.app.shared.ClientRequest;
 import ru.ifmo.app.shared.ServerResponse;
 import ru.ifmo.app.shared.Utils;
 import ru.ifmo.app.shared.Vehicles;
+import ru.ifmo.app.shared.Vehicles.VehicleCreationSchema;
 import ru.ifmo.app.shared.commands.CommandParameters;
+import ru.ifmo.app.shared.entities.Coordinates;
+import ru.ifmo.app.shared.entities.FuelType;
+import ru.ifmo.app.shared.entities.VehicleType;
 
 class NoClientRequestException extends Exception {
 }
@@ -89,6 +93,12 @@ public class Server {
           Server.logger.info("Client connected: " + client.getInetAddress());
 
           Vehicles vehicles = new Vehicles();
+          vehicles.add(new VehicleCreationSchema("name1", new Coordinates(1l, 2), 1.1f,
+              VehicleType.BICYCLE, FuelType.ALCOHOL));
+          vehicles.add(new VehicleCreationSchema("NAME2", new Coordinates(2l, 3), 2.2f,
+              VehicleType.BOAT, FuelType.GASOLINE));
+          vehicles.add(new VehicleCreationSchema("n3m3", new Coordinates(3l, 4), 3.3f,
+              VehicleType.DRONE, FuelType.KEROSENE));
           var executor = new CommandExecutor(vehicles);
 
           while (true) {

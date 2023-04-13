@@ -9,10 +9,12 @@ import ru.ifmo.app.shared.commands.Command;
 import ru.ifmo.app.shared.commands.ExitCommand;
 import ru.ifmo.app.shared.commands.HelpCommand;
 import ru.ifmo.app.shared.commands.RemoveByIdCommand;
+import ru.ifmo.app.shared.commands.ShowCommand;
 
 public class CommandRegistery {
   public static CommandRegistery global = new CommandRegistery().put(new HelpCommand(), "h", "help")
-      .put(new RemoveByIdCommand(), "remove_by_id", "r").put(new ExitCommand(), "exit", "e", "q");
+      .put(new RemoveByIdCommand(), "remove_by_id", "r").put(new ExitCommand(), "exit", "e", "q")
+      .put(new ShowCommand(), "show", "s");
 
   private LinkedHashMap<Collection<String>, Command> commandsMap = new LinkedHashMap<>();
 
