@@ -2,17 +2,19 @@ package ru.ifmo.app.shared;
 
 import java.io.Serializable;
 
-public record ClientRequest<T extends Serializable>(
+import ru.ifmo.app.shared.commands.CommandParameters;
+
+public record ClientRequest<T extends CommandParameters>(
     String commandName,
     T commandParameters
 ) implements Serializable {
-    public static ClientRequest<Serializable> uncheckedCast(Object object) {
+    public static ClientRequest<CommandParameters> uncheckedCast(Object object) {
         @SuppressWarnings("unchecked")
-        var result = (ClientRequest<Serializable>) object;
+        var result = (ClientRequest<CommandParameters>) object;
         return result;
     }
 
-    public static ClientRequest<Serializable> withoutParams(String commandName) {
-        return new ClientRequest<Serializable>(commandName, SerializableDummy.singletone);
+    public static ClientRequest<CommandParameters> withoutParams(String commandName) {
+        return new ClientRequest<CommandParameters>(commandName, CommandParameters.dummy);
     }
 }

@@ -20,7 +20,8 @@ public class RemoveByIdCommand implements Command {
   public RemoveByIdCommand.Parameters parametersObjectFromStrings(String[] strings)
       throws InvalidCommandParametersException {
     if (strings.length < 1)
-      throw new InvalidCommandParametersException("Expected 1 'id' parameter");
+      throw new InvalidCommandParametersException(
+          "Expected: \n" + CommandParameters.description(RemoveByIdCommand.Parameters.class));
 
     String vehicleUUID = strings[0];
 
@@ -47,7 +48,8 @@ public class RemoveByIdCommand implements Command {
             .println(Messages.get("Warn.VehicleStartingWithIdNotFound", idString));
       }
     } catch (ClassCastException err) {
-      throw new InvalidCommandParametersException();
+      throw new InvalidCommandParametersException(
+          CommandParameters.description(RemoveByIdCommand.Parameters.class));
     }
   }
 

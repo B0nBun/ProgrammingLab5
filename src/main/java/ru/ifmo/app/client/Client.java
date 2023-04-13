@@ -1,7 +1,6 @@
 package ru.ifmo.app.client;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
@@ -20,11 +19,17 @@ import ru.ifmo.app.shared.CommandRegistery;
 import ru.ifmo.app.shared.ServerResponse;
 import ru.ifmo.app.shared.Utils;
 import ru.ifmo.app.shared.commands.Command;
+import ru.ifmo.app.shared.commands.CommandParameters;
+
+/**
+ * Commands TODO: add add if max clear count greater than fuel type execute script filetr greater
+ * than fuel type group counting by id head info remove lower save show update
+ */
 
 public class Client {
   public static final Logger logger = LoggerFactory.getLogger("ru.ifmo.app.client.logger");
 
-  private static ClientRequest<Serializable> requestFromCommandString(String commandString) throws CommandParseException, InvalidCommandParametersException {
+  private static ClientRequest<CommandParameters> requestFromCommandString(String commandString) throws CommandParseException, InvalidCommandParametersException {
     var splitted = Arrays.asList(commandString.trim().split("\s+"));
     if (splitted.size() == 0) {
       throw new CommandParseException("Expected a command, but got nothing");
@@ -35,12 +40,12 @@ public class Client {
     if (command == null) {
       throw new CommandParseException("Command not found");
     }
-    Serializable params = command.parametersObjectFromStrings(commandArguments.toArray(new String[commandArguments.size()]));
+    CommandParameters params = command.parametersObjectFromStrings(commandArguments.toArray(new String[commandArguments.size()]));
     return new ClientRequest<>(commandName, params);
   }
 
-  public static void main(String[] args) throws IOException, ClassNotFoundException,
-      InterruptedException, CommandParseException, InvalidCommandParametersException {
+  public static void main(String[] args)
+      throws IOException, ClassNotFoundException, InterruptedException {
     int port = 1111;
     InetSocketAddress addr = new InetSocketAddress("127.0.0.1", port);
 
@@ -56,7 +61,16 @@ public class Client {
       while (true) {
         Client.logger.info("Input the message for the server: ");
         var commandString = scanner.nextLine();
-        var requestObject = Client.requestFromCommandString(commandString);
+        ClientRequest<CommandParameters> requestObject = null;
+        try {
+          requestObject = Client.requestFromCommandString(commandString);
+        } catch (InvalidCommandParametersException err) {
+          Client.logger.error("Invalid command parameters: " + err.getMessage());
+          continue;
+        } catch (CommandParseException err) {
+          Client.logger.error("Couldn't parse the command: " + err.getMessage());
+          continue;
+        }
 
         // TODO: Add timeout to avoid infinite loop
         keysHandling: while (true) {
