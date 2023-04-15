@@ -22,6 +22,8 @@ import ru.ifmo.app.shared.Utils;
 import ru.ifmo.app.shared.commands.Command;
 import ru.ifmo.app.shared.commands.CommandParameters;
 
+// TODO: Some exceptions are in 'local' package, so they need to be transferred either to shared, client or server
+
 public class Client {
 
     public static final Logger logger = LoggerFactory.getLogger(

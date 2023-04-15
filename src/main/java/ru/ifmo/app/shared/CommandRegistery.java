@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 import ru.ifmo.app.shared.commands.AddCommand;
+import ru.ifmo.app.shared.commands.AddIfMaxCommand;
 import ru.ifmo.app.shared.commands.ClearCommand;
 import ru.ifmo.app.shared.commands.Command;
 import ru.ifmo.app.shared.commands.CountGreaterThanFuelTypeCommand;
@@ -20,8 +21,6 @@ import ru.ifmo.app.shared.commands.ShowCommand;
 
 /**
  * Commands TODO:
- * add;
- * add if max;
  * remove lower;
  * update;
  * x execute script;
@@ -41,8 +40,8 @@ public class CommandRegistery {
         .put(new FilterGreaterThanFuelTypeCommand(), "filter-greater-than-fuel-type")
         .put(new GroupCountingByIdCommand(), "group-counting-by-id")
         .put(new HeadCommand(), "head")
-        // TODO: Validate added vehicles on server side
-        .put(new AddCommand(), "add", "a");
+        .put(new AddCommand(), "add", "a")
+        .put(new AddIfMaxCommand(), "add-if-max");
 
     private LinkedHashMap<Collection<String>, Command> commandsMap = new LinkedHashMap<>();
 
