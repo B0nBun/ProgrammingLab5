@@ -1,5 +1,6 @@
 package ru.ifmo.app.shared.commands;
 
+import java.io.Serializable;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.stream.Collectors;
 import ru.ifmo.app.server.CommandContext;
@@ -10,8 +11,11 @@ import ru.ifmo.app.shared.utils.Messages;
 public class GroupCountingByIdCommand implements Command {
 
     @Override
-    public void execute(CommandContext context, Object commandParameters)
-        throws InvalidCommandParametersException, ExitProgramException {
+    public void execute(
+        CommandContext context,
+        Object commandParameters,
+        Serializable additionalObject
+    ) throws InvalidCommandParametersException, ExitProgramException {
         var grouped = context
             .vehicles()
             .stream()

@@ -3,6 +3,7 @@ package ru.ifmo.app.shared;
 import com.fasterxml.uuid.Generators;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayDeque;
@@ -262,10 +263,13 @@ public class Vehicles {
      * @param newVehicle A creation schema with fields that specify data, which aren't supposed to be
      *        genereated automatically
      */
-    public void add(VehicleCreationSchema newVehicle) {
-        this.collection.add(
-                newVehicle.generate(this.idGenerator.next(), this.peekNextCreationDate())
-            );
+    public Vehicle add(VehicleCreationSchema newVehicle) {
+        Vehicle vehicle = newVehicle.generate(
+            this.idGenerator.next(),
+            this.peekNextCreationDate()
+        );
+        this.collection.add(vehicle);
+        return vehicle;
     }
 
     /**
@@ -344,7 +348,8 @@ public class Vehicles {
         Float enginePower,
         VehicleType type,
         FuelType fuelType
-    ) {
+    )
+        implements Serializable {
         /**
          * Constructor used to create a VehicleCreationSchema from already existing {@link Vehicle} object
          * @param vehicle Vehicle, values of which are copied to the constructed VehicleCreationSchema
@@ -481,6 +486,15 @@ public class Vehicles {
             boolean logScanned
         ) {
             return VehicleCreationSchema.createFromScanner(scanner, null, logScanned);
+        }
+
+        public void validate() throws ValidationException {
+            Vehicle.fields.name.validate(this.name());
+            Vehicle.fields.enginePower.validate(this.enginePower());
+            Vehicle.fields.fuelType.validate(this.fuelType());
+            Vehicle.fields.vehicleType.validate(this.type());
+            Coordinates.fields.x.validate(this.coordinates().x());
+            Coordinates.fields.y.validate(this.coordinates().y());
         }
     }
 }

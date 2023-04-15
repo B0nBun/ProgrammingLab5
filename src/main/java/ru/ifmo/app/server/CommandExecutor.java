@@ -1,6 +1,7 @@
 package ru.ifmo.app.server;
 
 import java.io.PrintWriter;
+import java.io.Serializable;
 import ru.ifmo.app.server.exceptions.ExitProgramException;
 import ru.ifmo.app.server.exceptions.InvalidCommandParametersException;
 import ru.ifmo.app.shared.ClientRequest;
@@ -18,19 +19,20 @@ public class CommandExecutor {
     }
 
     public void execute(
-        ClientRequest<CommandParameters> clientMessage,
+        ClientRequest<CommandParameters, Serializable> clientRequest,
         PrintWriter outputWriter
     ) throws InvalidCommandParametersException, ExitProgramException {
-        String commandName = clientMessage.commandName();
+        String commandName = clientRequest.commandName();
         var command = this.commandRegistery.get(commandName);
         if (command == null) {
             outputWriter.println(
-                "Couldn't find the command " + clientMessage.commandName()
+                "Couldn't find the command " + clientRequest.commandName()
             );
         }
         command.execute(
             new CommandContext(this.commandRegistery, outputWriter, this.vehicles),
-            clientMessage.commandParameters()
+            clientRequest.commandParameters(),
+            clientRequest.additionalObject()
         );
     }
 }

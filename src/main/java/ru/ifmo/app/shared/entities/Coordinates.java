@@ -1,5 +1,6 @@
 package ru.ifmo.app.shared.entities;
 
+import java.io.Serializable;
 import org.jdom2.Element;
 import ru.ifmo.app.local.lib.exceptions.ParsingException;
 import ru.ifmo.app.local.lib.exceptions.ValidationException;
@@ -10,7 +11,7 @@ import ru.ifmo.app.shared.utils.fieldschema.FieldSchemaNum;
 /**
  * Record of coordinates stored in the {@link Vehicle} objects
  */
-public record Coordinates(Long x, Integer y) {
+public record Coordinates(Long x, Integer y) implements Serializable {
     /**
      * Converts the coordinates to an XML {@link Element}
      */

@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.net.ServerSocket;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
@@ -33,7 +34,7 @@ public class Server {
         "ru.ifmo.app.server.logger"
     );
 
-    private static ClientRequest<CommandParameters> getClientRequestFromStream(
+    private static ClientRequest<CommandParameters, Serializable> getClientRequestFromStream(
         InputStream in
     ) throws IOException, ClassNotFoundException, NoClientRequestException {
         try {
@@ -60,7 +61,7 @@ public class Server {
             var byteOutput = new ByteArrayOutputStream();
             var writer = new PrintWriter(byteOutput)
         ) {
-            ClientRequest<CommandParameters> request = null;
+            ClientRequest<CommandParameters, Serializable> request = null;
 
             try {
                 request = Server.getClientRequestFromStream(in);

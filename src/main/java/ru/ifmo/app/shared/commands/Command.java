@@ -1,18 +1,28 @@
 package ru.ifmo.app.shared.commands;
 
+import java.io.Serializable;
+import java.util.Scanner;
 import ru.ifmo.app.server.CommandContext;
 import ru.ifmo.app.server.exceptions.ExitProgramException;
 import ru.ifmo.app.server.exceptions.InvalidCommandParametersException;
+import ru.ifmo.app.shared.SerializableDummy;
 import ru.ifmo.app.shared.utils.Messages;
 
 public interface Command {
+    public default Serializable additionalObjectFromScanner(Scanner scanner) {
+        return SerializableDummy.singletone;
+    }
+
     public default CommandParameters parametersObjectFromStrings(String[] strings)
         throws InvalidCommandParametersException {
         return CommandParameters.dummy;
     }
 
-    public void execute(CommandContext context, Object commandParameters)
-        throws InvalidCommandParametersException, ExitProgramException;
+    public void execute(
+        CommandContext context,
+        Object commandParameters,
+        Serializable additionalObject
+    ) throws InvalidCommandParametersException, ExitProgramException;
 
     /**
      * A method which is called in the {@link ru.ifmo.app.local.lib.commands.HelpCommand HelpCommand}

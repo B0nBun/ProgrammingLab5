@@ -1,5 +1,6 @@
 package ru.ifmo.app.shared.commands;
 
+import java.io.Serializable;
 import java.util.stream.Collectors;
 import ru.ifmo.app.local.lib.exceptions.ParsingException;
 import ru.ifmo.app.server.CommandContext;
@@ -37,8 +38,11 @@ public class FilterGreaterThanFuelTypeCommand implements Command {
     }
 
     @Override
-    public void execute(CommandContext context, Object commandParameters)
-        throws InvalidCommandParametersException, ExitProgramException {
+    public void execute(
+        CommandContext context,
+        Object commandParameters,
+        Serializable additionalObject
+    ) throws InvalidCommandParametersException, ExitProgramException {
         var params = (Parameters) commandParameters;
         FuelType chosen = params.fuelType;
         var result = context

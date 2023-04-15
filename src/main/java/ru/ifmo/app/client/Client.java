@@ -1,6 +1,7 @@
 package ru.ifmo.app.client;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
@@ -27,8 +28,9 @@ public class Client {
         "ru.ifmo.app.client.logger"
     );
 
-    private static ClientRequest<CommandParameters> requestFromCommandString(
-        String commandString
+    private static ClientRequest<CommandParameters, Serializable> constructRequest(
+        String commandString,
+        Scanner scanner
     ) throws CommandParseException, InvalidCommandParametersException {
         var splitted = Arrays.asList(commandString.trim().split("\s+"));
         if (splitted.size() == 0) {
@@ -43,7 +45,8 @@ public class Client {
         CommandParameters params = command.parametersObjectFromStrings(
             commandArguments.toArray(new String[commandArguments.size()])
         );
-        return new ClientRequest<>(commandName, params);
+        Serializable additionalObject = command.additionalObjectFromScanner(scanner);
+        return new ClientRequest<>(commandName, params, additionalObject);
     }
 
     public static void main(String[] args)
@@ -64,9 +67,9 @@ public class Client {
             while (true) {
                 Client.logger.info("Input the message for the server: ");
                 var commandString = scanner.nextLine();
-                ClientRequest<CommandParameters> requestObject = null;
+                ClientRequest<CommandParameters, Serializable> requestObject = null;
                 try {
-                    requestObject = Client.requestFromCommandString(commandString);
+                    requestObject = Client.constructRequest(commandString, scanner);
                 } catch (InvalidCommandParametersException err) {
                     Client.logger.error(
                         "Invalid command parameters: " + err.getMessage()

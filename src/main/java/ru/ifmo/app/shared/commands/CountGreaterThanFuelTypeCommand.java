@@ -1,5 +1,6 @@
 package ru.ifmo.app.shared.commands;
 
+import java.io.Serializable;
 import ru.ifmo.app.local.lib.exceptions.ParsingException;
 import ru.ifmo.app.server.CommandContext;
 import ru.ifmo.app.server.exceptions.ExitProgramException;
@@ -36,8 +37,11 @@ public class CountGreaterThanFuelTypeCommand implements Command {
     }
 
     @Override
-    public void execute(CommandContext context, Object commandParameters)
-        throws InvalidCommandParametersException, ExitProgramException {
+    public void execute(
+        CommandContext context,
+        Object commandParameters,
+        Serializable additionalObject
+    ) throws InvalidCommandParametersException, ExitProgramException {
         var params = (Parameters) commandParameters;
         FuelType chosen = params.fuelType;
         var count = context
