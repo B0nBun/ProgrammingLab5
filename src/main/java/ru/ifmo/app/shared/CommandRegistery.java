@@ -19,6 +19,7 @@ import ru.ifmo.app.shared.commands.InfoCommand;
 import ru.ifmo.app.shared.commands.RemoveByIdCommand;
 import ru.ifmo.app.shared.commands.RemoveLowerCommand;
 import ru.ifmo.app.shared.commands.ShowCommand;
+import ru.ifmo.app.shared.commands.UpdateCommand;
 
 /**
  * Commands TODO:
@@ -42,7 +43,8 @@ public class CommandRegistery {
         .put(new HeadCommand(), "head")
         .put(new AddCommand(), "add", "a")
         .put(new AddIfMaxCommand(), "add-if-max")
-        .put(new RemoveLowerCommand(), "remove-lower");
+        .put(new RemoveLowerCommand(), "remove-lower")
+        .put(new UpdateCommand(), "update", "u");
 
     private LinkedHashMap<Collection<String>, Command> commandsMap = new LinkedHashMap<>();
 

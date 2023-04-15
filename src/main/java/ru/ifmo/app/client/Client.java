@@ -22,7 +22,8 @@ import ru.ifmo.app.shared.Utils;
 import ru.ifmo.app.shared.commands.Command;
 import ru.ifmo.app.shared.commands.CommandParameters;
 
-// TODO: Some exceptions are in 'local' package, so they need to be transferred either to shared, client or server
+// TODO: Orgonise code in 'server', 'client' and 'shared' packages properly, so it would be possible
+// to compile them seperately from each other (e.g only 'server' & 'shared' or only 'client' & 'shared')
 
 public class Client {
 
