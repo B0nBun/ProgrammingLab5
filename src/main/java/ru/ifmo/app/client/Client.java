@@ -21,21 +21,6 @@ import ru.ifmo.app.shared.Utils;
 import ru.ifmo.app.shared.commands.Command;
 import ru.ifmo.app.shared.commands.CommandParameters;
 
-/**
- * Commands TODO:
- * add;
- * add if max;
- * execute script;
- * filter greater than fuel type;
- * group counting by id;
- * head;
- * info;
- * remove;
- * lower;
- * save;
- * update
- */
-
 public class Client {
 
     public static final Logger logger = LoggerFactory.getLogger(

@@ -1,5 +1,6 @@
 package ru.ifmo.app.shared.commands;
 
+import java.util.stream.Collectors;
 import ru.ifmo.app.local.lib.exceptions.ParsingException;
 import ru.ifmo.app.server.CommandContext;
 import ru.ifmo.app.server.exceptions.ExitProgramException;
@@ -7,7 +8,7 @@ import ru.ifmo.app.server.exceptions.InvalidCommandParametersException;
 import ru.ifmo.app.shared.entities.FuelType;
 import ru.ifmo.app.shared.utils.Messages;
 
-public class CountGreaterThanFuelTypeCommand implements Command {
+public class FilterGreaterThanFuelTypeCommand implements Command {
 
     private static class Parameters extends CommandParameters {
 
@@ -40,15 +41,20 @@ public class CountGreaterThanFuelTypeCommand implements Command {
         throws InvalidCommandParametersException, ExitProgramException {
         var params = (Parameters) commandParameters;
         FuelType chosen = params.fuelType;
-        var count = context
+        var result = context
             .vehicles()
             .stream()
             .filter(v -> v.fuelType().compareTo(chosen) > 0)
-            .count();
+            .map(v -> v.toString())
+            .collect(Collectors.joining("\n"))
+            .trim();
 
-        context
-            .outputWriter()
-            .println(Messages.get("NumberOfVehiclesWithGreaterFuelType", count));
+        if (result.equals("")) {
+            context.outputWriter().println(Messages.get("NoElementsWithGreaterFuelType"));
+            return;
+        }
+
+        context.outputWriter().println(result);
     }
 
     @Override
