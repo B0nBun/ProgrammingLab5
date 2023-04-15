@@ -10,6 +10,7 @@ import ru.ifmo.app.shared.commands.Command;
 import ru.ifmo.app.shared.commands.CountGreaterThanFuelTypeCommand;
 import ru.ifmo.app.shared.commands.ExitCommand;
 import ru.ifmo.app.shared.commands.FilterGreaterThanFuelTypeCommand;
+import ru.ifmo.app.shared.commands.GroupCountingByIdCommand;
 import ru.ifmo.app.shared.commands.HelpCommand;
 import ru.ifmo.app.shared.commands.InfoCommand;
 import ru.ifmo.app.shared.commands.RemoveByIdCommand;
@@ -20,8 +21,6 @@ import ru.ifmo.app.shared.commands.ShowCommand;
  * x add;
  * x add if max;
  * x execute script;
- * filter greater than fuel type;
- * group counting by id;
  * head;
  * x remove lower;
  * x save;
@@ -38,7 +37,8 @@ public class CommandRegistery {
         .put(new ClearCommand(), "clear")
         .put(new CountGreaterThanFuelTypeCommand(), "count-greater-than-fuel-type")
         .put(new InfoCommand(), "info")
-        .put(new FilterGreaterThanFuelTypeCommand(), "filter-greater-than-fuel-type");
+        .put(new FilterGreaterThanFuelTypeCommand(), "filter-greater-than-fuel-type")
+        .put(new GroupCountingByIdCommand(), "group-counting-by-id");
 
     private LinkedHashMap<Collection<String>, Command> commandsMap = new LinkedHashMap<>();
 
