@@ -17,11 +17,11 @@ import ru.ifmo.app.shared.commands.HeadCommand;
 import ru.ifmo.app.shared.commands.HelpCommand;
 import ru.ifmo.app.shared.commands.InfoCommand;
 import ru.ifmo.app.shared.commands.RemoveByIdCommand;
+import ru.ifmo.app.shared.commands.RemoveLowerCommand;
 import ru.ifmo.app.shared.commands.ShowCommand;
 
 /**
  * Commands TODO:
- * remove lower;
  * update;
  * x execute script;
  * x save;
@@ -41,7 +41,8 @@ public class CommandRegistery {
         .put(new GroupCountingByIdCommand(), "group-counting-by-id")
         .put(new HeadCommand(), "head")
         .put(new AddCommand(), "add", "a")
-        .put(new AddIfMaxCommand(), "add-if-max");
+        .put(new AddIfMaxCommand(), "add-if-max")
+        .put(new RemoveLowerCommand(), "remove-lower");
 
     private LinkedHashMap<Collection<String>, Command> commandsMap = new LinkedHashMap<>();
 
