@@ -13,49 +13,52 @@ import java.util.Optional;
  * {@link Iterator#next} call. </i>
  */
 public class Peekable<T> implements Iterator<T> {
-  /** An iterator values of which are peeked and returned in the {@link Peekable#next} */
-  private Iterator<T> iterator;
 
-  /** A field that stores the value, which will be returned from this iterator next. */
-  private Optional<T> nextElement;
+    /** An iterator values of which are peeked and returned in the {@link Peekable#next} */
+    private Iterator<T> iterator;
 
-  /**
-   * Given the iterator, construct a peekable iterator from it.
-   *
-   * @param iterator
-   */
-  public Peekable(Iterator<T> iterator) {
-    this.iterator = iterator;
-    this.nextElement = this.iterator.hasNext() ? Optional.of(iterator.next()) : Optional.empty();
-  }
+    /** A field that stores the value, which will be returned from this iterator next. */
+    private Optional<T> nextElement;
 
-  /**
-   * Converts iterable to iterator with {@link Iterable#iterator} and uses the
-   * {@link Peekable(Iterator)} constructor to create a peekable.
-   *
-   * @param iterable Iterable from which used iterator is created.
-   */
-  public Peekable(Iterable<T> iterable) {
-    this(iterable.iterator());
-  }
+    /**
+     * Given the iterator, construct a peekable iterator from it.
+     *
+     * @param iterator
+     */
+    public Peekable(Iterator<T> iterator) {
+        this.iterator = iterator;
+        this.nextElement =
+            this.iterator.hasNext() ? Optional.of(iterator.next()) : Optional.empty();
+    }
 
-  public boolean hasNext() {
-    return iterator.hasNext();
-  }
+    /**
+     * Converts iterable to iterator with {@link Iterable#iterator} and uses the
+     * {@link Peekable(Iterator)} constructor to create a peekable.
+     *
+     * @param iterable Iterable from which used iterator is created.
+     */
+    public Peekable(Iterable<T> iterable) {
+        this(iterable.iterator());
+    }
 
-  public T next() throws NoSuchElementException {
-    var result = this.nextElement.orElseGet(this.iterator::next);
-    this.nextElement = iterator.hasNext() ? Optional.of(iterator.next()) : Optional.empty();
-    return result;
-  }
+    public boolean hasNext() {
+        return iterator.hasNext();
+    }
 
-  /**
-   * "Peek" a value, which will be returned next from this iterator.
-   *
-   * @return A value, which will be returned from the next {@link Peekable#next} call.
-   * @throws NoSuchElementException Thrown if the iterator ended and there is not values to "peek"
-   */
-  public T peek() throws NoSuchElementException {
-    return nextElement.orElseGet(iterator::next);
-  }
+    public T next() throws NoSuchElementException {
+        var result = this.nextElement.orElseGet(this.iterator::next);
+        this.nextElement =
+            iterator.hasNext() ? Optional.of(iterator.next()) : Optional.empty();
+        return result;
+    }
+
+    /**
+     * "Peek" a value, which will be returned next from this iterator.
+     *
+     * @return A value, which will be returned from the next {@link Peekable#next} call.
+     * @throws NoSuchElementException Thrown if the iterator ended and there is not values to "peek"
+     */
+    public T peek() throws NoSuchElementException {
+        return nextElement.orElseGet(iterator::next);
+    }
 }

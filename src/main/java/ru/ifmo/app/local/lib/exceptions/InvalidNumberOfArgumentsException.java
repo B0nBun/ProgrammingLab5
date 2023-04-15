@@ -7,7 +7,8 @@ import ru.ifmo.app.shared.utils.Messages;
  * required conditions.
  */
 public class InvalidNumberOfArgumentsException extends Exception {
-  public InvalidNumberOfArgumentsException(int requiredNumber, int providedNumber) {
-    super(Messages.get("InvalidNumberOfArguments", requiredNumber, providedNumber));
-  }
+
+    public InvalidNumberOfArgumentsException(int requiredNumber, int providedNumber) {
+        super(Messages.get("InvalidNumberOfArguments", requiredNumber, providedNumber));
+    }
 }

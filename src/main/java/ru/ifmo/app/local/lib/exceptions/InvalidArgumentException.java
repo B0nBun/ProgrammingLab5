@@ -7,7 +7,8 @@ import ru.ifmo.app.shared.utils.Messages;
  * doesn't satisfy any other requirements (e.g. passed "asdasd", when Integer was required)
  */
 public class InvalidArgumentException extends Exception {
-  public InvalidArgumentException(String argumentName, String message) {
-    super(Messages.get("Error.InvalidArgument", argumentName, message));
-  }
+
+    public InvalidArgumentException(String argumentName, String message) {
+        super(Messages.get("Error.InvalidArgument", argumentName, message));
+    }
 }

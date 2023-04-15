@@ -24,29 +24,41 @@ public record Vehicle(
     Float enginePower,
     VehicleType type,
     FuelType fuelType
-) implements Comparable<Vehicle> {
-    
+)
+    implements Comparable<Vehicle> {
     /**
      * Creates an XML {@link Element} of the Vehicle
-     * 
+     *
      * @return The XML element with all of the data stored as it's children
      */
     public Element toXmlElement() {
         Element vehicleElement = new Element(VehiclesXmlTag.VEHICLE.toString())
             .setAttribute(VehiclesXmlTag.ID_ATTR.toString(), this.id.toString())
-            .setAttribute(VehiclesXmlTag.CREATION_DATE_ATTR.toString(), this.creationDate.toString())
-            .addContent(List.of(
-                new Element(VehiclesXmlTag.NAME.toString()).setText(this.name()),
-                this.coordinates().toXmlElement(),
-                new Element(VehiclesXmlTag.ENGINE_POWER.toString()).setText(this.enginePower().toString()),
-                new Element(VehiclesXmlTag.VEHICLE_TYPE.toString()).setText(this.type().toString()),
-                new Element(VehiclesXmlTag.FUEL_TYPE.toString()).setText(this.fuelType().toString())
-            ));
+            .setAttribute(
+                VehiclesXmlTag.CREATION_DATE_ATTR.toString(),
+                this.creationDate.toString()
+            )
+            .addContent(
+                List.of(
+                    new Element(VehiclesXmlTag.NAME.toString()).setText(this.name()),
+                    this.coordinates().toXmlElement(),
+                    new Element(VehiclesXmlTag.ENGINE_POWER.toString())
+                        .setText(this.enginePower().toString()),
+                    new Element(VehiclesXmlTag.VEHICLE_TYPE.toString())
+                        .setText(this.type().toString()),
+                    new Element(VehiclesXmlTag.FUEL_TYPE.toString())
+                        .setText(this.fuelType().toString())
+                )
+            );
 
         return vehicleElement;
     }
 
-    private static <T> T getFieldFromVehicleXmlElement(Element vehicleElement, String fieldTagName, FieldSchema<T, ?> fieldSchema) throws ParsingException, ValidationException {
+    private static <T> T getFieldFromVehicleXmlElement(
+        Element vehicleElement,
+        String fieldTagName,
+        FieldSchema<T, ?> fieldSchema
+    ) throws ParsingException, ValidationException {
         try {
             Element neededElement = vehicleElement.getChild(fieldTagName);
             String elementContent = null;
@@ -60,7 +72,7 @@ public record Vehicle(
             throw new ParsingException(fieldTagName + ": " + err.getMessage());
         }
     }
-    
+
     /**
      * Constructs a new Vehicle object derived from provided Xml.
      * <p>
@@ -70,44 +82,95 @@ public record Vehicle(
      * <p>
      * All of the element/attribute tag names can be found in the {@link VehiclesXmlTag}
      * </p>
-     * 
+     *
      * @param vehicleElement The element which should be interpreted as a vehicle
      * @return Constructed Vehicle object
-     * 
+     *
      * @throws ParsingException Thrown if any of the data doesn't pass the parsing processes
      * @throws ValidationException Thrown if any of the data doesn't pass the validation processes of {@link Vehicle.fields}
      */
-    public static Vehicle fromXmlElement(Element vehicleElement) throws ParsingException, ValidationException {        
-        String idString = vehicleElement.getAttributeValue(VehiclesXmlTag.ID_ATTR.toString());
+    public static Vehicle fromXmlElement(Element vehicleElement)
+        throws ParsingException, ValidationException {
+        String idString = vehicleElement.getAttributeValue(
+            VehiclesXmlTag.ID_ATTR.toString()
+        );
         if (idString == null) {
-            throw new ParsingException(Messages.get("Error.XmlAttribute.RequiredButGot", VehiclesXmlTag.ID_ATTR, "uuid", "nothing"));
+            throw new ParsingException(
+                Messages.get(
+                    "Error.XmlAttribute.RequiredButGot",
+                    VehiclesXmlTag.ID_ATTR,
+                    "uuid",
+                    "nothing"
+                )
+            );
         }
         try {
             UUID id = null;
             try {
                 id = UUID.fromString(idString);
             } catch (IllegalArgumentException err) {
-                throw new ParsingException(Messages.get("Error.XmlAttribute.RequiredButGot", VehiclesXmlTag.ID_ATTR, "uuid", idString));
+                throw new ParsingException(
+                    Messages.get(
+                        "Error.XmlAttribute.RequiredButGot",
+                        VehiclesXmlTag.ID_ATTR,
+                        "uuid",
+                        idString
+                    )
+                );
             }
-    
-            String name = Vehicle.getFieldFromVehicleXmlElement(vehicleElement, VehiclesXmlTag.NAME.toString(), Vehicle.fields.name);
-            
-            Element coordinatesElement = vehicleElement.getChild(VehiclesXmlTag.COORDINATES.toString());
+
+            String name = Vehicle.getFieldFromVehicleXmlElement(
+                vehicleElement,
+                VehiclesXmlTag.NAME.toString(),
+                Vehicle.fields.name
+            );
+
+            Element coordinatesElement = vehicleElement.getChild(
+                VehiclesXmlTag.COORDINATES.toString()
+            );
             Coordinates coordinates = Coordinates.fromXmlElement(coordinatesElement);
             if (coordinates == null) {
-                throw new ParsingException(Messages.get("Error.XmlElement.RequiredByGot", VehiclesXmlTag.COORDINATES, "uuid", "nothing"));
+                throw new ParsingException(
+                    Messages.get(
+                        "Error.XmlElement.RequiredByGot",
+                        VehiclesXmlTag.COORDINATES,
+                        "uuid",
+                        "nothing"
+                    )
+                );
             }
-    
-            String creationDateString = vehicleElement.getAttributeValue(VehiclesXmlTag.CREATION_DATE_ATTR.toString());
+
+            String creationDateString = vehicleElement.getAttributeValue(
+                VehiclesXmlTag.CREATION_DATE_ATTR.toString()
+            );
             if (creationDateString == null) {
-                throw new ValidationException(Messages.get("Error.XmlAttribute.RequiredButGot", VehiclesXmlTag.CREATION_DATE_ATTR, "date", "nothing"));
+                throw new ValidationException(
+                    Messages.get(
+                        "Error.XmlAttribute.RequiredButGot",
+                        VehiclesXmlTag.CREATION_DATE_ATTR,
+                        "date",
+                        "nothing"
+                    )
+                );
             }
             LocalDate creationDate = FieldSchema.localdate().parse(creationDateString);
-    
-            Float enginePower = Vehicle.getFieldFromVehicleXmlElement(vehicleElement, VehiclesXmlTag.ENGINE_POWER.toString(), Vehicle.fields.enginePower);
-            VehicleType vehicleType = Vehicle.getFieldFromVehicleXmlElement(vehicleElement, VehiclesXmlTag.VEHICLE_TYPE.toString(), Vehicle.fields.vehicleType);
-            FuelType fuelType = Vehicle.getFieldFromVehicleXmlElement(vehicleElement, VehiclesXmlTag.FUEL_TYPE.toString(), Vehicle.fields.fuelType);
-    
+
+            Float enginePower = Vehicle.getFieldFromVehicleXmlElement(
+                vehicleElement,
+                VehiclesXmlTag.ENGINE_POWER.toString(),
+                Vehicle.fields.enginePower
+            );
+            VehicleType vehicleType = Vehicle.getFieldFromVehicleXmlElement(
+                vehicleElement,
+                VehiclesXmlTag.VEHICLE_TYPE.toString(),
+                Vehicle.fields.vehicleType
+            );
+            FuelType fuelType = Vehicle.getFieldFromVehicleXmlElement(
+                vehicleElement,
+                VehiclesXmlTag.FUEL_TYPE.toString(),
+                Vehicle.fields.fuelType
+            );
+
             return new Vehicle(
                 id,
                 name,
@@ -118,9 +181,13 @@ public record Vehicle(
                 fuelType
             );
         } catch (ValidationException err) {
-            throw new ValidationException("Vehicle with id='" + idString + "': " + err.getMessage());
+            throw new ValidationException(
+                "Vehicle with id='" + idString + "': " + err.getMessage()
+            );
         } catch (ParsingException err) {
-            throw new ParsingException("Vehicle with id='" + idString + "': " + err.getMessage());
+            throw new ParsingException(
+                "Vehicle with id='" + idString + "': " + err.getMessage()
+            );
         }
     }
 
@@ -139,7 +206,7 @@ public record Vehicle(
             "]"
         );
     }
-    
+
     /**
      * Compares the vehicles by enginePower field
      */
@@ -152,8 +219,20 @@ public record Vehicle(
      * Static class, which serves as a namespace for {@link FieldSchema FieldSchemas} representing the fields stored in the Vehicle class.
      */
     public static final class fields {
-        public static final FieldSchemaString name = FieldSchema.str().nonnull().nonempty();
-        public static final FieldSchemaNum<Float> enginePower = FieldSchema.floating().nonnull().greaterThan(0f);
-        public static final FieldSchemaEnum<FuelType> fuelType = FieldSchema.enumeration(FuelType.class);
-        public static final FieldSchemaEnum<VehicleType> vehicleType = FieldSchema.enumeration(VehicleType.class);
-    }}
+
+        public static final FieldSchemaString name = FieldSchema
+            .str()
+            .nonnull()
+            .nonempty();
+        public static final FieldSchemaNum<Float> enginePower = FieldSchema
+            .floating()
+            .nonnull()
+            .greaterThan(0f);
+        public static final FieldSchemaEnum<FuelType> fuelType = FieldSchema.enumeration(
+            FuelType.class
+        );
+        public static final FieldSchemaEnum<VehicleType> vehicleType = FieldSchema.enumeration(
+            VehicleType.class
+        );
+    }
+}

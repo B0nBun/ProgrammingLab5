@@ -19,52 +19,57 @@ import ru.ifmo.app.shared.utils.Messages;
  * prompt.
  */
 public class SaveCommand implements DeprecatedCommand {
-  private File askForFilepath(Scanner scanner) {
-    App.logger.info(Messages.get("ProvideFileForSaving"));
-    String filepath = scanner.nextLine();
-    if (filepath == null || filepath.trim().length() == 0) {
-      return null;
+
+    private File askForFilepath(Scanner scanner) {
+        App.logger.info(Messages.get("ProvideFileForSaving"));
+        String filepath = scanner.nextLine();
+        if (filepath == null || filepath.trim().length() == 0) {
+            return null;
+        }
+        String expanded = Utils.expandPath(filepath);
+        return new File(expanded.trim());
     }
-    String expanded = Utils.expandPath(filepath);
-    return new File(expanded.trim());
-  }
 
-  @Override
-  public void execute(DeprecatedCommandContext context) {
+    @Override
+    public void execute(DeprecatedCommandContext context) {
+        var xmlOutputter = new XMLOutputter();
+        xmlOutputter.setFormat(Format.getPrettyFormat());
+        Element vehiclesRootElement = context.vehicles().toXmlElement();
+        String vehiclesSerialized = xmlOutputter.outputString(vehiclesRootElement);
 
-    var xmlOutputter = new XMLOutputter();
-    xmlOutputter.setFormat(Format.getPrettyFormat());
-    Element vehiclesRootElement = context.vehicles().toXmlElement();
-    String vehiclesSerialized = xmlOutputter.outputString(vehiclesRootElement);
+        while (true) {
+            File savingFile = context.vehiclesFile() == null
+                ? askForFilepath(context.scanner())
+                : context.vehiclesFile();
 
-    while (true) {
-      File savingFile = context.vehiclesFile() == null ? askForFilepath(context.scanner())
-          : context.vehiclesFile();
+            if (savingFile == null) {
+                App.logger.info(Messages.get("SaveCancel"));
+                break;
+            }
 
-      if (savingFile == null) {
-        App.logger.info(Messages.get("SaveCancel"));
-        break;
-      }
+            var validationError = Utils.validateFilename(savingFile.getName());
+            if (validationError.isPresent() && !savingFile.exists()) {
+                App.logger.error(validationError.get());
+                continue;
+            }
 
-      var validationError = Utils.validateFilename(savingFile.getName());
-      if (validationError.isPresent() && !savingFile.exists()) {
-        App.logger.error(validationError.get());
-        continue;
-      }
-
-      try (var printWriter = new PrintWriter(savingFile)) {
-        printWriter.write(vehiclesSerialized);
-        App.logger.info(Messages.get("CollectionWasSaved", savingFile.getAbsolutePath()));
-        break;
-      } catch (FileNotFoundException err) {
-        App.logger.error(Messages.get("Error.FileNotFound", savingFile, err.getMessage()));
-        continue;
-      }
+            try (var printWriter = new PrintWriter(savingFile)) {
+                printWriter.write(vehiclesSerialized);
+                App.logger.info(
+                    Messages.get("CollectionWasSaved", savingFile.getAbsolutePath())
+                );
+                break;
+            } catch (FileNotFoundException err) {
+                App.logger.error(
+                    Messages.get("Error.FileNotFound", savingFile, err.getMessage())
+                );
+                continue;
+            }
+        }
     }
-  }
 
-  @Override
-  public String helpMessage() {
-    return Messages.get("Help.Command.Save");
-  }
+    @Override
+    public String helpMessage() {
+        return Messages.get("Help.Command.Save");
+    }
 }

@@ -13,23 +13,27 @@ import ru.ifmo.app.shared.utils.Messages;
  * descriptions.
  */
 public class HelpCommand implements DeprecatedCommand {
-  @Override
-  public void execute(DeprecatedCommandContext context) {
-    Stream<String> commandStrings =
-        context.commandRegistery().getAllCommands().stream().map(entry -> {
-          var command = entry.getValue();
-          var helpMessage = command.helpMessage();
-          var commandAliases = "[" + String.join(", ", entry.getKey()) + "]";
-          var argumentsString = String.join(" ", command.helpArguments());
-          return "- " + commandAliases + " " + argumentsString + "\n" + helpMessage;
-        });
 
-    App.logger.info(Messages.get("Help.CommandListTitle"));
-    App.logger.info(commandStrings.collect(Collectors.joining("\n")));
-  }
+    @Override
+    public void execute(DeprecatedCommandContext context) {
+        Stream<String> commandStrings = context
+            .commandRegistery()
+            .getAllCommands()
+            .stream()
+            .map(entry -> {
+                var command = entry.getValue();
+                var helpMessage = command.helpMessage();
+                var commandAliases = "[" + String.join(", ", entry.getKey()) + "]";
+                var argumentsString = String.join(" ", command.helpArguments());
+                return "- " + commandAliases + " " + argumentsString + "\n" + helpMessage;
+            });
 
-  @Override
-  public String helpMessage() {
-    return Messages.get("Help.Command.Help");
-  }
+        App.logger.info(Messages.get("Help.CommandListTitle"));
+        App.logger.info(commandStrings.collect(Collectors.joining("\n")));
+    }
+
+    @Override
+    public String helpMessage() {
+        return Messages.get("Help.Command.Help");
+    }
 }

@@ -15,15 +15,18 @@ import ru.ifmo.app.shared.utils.Messages;
  * collection.
  */
 public class AddCommand implements DeprecatedCommand {
-  @Override
-  public void execute(DeprecatedCommandContext context) {
-    VehicleCreationSchema creationSchema =
-        VehicleCreationSchema.createFromScanner(context.scanner(), context.executedByScript());
-    context.vehicles().add(creationSchema);
-  }
 
-  @Override
-  public String helpMessage() {
-    return Messages.get("Help.Command.Add");
-  }
+    @Override
+    public void execute(DeprecatedCommandContext context) {
+        VehicleCreationSchema creationSchema = VehicleCreationSchema.createFromScanner(
+            context.scanner(),
+            context.executedByScript()
+        );
+        context.vehicles().add(creationSchema);
+    }
+
+    @Override
+    public String helpMessage() {
+        return Messages.get("Help.Command.Add");
+    }
 }

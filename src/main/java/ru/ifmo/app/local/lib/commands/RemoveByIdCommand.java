@@ -12,33 +12,41 @@ import ru.ifmo.app.shared.utils.Messages;
  * Otherwise all of the vehicles, ids of which start with provided string are removed
  */
 public class RemoveByIdCommand implements DeprecatedCommand {
-  @Override
-  public void execute(DeprecatedCommandContext context) throws InvalidNumberOfArgumentsException {
-    if (context.arguments().length < 1)
-      throw new InvalidNumberOfArgumentsException(1, context.arguments().length);
 
-    String vehicleUUID = context.arguments()[0];
+    @Override
+    public void execute(DeprecatedCommandContext context)
+        throws InvalidNumberOfArgumentsException {
+        if (context.arguments().length < 1) throw new InvalidNumberOfArgumentsException(
+            1,
+            context.arguments().length
+        );
 
-    var found = context.vehicles().removeIf(v -> {
-      if (v.id().toString().startsWith(vehicleUUID)) {
-        App.logger.info(Messages.get("RemovingVehicleWithId", v.id()));
-        return true;
-      }
-      return false;
-    });
+        String vehicleUUID = context.arguments()[0];
 
-    if (!found) {
-      App.logger.warn(Messages.get("Warn.VehicleStartingWithIdNotFound", vehicleUUID));
+        var found = context
+            .vehicles()
+            .removeIf(v -> {
+                if (v.id().toString().startsWith(vehicleUUID)) {
+                    App.logger.info(Messages.get("RemovingVehicleWithId", v.id()));
+                    return true;
+                }
+                return false;
+            });
+
+        if (!found) {
+            App.logger.warn(
+                Messages.get("Warn.VehicleStartingWithIdNotFound", vehicleUUID)
+            );
+        }
     }
-  }
 
-  @Override
-  public String[] helpArguments() {
-    return new String[] {Messages.get("Help.Command.Arg.Id")};
-  }
+    @Override
+    public String[] helpArguments() {
+        return new String[] { Messages.get("Help.Command.Arg.Id") };
+    }
 
-  @Override
-  public String helpMessage() {
-    return Messages.get("Help.Command.RemoveById");
-  }
+    @Override
+    public String helpMessage() {
+        return Messages.get("Help.Command.RemoveById");
+    }
 }

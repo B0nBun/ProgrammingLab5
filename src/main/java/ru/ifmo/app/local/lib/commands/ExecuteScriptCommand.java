@@ -24,44 +24,51 @@ import ru.ifmo.app.shared.utils.Messages;
  */
 public class ExecuteScriptCommand implements DeprecatedCommand {
 
-  @Override
-  public void execute(DeprecatedCommandContext context)
-      throws InvalidArgumentException, InvalidNumberOfArgumentsException, ExitProgramException,
-      MaximumScriptExecutionDepthException {
-    int maximumScriptExecutionDepth = 100;
-    if (context.scriptExecutionDepth() >= maximumScriptExecutionDepth) {
-      throw new MaximumScriptExecutionDepthException(maximumScriptExecutionDepth);
+    @Override
+    public void execute(DeprecatedCommandContext context)
+        throws InvalidArgumentException, InvalidNumberOfArgumentsException, ExitProgramException, MaximumScriptExecutionDepthException {
+        int maximumScriptExecutionDepth = 100;
+        if (context.scriptExecutionDepth() >= maximumScriptExecutionDepth) {
+            throw new MaximumScriptExecutionDepthException(maximumScriptExecutionDepth);
+        }
+
+        if (context.arguments().length < 1) throw new InvalidNumberOfArgumentsException(
+            1,
+            context.arguments().length
+        );
+
+        String scriptFilepath = Utils.expandPath(context.arguments()[0]);
+
+        try (Scanner fileScanner = new Scanner(new FileInputStream(scriptFilepath))) {
+            var commandExecutor = new DeprecatedCommandExecutor(
+                fileScanner,
+                context.vehicles(),
+                context.vehiclesFile(),
+                context.scriptExecutionDepth() + 1
+            );
+
+            while (fileScanner.hasNextLine()) {
+                String commandString = fileScanner.nextLine();
+                App.logger.info(commandString);
+                commandExecutor.executeCommandString(commandString);
+            }
+        } catch (FileNotFoundException | SecurityException err) {
+            throw new InvalidArgumentException(
+                Messages.get("Help.Command.Arg.Filepath"),
+                err.getMessage()
+            );
+        } catch (NoSuchElementException err) {
+            App.logger.error(Messages.get("Error.NoSuchElement.ScriptEnded"));
+        }
     }
 
-    if (context.arguments().length < 1)
-      throw new InvalidNumberOfArgumentsException(1, context.arguments().length);
-
-    String scriptFilepath = Utils.expandPath(context.arguments()[0]);
-
-    try (Scanner fileScanner = new Scanner(new FileInputStream(scriptFilepath))) {
-      var commandExecutor = new DeprecatedCommandExecutor(fileScanner, context.vehicles(),
-          context.vehiclesFile(), context.scriptExecutionDepth() + 1);
-
-      while (fileScanner.hasNextLine()) {
-        String commandString = fileScanner.nextLine();
-        App.logger.info(commandString);
-        commandExecutor.executeCommandString(commandString);
-      }
-    } catch (FileNotFoundException | SecurityException err) {
-      throw new InvalidArgumentException(Messages.get("Help.Command.Arg.Filepath"),
-          err.getMessage());
-    } catch (NoSuchElementException err) {
-      App.logger.error(Messages.get("Error.NoSuchElement.ScriptEnded"));
+    @Override
+    public String[] helpArguments() {
+        return new String[] { Messages.get("Help.Command.Arg.Filepath") };
     }
-  }
 
-  @Override
-  public String[] helpArguments() {
-    return new String[] {Messages.get("Help.Command.Arg.Filepath")};
-  }
-
-  @Override
-  public String helpMessage() {
-    return Messages.get("Help.Command.ExecuteScript");
-  }
+    @Override
+    public String helpMessage() {
+        return Messages.get("Help.Command.ExecuteScript");
+    }
 }

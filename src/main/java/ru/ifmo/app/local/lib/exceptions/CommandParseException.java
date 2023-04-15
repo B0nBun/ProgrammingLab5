@@ -7,7 +7,8 @@ import ru.ifmo.app.shared.utils.Messages;
  * it's arguments
  */
 public class CommandParseException extends Exception {
-  public CommandParseException(String commandString) {
-    super(Messages.get("Error.CommandParse", commandString));
-  }
+
+    public CommandParseException(String commandString) {
+        super(Messages.get("Error.CommandParse", commandString));
+    }
 }

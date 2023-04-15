@@ -12,25 +12,34 @@ import ru.ifmo.app.shared.utils.Messages;
  * collection is empty, then the appropriate message is logged.
  */
 public class GroupCountingByIdCommand implements DeprecatedCommand {
-  @Override
-  public void execute(DeprecatedCommandContext context) {
-    var grouped = context.vehicles().stream().map(vehicle -> {
-      var withSameId = context.vehicles().stream().filter(v -> v.id() == vehicle.id()).count();
-      return new SimpleEntry<>(vehicle.id(), withSameId);
-    });
 
-    var joined = grouped.map(entry -> entry.getKey() + ": " + entry.getValue())
-        .collect(Collectors.joining("\n"));
+    @Override
+    public void execute(DeprecatedCommandContext context) {
+        var grouped = context
+            .vehicles()
+            .stream()
+            .map(vehicle -> {
+                var withSameId = context
+                    .vehicles()
+                    .stream()
+                    .filter(v -> v.id() == vehicle.id())
+                    .count();
+                return new SimpleEntry<>(vehicle.id(), withSameId);
+            });
 
-    if (joined.equals("")) {
-      App.logger.info(Messages.get("CollectionIsEmpty"));
-      return;
+        var joined = grouped
+            .map(entry -> entry.getKey() + ": " + entry.getValue())
+            .collect(Collectors.joining("\n"));
+
+        if (joined.equals("")) {
+            App.logger.info(Messages.get("CollectionIsEmpty"));
+            return;
+        }
+        App.logger.info(joined);
     }
-    App.logger.info(joined);
-  }
 
-  @Override
-  public String helpMessage() {
-    return Messages.get("Help.Command.GroupCountingById");
-  }
+    @Override
+    public String helpMessage() {
+        return Messages.get("Help.Command.GroupCountingById");
+    }
 }

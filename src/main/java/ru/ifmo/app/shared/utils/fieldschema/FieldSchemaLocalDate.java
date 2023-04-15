@@ -7,36 +7,37 @@ import java.util.List;
 import ru.ifmo.app.local.lib.exceptions.ParsingException;
 import ru.ifmo.app.shared.Utils.Validator;
 
-public class FieldSchemaLocalDate implements FieldSchema<LocalDate, FieldSchemaLocalDate> {
-  private List<Validator<LocalDate>> validators;
+public class FieldSchemaLocalDate
+    implements FieldSchema<LocalDate, FieldSchemaLocalDate> {
 
-  private FieldSchemaLocalDate(List<Validator<LocalDate>> initValidators) {
-    this.validators = initValidators;
-  }
+    private List<Validator<LocalDate>> validators;
 
-  FieldSchemaLocalDate() {
-    this(new ArrayList<>());
-  }
-
-  public LocalDate parse(String input) throws ParsingException {
-    if (input == null)
-      return null;
-
-    try {
-      LocalDate parsed = LocalDate.parse(input);
-      return parsed;
-    } catch (DateTimeParseException err) {
-      throw new ParsingException(err.getMessage());
+    private FieldSchemaLocalDate(List<Validator<LocalDate>> initValidators) {
+        this.validators = initValidators;
     }
-  }
 
-  public List<Validator<LocalDate>> validators() {
-    return this.validators;
-  }
+    FieldSchemaLocalDate() {
+        this(new ArrayList<>());
+    }
 
-  public FieldSchemaLocalDate refine(Validator<LocalDate> validator) {
-    var newValidators = new ArrayList<>(this.validators);
-    newValidators.add(validator);
-    return new FieldSchemaLocalDate(newValidators);
-  }
+    public LocalDate parse(String input) throws ParsingException {
+        if (input == null) return null;
+
+        try {
+            LocalDate parsed = LocalDate.parse(input);
+            return parsed;
+        } catch (DateTimeParseException err) {
+            throw new ParsingException(err.getMessage());
+        }
+    }
+
+    public List<Validator<LocalDate>> validators() {
+        return this.validators;
+    }
+
+    public FieldSchemaLocalDate refine(Validator<LocalDate> validator) {
+        var newValidators = new ArrayList<>(this.validators);
+        newValidators.add(validator);
+        return new FieldSchemaLocalDate(newValidators);
+    }
 }

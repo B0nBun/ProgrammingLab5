@@ -15,35 +15,43 @@ import ru.ifmo.app.shared.utils.Messages;
  * the arguments
  */
 public class FilterGreaterThanFuelTypeCommand implements DeprecatedCommand {
-  @Override
-  public void execute(DeprecatedCommandContext context)
-      throws InvalidArgumentException, InvalidNumberOfArgumentsException {
-    if (context.arguments().length < 1)
-      throw new InvalidNumberOfArgumentsException(1, context.arguments().length);
 
-    try {
-      FuelType chosenType = FuelType.parse(context.arguments()[0]);
+    @Override
+    public void execute(DeprecatedCommandContext context)
+        throws InvalidArgumentException, InvalidNumberOfArgumentsException {
+        if (context.arguments().length < 1) throw new InvalidNumberOfArgumentsException(
+            1,
+            context.arguments().length
+        );
 
-      var filtered = context.vehicles().stream().filter(v -> v.fuelType().compareTo(chosenType) > 0)
-          .map(v -> v.toString()).collect(Collectors.joining("\n")).trim();
+        try {
+            FuelType chosenType = FuelType.parse(context.arguments()[0]);
 
-      if (filtered.equals("")) {
-        App.logger.info(Messages.get("NoElementsWithGreaterFuelType"));
-        return;
-      }
-      App.logger.info(filtered);
-    } catch (ParsingException err) {
-      throw new InvalidArgumentException("type", err.getMessage());
+            var filtered = context
+                .vehicles()
+                .stream()
+                .filter(v -> v.fuelType().compareTo(chosenType) > 0)
+                .map(v -> v.toString())
+                .collect(Collectors.joining("\n"))
+                .trim();
+
+            if (filtered.equals("")) {
+                App.logger.info(Messages.get("NoElementsWithGreaterFuelType"));
+                return;
+            }
+            App.logger.info(filtered);
+        } catch (ParsingException err) {
+            throw new InvalidArgumentException("type", err.getMessage());
+        }
     }
-  }
 
-  @Override
-  public String[] helpArguments() {
-    return new String[] {Messages.get("Help.Command.Arg.FuelType")};
-  }
+    @Override
+    public String[] helpArguments() {
+        return new String[] { Messages.get("Help.Command.Arg.FuelType") };
+    }
 
-  @Override
-  public String helpMessage() {
-    return Messages.get("Help.Command.FilterGreaterThanFuelType");
-  }
+    @Override
+    public String helpMessage() {
+        return Messages.get("Help.Command.FilterGreaterThanFuelType");
+    }
 }

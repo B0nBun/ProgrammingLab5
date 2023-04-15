@@ -2,7 +2,6 @@ package ru.ifmo.app.local.lib;
 
 import java.io.File;
 import java.util.Scanner;
-
 import ru.ifmo.app.shared.Vehicles;
 import ru.ifmo.app.shared.utils.DeprecatedCommandRegistery;
 

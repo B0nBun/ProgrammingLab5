@@ -11,18 +11,19 @@ import ru.ifmo.app.shared.utils.Messages;
  * appropriate message is logged.
  */
 public class HeadCommand implements DeprecatedCommand {
-  @Override
-  public void execute(DeprecatedCommandContext context) {
-    Vehicle head = context.vehicles().stream().sorted().findFirst().orElse(null);
-    if (head == null) {
-      App.logger.info(Messages.get("NoFirstElement"));
-      return;
-    }
-    App.logger.info(head.toString());
-  }
 
-  @Override
-  public String helpMessage() {
-    return Messages.get("Help.Command.Head");
-  }
+    @Override
+    public void execute(DeprecatedCommandContext context) {
+        Vehicle head = context.vehicles().stream().sorted().findFirst().orElse(null);
+        if (head == null) {
+            App.logger.info(Messages.get("NoFirstElement"));
+            return;
+        }
+        App.logger.info(head.toString());
+    }
+
+    @Override
+    public String helpMessage() {
+        return Messages.get("Help.Command.Head");
+    }
 }

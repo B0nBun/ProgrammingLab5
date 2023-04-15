@@ -5,7 +5,8 @@ package ru.ifmo.app.client.exceptions;
  * it's arguments
  */
 public class CommandParseException extends Exception {
-  public CommandParseException(String message) {
-    super(message);
-  }
+
+    public CommandParseException(String message) {
+        super(message);
+    }
 }
