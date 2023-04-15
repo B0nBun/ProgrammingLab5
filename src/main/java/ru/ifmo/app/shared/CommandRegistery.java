@@ -10,6 +10,7 @@ import ru.ifmo.app.shared.commands.Command;
 import ru.ifmo.app.shared.commands.CountGreaterThanFuelTypeCommand;
 import ru.ifmo.app.shared.commands.ExitCommand;
 import ru.ifmo.app.shared.commands.HelpCommand;
+import ru.ifmo.app.shared.commands.InfoCommand;
 import ru.ifmo.app.shared.commands.RemoveByIdCommand;
 import ru.ifmo.app.shared.commands.ShowCommand;
 
@@ -21,7 +22,8 @@ public class CommandRegistery {
         .put(new ExitCommand(), "exit", "e", "q")
         .put(new ShowCommand(), "show", "s")
         .put(new ClearCommand(), "clear")
-        .put(new CountGreaterThanFuelTypeCommand(), "count_greater_than_fuel_type");
+        .put(new CountGreaterThanFuelTypeCommand(), "count_greater_than_fuel_type")
+        .put(new InfoCommand(), "info");
 
     private LinkedHashMap<Collection<String>, Command> commandsMap = new LinkedHashMap<>();
 
