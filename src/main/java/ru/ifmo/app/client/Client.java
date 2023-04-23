@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.ConnectException;
 import java.net.InetSocketAddress;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
@@ -91,20 +92,36 @@ public class Client {
         }
     }
 
+    private static record Connection(
+        SocketChannel client,
+        Integer ops,
+        Selector selector
+    ) {
+        public static Connection fromChannel(SocketChannel channel) throws IOException {
+            Selector selector = Selector.open();
+            channel.configureBlocking(false);
+            int ops = channel.validOps();
+            channel.register(selector, ops);
+            return new Connection(channel, ops, selector);
+        }
+
+        public void close() throws IOException {
+            this.selector.close();
+            this.client.close();
+        }
+    }
+
     public static void main(String[] args)
         throws IOException, ClassNotFoundException, InterruptedException {
         int port = 1111;
         InetSocketAddress addr = new InetSocketAddress("127.0.0.1", port);
 
         try (
-            SocketChannel client = SocketChannel.open(addr);
-            Selector selector = Selector.open();
+            SocketChannel _client = SocketChannel.open(addr);
             Scanner inputScanner = new Scanner(System.in);
         ) {
             Scanner scriptScanner = null;
-            client.configureBlocking(false);
-            int ops = client.validOps();
-            client.register(selector, ops);
+            Connection connection = Connection.fromChannel(_client);
             Client.logger.info("Connected to " + addr + "...");
 
             clientLoop:while (true) {
@@ -148,10 +165,9 @@ public class Client {
                     continue;
                 }
 
-                // TODO: Add timeout to avoid infinite loop
                 keysHandling:while (true) {
-                    selector.select();
-                    var keys = selector.selectedKeys().iterator();
+                    connection.selector().select();
+                    var keys = connection.selector().selectedKeys().iterator();
                     while (keys.hasNext()) {
                         var key = keys.next();
                         keys.remove();
@@ -159,12 +175,12 @@ public class Client {
                         if (key.isWritable()) {
                             ByteBuffer buffer = Utils.objectToBuffer(requestObject);
                             buffer.flip();
-                            client.write(buffer);
+                            connection.client().write(buffer);
                             key.interestOps(SelectionKey.OP_READ);
                         } else if (key.isReadable()) {
                             try {
                                 ServerResponse response = Utils.objectFromChannel(
-                                    client,
+                                    connection.client(),
                                     ServerResponse.class::cast
                                 );
                                 if (response.clientDisconnected()) {
@@ -175,6 +191,20 @@ public class Client {
                                 key.interestOps(SelectionKey.OP_WRITE);
                             } catch (BufferUnderflowException err) {
                                 Client.logger.warn("Couldn't connect to the server...");
+                                Client.logger.info("Trying to reconnect");
+                                var previous = connection;
+                                try {
+                                    Connection newConnection = Connection.fromChannel(
+                                        SocketChannel.open(addr)
+                                    );
+                                    connection = newConnection;
+                                    previous.close();
+                                    Client.logger.info("Connected! Input your command: ");
+                                } catch (ConnectException cerr) {
+                                    Client.logger.error(
+                                        "Connection refused: " + err.getMessage()
+                                    );
+                                }
                             }
                             break keysHandling;
                         }
