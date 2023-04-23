@@ -107,7 +107,7 @@ public class Client {
             client.register(selector, ops);
             Client.logger.info("Connected to " + addr + "...");
 
-            while (true) {
+            clientLoop:while (true) {
                 Scanner currentScanner = scriptScanner == null
                     ? inputScanner
                     : scriptScanner;
@@ -167,12 +167,14 @@ public class Client {
                                     client,
                                     ServerResponse.class::cast
                                 );
-                                Client.logger.info("Response: \n" + response.output());
+                                if (response.clientDisconnected()) {
+                                    Client.logger.info("Exiting client");
+                                    break clientLoop;
+                                }
+                                Client.logger.info(response.output());
                                 key.interestOps(SelectionKey.OP_WRITE);
                             } catch (BufferUnderflowException err) {
-                                Client.logger.warn(
-                                    "Couldn't connect to the server..."
-                                );
+                                Client.logger.warn("Couldn't connect to the server...");
                             }
                             break keysHandling;
                         }

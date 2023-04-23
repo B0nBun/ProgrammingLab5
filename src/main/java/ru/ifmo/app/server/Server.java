@@ -57,12 +57,12 @@ public class Server {
         OutputStream out,
         CommandExecutor executor
     ) throws IOException, ClassNotFoundException {
+        boolean clientDisconnected = false;
         try (
             var byteOutput = new ByteArrayOutputStream();
             var writer = new PrintWriter(byteOutput)
         ) {
             ClientRequest<CommandParameters, Serializable> request = null;
-
             try {
                 request = Server.getClientRequestFromStream(in);
                 executor.execute(request, writer);
@@ -72,10 +72,10 @@ public class Server {
                 );
             } catch (ExitProgramException err) {
                 writer.println("Exiting");
-                return true;
+                clientDisconnected = true;
             } catch (NoClientRequestException err) {
                 writer.println("No message from client, disconnecting...");
-                return true;
+                clientDisconnected = true;
             }
 
             var error = writer.checkError();
@@ -85,13 +85,13 @@ public class Server {
 
             writer.flush();
             var response = new ServerResponse(
-                new String(byteOutput.toByteArray(), StandardCharsets.UTF_8)
+                new String(byteOutput.toByteArray(), StandardCharsets.UTF_8),
+                clientDisconnected
             );
             var responseBuffer = Utils.objectToBuffer(response);
             out.write(responseBuffer.array());
         }
-
-        return false;
+        return clientDisconnected;
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
