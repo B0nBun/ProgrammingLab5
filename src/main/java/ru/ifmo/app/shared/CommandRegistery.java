@@ -21,12 +21,6 @@ import ru.ifmo.app.shared.commands.RemoveLowerCommand;
 import ru.ifmo.app.shared.commands.ShowCommand;
 import ru.ifmo.app.shared.commands.UpdateCommand;
 
-/**
- * Commands TODO:
- * x execute script;
- * x save;
- */
-
 public class CommandRegistery {
 
     public static CommandRegistery global = new CommandRegistery()

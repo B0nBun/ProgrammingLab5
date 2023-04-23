@@ -120,7 +120,9 @@ public class Client {
             SocketChannel _client = SocketChannel.open(addr);
             Scanner inputScanner = new Scanner(System.in);
         ) {
+            // Scanner active during script execution
             Scanner scriptScanner = null;
+            // Connection object, through which socket operations are made
             Connection connection = Connection.fromChannel(_client);
             Client.logger.info("Connected to " + addr + "...");
 
