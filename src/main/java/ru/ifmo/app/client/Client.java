@@ -27,7 +27,7 @@ import ru.ifmo.app.shared.Utils;
 import ru.ifmo.app.shared.commands.Command;
 import ru.ifmo.app.shared.commands.CommandParameters;
 
-// TODO: Orgonise code in 'server', 'client' and 'shared' packages properly, so it would be possible
+// TODO: Organise code in 'server', 'client' and 'shared' packages properly, so it would be possible
 // to compile them seperately from each other (e.g only 'server' & 'shared' or only 'client' & 'shared')
 
 public class Client {
