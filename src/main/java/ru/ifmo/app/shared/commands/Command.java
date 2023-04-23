@@ -9,7 +9,10 @@ import ru.ifmo.app.shared.SerializableDummy;
 import ru.ifmo.app.shared.utils.Messages;
 
 public interface Command {
-    public default Serializable additionalObjectFromScanner(Scanner scanner) {
+    public default Serializable additionalObjectFromScanner(
+        Scanner scanner,
+        boolean logScanned
+    ) {
         return SerializableDummy.singletone;
     }
 

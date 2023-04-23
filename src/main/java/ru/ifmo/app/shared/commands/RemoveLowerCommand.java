@@ -11,8 +11,8 @@ import ru.ifmo.app.shared.utils.Messages;
 public class RemoveLowerCommand implements Command {
 
     @Override
-    public Serializable additionalObjectFromScanner(Scanner scanner) {
-        return VehicleCreationSchema.createFromScanner(scanner, false);
+    public Serializable additionalObjectFromScanner(Scanner scanner, boolean logScanned) {
+        return VehicleCreationSchema.createFromScanner(scanner, logScanned);
     }
 
     @Override

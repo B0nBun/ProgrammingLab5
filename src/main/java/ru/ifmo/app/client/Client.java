@@ -1,5 +1,8 @@
 package ru.ifmo.app.client;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.InetSocketAddress;
@@ -8,8 +11,10 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,25 +36,59 @@ public class Client {
         "ru.ifmo.app.client.logger"
     );
 
-    private static ClientRequest<CommandParameters, Serializable> constructRequest(
-        String commandString,
-        Scanner scanner
-    ) throws CommandParseException, InvalidCommandParametersException {
+    private static SimpleEntry<String, List<String>> parseCommand(String commandString)
+        throws CommandParseException {
         var splitted = Arrays.asList(commandString.trim().split("\s+"));
         if (splitted.size() == 0) {
             throw new CommandParseException("Expected a command, but got nothing");
         }
         String commandName = splitted.get(0);
         List<String> commandArguments = splitted.subList(1, splitted.size());
+        return new SimpleEntry<String, List<String>>(commandName, commandArguments);
+    }
+
+    private static ClientRequest<CommandParameters, Serializable> constructRequest(
+        String commandString,
+        Scanner scanner,
+        boolean logScanned
+    ) throws CommandParseException, InvalidCommandParametersException {
+        SimpleEntry<String, List<String>> parsed = Client.parseCommand(commandString);
+        var commandName = parsed.getKey();
+        var commandArguments = parsed.getValue();
         Command command = CommandRegistery.global.get(commandName);
         if (command == null) {
-            throw new CommandParseException("Command not found");
+            throw new CommandParseException("Command '" + commandName + "' not found");
         }
         CommandParameters params = command.parametersObjectFromStrings(
             commandArguments.toArray(new String[commandArguments.size()])
         );
-        Serializable additionalObject = command.additionalObjectFromScanner(scanner);
+        Serializable additionalObject = command.additionalObjectFromScanner(
+            scanner,
+            logScanned
+        );
         return new ClientRequest<>(commandName, params, additionalObject);
+    }
+
+    private static boolean isExecuteScriptCommand(String commandString)
+        throws CommandParseException {
+        var commandName = Client.parseCommand(commandString).getKey();
+        return commandName.equals("execute_script");
+    }
+
+    private static Scanner scannerFromExecuteScriptCommand(String commandString)
+        throws CommandParseException {
+        var arguments = Client.parseCommand(commandString).getValue();
+        if (arguments.size() == 0) throw new CommandParseException(
+            "Filepath to a script expected, got nothing"
+        );
+        var file = new File(arguments.get(0));
+        try {
+            return new Scanner(new FileInputStream(file.getAbsolutePath()));
+        } catch (FileNotFoundException err) {
+            throw new CommandParseException(
+                "File '" + file.toPath() + "' is not readable: " + err.getMessage()
+            );
+        }
     }
 
     public static void main(String[] args)
@@ -60,19 +99,43 @@ public class Client {
         try (
             SocketChannel client = SocketChannel.open(addr);
             Selector selector = Selector.open();
-            Scanner scanner = new Scanner(System.in);
+            Scanner inputScanner = new Scanner(System.in);
         ) {
+            Scanner scriptScanner = null;
             client.configureBlocking(false);
             int ops = client.validOps();
             client.register(selector, ops);
             Client.logger.info("Connected to " + addr + "...");
 
             while (true) {
-                Client.logger.info("Input the message for the server: ");
-                var commandString = scanner.nextLine();
+                Scanner currentScanner = scriptScanner == null
+                    ? inputScanner
+                    : scriptScanner;
+                Client.logger.info("> ");
+                String commandString = null;
+                try {
+                    commandString = currentScanner.nextLine();
+                } catch (NoSuchElementException err) {
+                    Client.logger.info("End of file, execution ended...");
+                    scriptScanner.close();
+                    scriptScanner = null;
+                    continue;
+                }
+
                 ClientRequest<CommandParameters, Serializable> requestObject = null;
                 try {
-                    requestObject = Client.constructRequest(commandString, scanner);
+                    if (Client.isExecuteScriptCommand(commandString)) {
+                        scriptScanner =
+                            Client.scannerFromExecuteScriptCommand(commandString);
+                        continue;
+                    }
+
+                    requestObject =
+                        Client.constructRequest(
+                            commandString,
+                            currentScanner,
+                            currentScanner == scriptScanner
+                        );
                 } catch (InvalidCommandParametersException err) {
                     Client.logger.error(
                         "Invalid command parameters: " + err.getMessage()
@@ -107,7 +170,9 @@ public class Client {
                                 Client.logger.info("Response: \n" + response.output());
                                 key.interestOps(SelectionKey.OP_WRITE);
                             } catch (BufferUnderflowException err) {
-                                Client.logger.warn("Couldn't connect to the server...");
+                                Client.logger.warn(
+                                    "Couldn't connect to the server..."
+                                );
                             }
                             break keysHandling;
                         }

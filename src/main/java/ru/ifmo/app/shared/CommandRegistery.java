@@ -23,7 +23,6 @@ import ru.ifmo.app.shared.commands.UpdateCommand;
 
 /**
  * Commands TODO:
- * update;
  * x execute script;
  * x save;
  */

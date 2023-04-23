@@ -13,10 +13,10 @@ import ru.ifmo.app.shared.utils.Messages;
 public class AddIfMaxCommand implements Command {
 
     @Override
-    public Serializable additionalObjectFromScanner(Scanner scanner) {
+    public Serializable additionalObjectFromScanner(Scanner scanner, boolean logScanned) {
         VehicleCreationSchema creationSchema = VehicleCreationSchema.createFromScanner(
             scanner,
-            false
+            logScanned
         );
         return creationSchema;
     }
