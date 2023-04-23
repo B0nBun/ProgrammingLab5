@@ -2,6 +2,8 @@ package ru.ifmo.app.server;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -12,27 +14,34 @@ import java.net.ServerSocket;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+import org.jdom2.Element;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.ifmo.app.client.exceptions.CommandParseException;
 import ru.ifmo.app.server.exceptions.ExitProgramException;
 import ru.ifmo.app.server.exceptions.InvalidCommandParametersException;
 import ru.ifmo.app.shared.ClientRequest;
 import ru.ifmo.app.shared.ServerResponse;
 import ru.ifmo.app.shared.Utils;
 import ru.ifmo.app.shared.Vehicles;
-import ru.ifmo.app.shared.Vehicles.VehicleCreationSchema;
 import ru.ifmo.app.shared.commands.CommandParameters;
-import ru.ifmo.app.shared.entities.Coordinates;
-import ru.ifmo.app.shared.entities.FuelType;
-import ru.ifmo.app.shared.entities.VehicleType;
 
 class NoClientRequestException extends Exception {}
 
-public class Server {
+class ServerRunnable implements Runnable {
 
-    public static final Logger logger = LoggerFactory.getLogger(
-        "ru.ifmo.app.server.logger"
-    );
+    private List<Vehicles> activeCollections;
+
+    public ServerRunnable(List<Vehicles> collections) {
+        this.activeCollections = collections;
+    }
 
     private static ClientRequest<CommandParameters, Serializable> getClientRequestFromStream(
         InputStream in
@@ -64,7 +73,7 @@ public class Server {
         ) {
             ClientRequest<CommandParameters, Serializable> request = null;
             try {
-                request = Server.getClientRequestFromStream(in);
+                request = ServerRunnable.getClientRequestFromStream(in);
                 executor.execute(request, writer);
             } catch (InvalidCommandParametersException err) {
                 writer.println(
@@ -94,7 +103,8 @@ public class Server {
         return clientDisconnected;
     }
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
+    @Override
+    public void run() {
         int port = 1111;
         try (var server = new ServerSocket(port);) {
             Server.logger.info("Server started at port: " + port);
@@ -107,39 +117,97 @@ public class Server {
                     Server.logger.info("Client connected: " + client.getInetAddress());
 
                     Vehicles vehicles = new Vehicles();
-                    vehicles.add(
-                        new VehicleCreationSchema(
-                            "name1",
-                            new Coordinates(1l, 2),
-                            1.1f,
-                            VehicleType.BICYCLE,
-                            FuelType.ALCOHOL
-                        )
-                    );
-                    vehicles.add(
-                        new VehicleCreationSchema(
-                            "NAME2",
-                            new Coordinates(2l, 3),
-                            2.2f,
-                            VehicleType.BOAT,
-                            FuelType.GASOLINE
-                        )
-                    );
-                    vehicles.add(
-                        new VehicleCreationSchema(
-                            "n3m3",
-                            new Coordinates(3l, 4),
-                            3.3f,
-                            VehicleType.DRONE,
-                            FuelType.KEROSENE
-                        )
-                    );
+                    activeCollections.add(vehicles);
                     var executor = new CommandExecutor(vehicles);
 
                     while (true) {
-                        boolean clientQuit = Server.handleClient(in, out, executor);
-                        if (clientQuit) break;
+                        try {
+                            boolean clientQuit = ServerRunnable.handleClient(
+                                in,
+                                out,
+                                executor
+                            );
+                            if (clientQuit) {
+                                activeCollections.remove(vehicles);
+                                break;
+                            }
+                        } catch (ClassNotFoundException err) {
+                            Server.logger.error(
+                                "Unknown class in client request, skipping..."
+                            );
+                        }
                     }
+                }
+            }
+        } catch (IOException err) {
+            Server.logger.error("IO Exception occured: " + err.getMessage());
+        }
+    }
+}
+
+public class Server {
+
+    public static final Logger logger = LoggerFactory.getLogger(
+        "ru.ifmo.app.server.logger"
+    );
+
+    private static SimpleEntry<String, List<String>> parseCommand(String commandString)
+        throws CommandParseException {
+        var splitted = Arrays.asList(commandString.trim().split("\s+"));
+        if (splitted.size() == 0) {
+            throw new CommandParseException("Expected a command, but got nothing");
+        }
+        String commandName = splitted.get(0);
+        List<String> commandArguments = splitted.subList(1, splitted.size());
+        return new SimpleEntry<String, List<String>>(commandName, commandArguments);
+    }
+
+    private static void saveCollection(Vehicles collection, String filepath) {
+        if (filepath == null || filepath.trim().length() == 0) {
+            Server.logger.error("Expected a filepath in arguments");
+        }
+
+        var xmlOutputter = new XMLOutputter();
+        xmlOutputter.setFormat(Format.getPrettyFormat());
+        Element vehiclesRootElement = collection.toXmlElement();
+        String vehiclesSerialized = xmlOutputter.outputString(vehiclesRootElement);
+
+        var file = new File(Utils.expandPath(filepath));
+        try (var printWriter = new PrintWriter(file)) {
+            printWriter.write(vehiclesSerialized);
+            Server.logger.info(
+                "Collection was saved to '" + file.getAbsolutePath() + "'"
+            );
+        } catch (FileNotFoundException err) {
+            Server.logger.info("Couldn't write to the file: " + err.getMessage());
+        }
+    }
+
+    public static void main(String[] __) throws IOException, ClassNotFoundException {
+        List<Vehicles> collections = new ArrayList<>();
+        var serverThread = new Thread(new ServerRunnable(collections));
+        serverThread.start();
+
+        try (var scanner = new Scanner(System.in)) {
+            while (true) {
+                String commandName = scanner.nextLine();
+                try {
+                    var parsed = Server.parseCommand(commandName);
+                    String command = parsed.getKey();
+                    List<String> args = parsed.getValue();
+                    if (command.equals("save")) {
+                        if (collections.size() == 0) {
+                            Server.logger.info("No active collections");
+                            continue;
+                        }
+                        if (args.size() == 0) {
+                            Server.logger.info("Expected a path in arguments");
+                            continue;
+                        }
+                        Server.saveCollection(collections.get(0), args.get(0));
+                    }
+                } catch (CommandParseException err) {
+                    Server.logger.info("Couldn't parse command: " + err.getMessage());
                 }
             }
         }
