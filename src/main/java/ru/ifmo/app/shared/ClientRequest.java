@@ -5,6 +5,7 @@ import ru.ifmo.app.shared.commands.CommandParameters;
 
 public record ClientRequest<T extends CommandParameters, Y extends Serializable>(
     String commandName,
+    String pathToSavefile,
     T commandParameters,
     Y additionalObject
 )
@@ -18,10 +19,12 @@ public record ClientRequest<T extends CommandParameters, Y extends Serializable>
     }
 
     public static ClientRequest<CommandParameters, Serializable> withoutParams(
-        String commandName
+        String commandName,
+        String pathToSavefile
     ) {
         return new ClientRequest<CommandParameters, Serializable>(
             commandName,
+            pathToSavefile,
             CommandParameters.dummy,
             SerializableDummy.singletone
         );

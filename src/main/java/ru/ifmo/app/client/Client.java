@@ -50,6 +50,7 @@ public class Client {
 
     private static ClientRequest<CommandParameters, Serializable> constructRequest(
         String commandString,
+        String pathToSavefile,
         Scanner scanner,
         boolean logScanned
     ) throws CommandParseException, InvalidCommandParametersException {
@@ -67,7 +68,7 @@ public class Client {
             scanner,
             logScanned
         );
-        return new ClientRequest<>(commandName, params, additionalObject);
+        return new ClientRequest<>(commandName, pathToSavefile, params, additionalObject);
     }
 
     private static boolean isExecuteScriptCommand(String commandString)
@@ -113,6 +114,12 @@ public class Client {
 
     public static void main(String[] args)
         throws IOException, ClassNotFoundException, InterruptedException {
+        if (args.length == 0) {
+            Client.logger.error("Expected a path to xml collection in command arguments");
+            return;
+        }
+        String pathToSavefile = args[0];
+
         int port = 1111;
         InetSocketAddress addr = new InetSocketAddress("127.0.0.1", port);
 
@@ -136,7 +143,7 @@ public class Client {
                     commandString = currentScanner.nextLine();
                 } catch (NoSuchElementException err) {
                     Client.logger.info("End of file, execution ended...");
-                    scriptScanner.close();
+                    if (scriptScanner != null) scriptScanner.close();
                     scriptScanner = null;
                     continue;
                 }
@@ -152,6 +159,7 @@ public class Client {
                     requestObject =
                         Client.constructRequest(
                             commandString,
+                            pathToSavefile,
                             currentScanner,
                             currentScanner == scriptScanner
                         );
@@ -186,6 +194,7 @@ public class Client {
                                     ServerResponse.class::cast
                                 );
                                 if (response.clientDisconnected()) {
+                                    Client.logger.info(response.output());
                                     Client.logger.info("Exiting client");
                                     break clientLoop;
                                 }

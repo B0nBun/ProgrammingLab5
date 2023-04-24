@@ -12,7 +12,8 @@ import ru.ifmo.app.shared.commands.CommandParameters;
 public class CommandExecutor {
 
     private CommandRegistery commandRegistery = CommandRegistery.global;
-    private Vehicles vehicles;
+    public int commandsExecuted = 0;
+    public Vehicles vehicles;
 
     public CommandExecutor(Vehicles vehicles) {
         this.vehicles = vehicles;
@@ -34,5 +35,6 @@ public class CommandExecutor {
             clientRequest.commandParameters(),
             clientRequest.additionalObject()
         );
+        this.commandsExecuted++;
     }
 }

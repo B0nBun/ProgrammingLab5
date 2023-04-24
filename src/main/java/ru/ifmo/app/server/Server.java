@@ -3,6 +3,7 @@ package ru.ifmo.app.server;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import org.jdom2.Element;
+import org.jdom2.JDOMException;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 import org.slf4j.Logger;
@@ -74,13 +76,24 @@ class ServerRunnable implements Runnable {
             ClientRequest<CommandParameters, Serializable> request = null;
             try {
                 request = ServerRunnable.getClientRequestFromStream(in);
+                if (executor.commandsExecuted == 0) {
+                    String path = request.pathToSavefile();
+                    executor.vehicles.replaceCollectionWith(
+                        Server.loadCollection(path, writer)
+                    );
+                }
+
                 executor.execute(request, writer);
             } catch (InvalidCommandParametersException err) {
                 writer.println(
                     "Invalid parameter object was passed to the command: " + err
                 );
             } catch (ExitProgramException err) {
-                writer.println("Exiting");
+                Server.saveCollection(
+                    executor.vehicles,
+                    request.pathToSavefile(),
+                    writer
+                );
                 clientDisconnected = true;
             } catch (NoClientRequestException err) {
                 writer.println("No message from client, disconnecting...");
@@ -162,7 +175,33 @@ public class Server {
         return new SimpleEntry<String, List<String>>(commandName, commandArguments);
     }
 
-    private static void saveCollection(Vehicles collection, String filepath) {
+    public static Vehicles loadCollection(String filepath, PrintWriter outputWriter)
+        throws IOException {
+        if (filepath == null || filepath.trim().length() == 0) {
+            Server.logger.error("Expected a filepath, but got nothing");
+            return new Vehicles();
+        }
+
+        var file = new File(filepath);
+        try (var inputStream = new FileInputStream(file)) {
+            Vehicles loaded = Vehicles.loadFromXml(inputStream);
+            return loaded;
+        } catch (JDOMException err) {
+            Server.logger.error("Xml file parsing error: " + err.getMessage());
+            outputWriter.println("Xml file parsing error: " + err.getMessage());
+            return new Vehicles();
+        } catch (FileNotFoundException err) {
+            Server.logger.error("File not found exception: " + err.getMessage());
+            outputWriter.println("File not found exception: " + err.getMessage());
+            return new Vehicles();
+        }
+    }
+
+    public static void saveCollection(
+        Vehicles collection,
+        String filepath,
+        PrintWriter outputWriter
+    ) {
         if (filepath == null || filepath.trim().length() == 0) {
             Server.logger.error("Expected a filepath in arguments");
         }
@@ -178,8 +217,14 @@ public class Server {
             Server.logger.info(
                 "Collection was saved to '" + file.getAbsolutePath() + "'"
             );
+            if (outputWriter != null) outputWriter.write(
+                "Collection was save to '" + file.getAbsolutePath() + "'"
+            );
         } catch (FileNotFoundException err) {
             Server.logger.info("Couldn't write to the file: " + err.getMessage());
+            if (outputWriter != null) outputWriter.write(
+                "Couldn't write to the file: " + err.getMessage()
+            );
         }
     }
 
@@ -204,7 +249,7 @@ public class Server {
                             Server.logger.info("Expected a path in arguments");
                             continue;
                         }
-                        Server.saveCollection(collections.get(0), args.get(0));
+                        Server.saveCollection(collections.get(0), args.get(0), null);
                     }
                 } catch (CommandParseException err) {
                     Server.logger.info("Couldn't parse command: " + err.getMessage());

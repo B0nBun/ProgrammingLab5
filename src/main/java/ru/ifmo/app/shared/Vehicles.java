@@ -320,6 +320,16 @@ public class Vehicles {
         return this;
     }
 
+    public Vehicles replaceCollectionWith(Vehicles vehicles) {
+        this.collection.clear();
+        vehicles
+            .stream()
+            .forEach(v -> {
+                this.collection.add(v);
+            });
+        return this;
+    }
+
     /**
      * @return The name of the class of internal collection
      */
