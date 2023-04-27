@@ -1,7 +1,6 @@
 package ru.ifmo.app.client;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
@@ -17,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.Stack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.ifmo.app.client.exceptions.CommandParseException;
@@ -83,13 +83,10 @@ public class Client {
         if (arguments.size() == 0) throw new CommandParseException(
             "Filepath to a script expected, got nothing"
         );
-        var file = new File(arguments.get(0));
         try {
-            return new Scanner(new FileInputStream(file.getAbsolutePath()));
+            return new Scanner(new File(arguments.get(0)));
         } catch (FileNotFoundException err) {
-            throw new CommandParseException(
-                "File '" + file.toPath() + "' is not readable: " + err.getMessage()
-            );
+            throw new CommandParseException("File not found: " + err.getMessage());
         }
     }
 
@@ -128,31 +125,35 @@ public class Client {
             Scanner inputScanner = new Scanner(System.in);
         ) {
             // Scanner active during script execution
-            Scanner scriptScanner = null;
+            var scriptPaths = new Stack<Scanner>();
             // Connection object, through which socket operations are made
             Connection connection = Connection.fromChannel(_client);
             Client.logger.info("Connected to " + addr + "...");
 
             clientLoop:while (true) {
-                Scanner currentScanner = scriptScanner == null
+                Scanner currentScanner = scriptPaths.empty()
                     ? inputScanner
-                    : scriptScanner;
+                    : scriptPaths.peek();
                 Client.logger.info("> ");
                 String commandString = null;
                 try {
                     commandString = currentScanner.nextLine();
+                    if (currentScanner != inputScanner) {
+                        Client.logger.info(commandString);
+                    }
                 } catch (NoSuchElementException err) {
                     Client.logger.info("End of file, execution ended...");
-                    if (scriptScanner != null) scriptScanner.close();
-                    scriptScanner = null;
+                    if (currentScanner != inputScanner) currentScanner.close();
+                    scriptPaths.pop();
                     continue;
                 }
 
                 ClientRequest<CommandParameters, Serializable> requestObject = null;
                 try {
                     if (Client.isExecuteScriptCommand(commandString)) {
-                        scriptScanner =
-                            Client.scannerFromExecuteScriptCommand(commandString);
+                        scriptPaths.push(
+                            Client.scannerFromExecuteScriptCommand(commandString)
+                        );
                         continue;
                     }
 
@@ -161,7 +162,7 @@ public class Client {
                             commandString,
                             pathToSavefile,
                             currentScanner,
-                            currentScanner == scriptScanner
+                            currentScanner != inputScanner
                         );
                 } catch (InvalidCommandParametersException err) {
                     Client.logger.error(

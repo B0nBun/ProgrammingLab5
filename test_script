@@ -1,7 +1,3 @@
-add
-SomeName
-11
--2222
-5.5
-Drone
-Gasoline
+show
+execute_script subscript
+show
