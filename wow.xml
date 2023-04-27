@@ -1,0 +1,9 @@
+<vehicles creation-date="2023-04-27">
+  <vehicle id="544729ac-2e6c-46b5-8729-ac2e6ce6b571" creation-date="2023-04-27">
+    <name>asd</name>
+    <coordinates x="123" y="-123123" />
+    <engine-power>123123.0</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+</vehicles>

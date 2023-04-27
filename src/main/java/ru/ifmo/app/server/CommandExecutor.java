@@ -14,9 +14,11 @@ public class CommandExecutor {
     private CommandRegistery commandRegistery = CommandRegistery.global;
     public int commandsExecuted = 0;
     public Vehicles vehicles;
+    public String savefilePath;
 
-    public CommandExecutor(Vehicles vehicles) {
+    public CommandExecutor(Vehicles vehicles, String savefilePath) {
         this.vehicles = vehicles;
+        this.savefilePath = savefilePath;
     }
 
     public void execute(

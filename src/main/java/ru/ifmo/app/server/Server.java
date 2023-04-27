@@ -16,10 +16,8 @@ import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -38,12 +36,22 @@ import ru.ifmo.app.shared.commands.CommandParameters;
 
 class NoClientRequestException extends Exception {}
 
+class ServerContext {
+
+    public Vehicles activeCollection;
+    public String pathToSavefile = null;
+
+    public ServerContext(Vehicles collection) {
+        this.activeCollection = collection;
+    }
+}
+
 class ServerRunnable implements Runnable {
 
-    private List<Vehicles> activeCollections;
+    public ServerContext serverContext;
 
-    public ServerRunnable(List<Vehicles> collections) {
-        this.activeCollections = collections;
+    public ServerRunnable(Vehicles collection) {
+        this.serverContext = new ServerContext(collection);
     }
 
     private static ClientRequest<CommandParameters, Serializable> getClientRequestFromStream(
@@ -67,7 +75,8 @@ class ServerRunnable implements Runnable {
     private static boolean handleClient(
         InputStream in,
         OutputStream out,
-        CommandExecutor executor
+        CommandExecutor executor,
+        ServerContext serverContext
     ) throws IOException, ClassNotFoundException {
         boolean clientDisconnected = false;
         try (
@@ -79,6 +88,7 @@ class ServerRunnable implements Runnable {
                 request = ServerRunnable.getClientRequestFromStream(in);
                 if (executor.commandsExecuted == 0) {
                     String path = request.pathToSavefile();
+                    serverContext.pathToSavefile = path;
                     executor.vehicles.replaceCollectionWith(
                         Server.loadCollection(path, writer)
                     );
@@ -131,18 +141,19 @@ class ServerRunnable implements Runnable {
                     Server.logger.info("Client connected: " + client.getInetAddress());
 
                     Vehicles vehicles = new Vehicles();
-                    activeCollections.add(vehicles);
-                    var executor = new CommandExecutor(vehicles);
+                    this.serverContext.activeCollection = vehicles;
+                    var executor = new CommandExecutor(vehicles, null);
 
                     while (true) {
                         try {
                             boolean clientQuit = ServerRunnable.handleClient(
                                 in,
                                 out,
-                                executor
+                                executor,
+                                this.serverContext
                             );
                             if (clientQuit) {
-                                activeCollections.remove(vehicles);
+                                this.serverContext.activeCollection = null;
                                 break;
                             }
                         } catch (ClassNotFoundException err) {
@@ -230,8 +241,8 @@ public class Server {
     }
 
     public static void main(String[] __) throws IOException, ClassNotFoundException {
-        List<Vehicles> collections = new ArrayList<>();
-        var serverThread = new Thread(new ServerRunnable(collections));
+        var serverRunnable = new ServerRunnable(null);
+        var serverThread = new Thread(serverRunnable);
         serverThread.start();
 
         try (var scanner = new Scanner(System.in)) {
@@ -242,15 +253,27 @@ public class Server {
                     String command = parsed.getKey();
                     List<String> args = parsed.getValue();
                     if (command.equals("save")) {
-                        if (collections.size() == 0) {
+                        if (serverRunnable.serverContext.activeCollection == null) {
                             Server.logger.info("No active collections");
                             continue;
                         }
-                        if (args.size() == 0) {
-                            Server.logger.info("Expected a path in arguments");
+                        if (
+                            args.size() == 0 &&
+                            serverRunnable.serverContext.pathToSavefile == null
+                        ) {
+                            Server.logger.info(
+                                "Client didn't send a request yet, so savefile is unknown (you can provide one in arguments to this command)"
+                            );
                             continue;
                         }
-                        Server.saveCollection(collections.get(0), args.get(0), null);
+                        String path = args.size() == 0
+                            ? serverRunnable.serverContext.pathToSavefile
+                            : args.get(0);
+                        Server.saveCollection(
+                            serverRunnable.serverContext.activeCollection,
+                            path,
+                            null
+                        );
                     }
                 } catch (CommandParseException err) {
                     Server.logger.error("Couldn't parse command: " + err.getMessage());
