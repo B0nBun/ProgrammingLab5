@@ -64,11 +64,20 @@ public class Client {
         CommandParameters params = command.parametersObjectFromStrings(
             commandArguments.toArray(new String[commandArguments.size()])
         );
-        Serializable additionalObject = command.additionalObjectFromScanner(
-            scanner,
-            logScanned
-        );
-        return new ClientRequest<>(commandName, pathToSavefile, params, additionalObject);
+        try {
+            Serializable additionalObject = command.additionalObjectFromScanner(
+                scanner,
+                logScanned
+            );
+            return new ClientRequest<>(
+                commandName,
+                pathToSavefile,
+                params,
+                additionalObject
+            );
+        } catch (NoSuchElementException err) {
+            throw new InvalidCommandParametersException("Premature end of file");
+        }
     }
 
     private static boolean isExecuteScriptCommand(String commandString)

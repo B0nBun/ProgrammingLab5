@@ -1,3 +1,7 @@
-show
-execute_script subscript
-show
+add
+SomeName
+11
+-2222
+5.5
+Drone
+Gasoline6

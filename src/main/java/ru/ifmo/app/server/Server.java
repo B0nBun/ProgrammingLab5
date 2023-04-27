@@ -19,6 +19,7 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -235,8 +236,8 @@ public class Server {
 
         try (var scanner = new Scanner(System.in)) {
             while (true) {
-                String commandName = scanner.nextLine();
                 try {
+                    String commandName = scanner.nextLine();
                     var parsed = Server.parseCommand(commandName);
                     String command = parsed.getKey();
                     List<String> args = parsed.getValue();
@@ -252,7 +253,7 @@ public class Server {
                         Server.saveCollection(collections.get(0), args.get(0), null);
                     }
                 } catch (CommandParseException err) {
-                    Server.logger.info("Couldn't parse command: " + err.getMessage());
+                    Server.logger.error("Couldn't parse command: " + err.getMessage());
                 }
             }
         }
