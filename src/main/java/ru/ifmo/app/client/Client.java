@@ -151,10 +151,14 @@ public class Client {
                         Client.logger.info(commandString);
                     }
                 } catch (NoSuchElementException err) {
-                    Client.logger.info("End of file, execution ended...");
-                    if (currentScanner != inputScanner) currentScanner.close();
-                    scriptPaths.pop();
-                    continue;
+                    if (currentScanner != inputScanner) {
+                        Client.logger.info("End of file, execution ended...");
+                        currentScanner.close();
+                        scriptPaths.pop();
+                        continue;
+                    } else {
+                        break;
+                    }
                 }
 
                 ClientRequest<CommandParameters, Serializable> requestObject = null;
