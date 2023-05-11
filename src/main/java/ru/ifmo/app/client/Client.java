@@ -227,7 +227,7 @@ public class Client {
                                     Client.logger.info("Connected! Input your command: ");
                                 } catch (ConnectException cerr) {
                                     Client.logger.error(
-                                        "Connection refused: " + err.getMessage()
+                                        "Connection refused: " + cerr.getMessage()
                                     );
                                 }
                             }
@@ -236,6 +236,10 @@ public class Client {
                     }
                 }
             }
+        } catch (ConnectException err) {
+            Client.logger.error(
+                "Connection refused: " + err.getMessage()
+            );
         }
     }
 }
