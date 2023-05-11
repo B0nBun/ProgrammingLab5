@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -277,6 +278,9 @@ public class Server {
                     }
                 } catch (CommandParseException err) {
                     Server.logger.error("Couldn't parse command: " + err.getMessage());
+                } catch (NoSuchElementException err) {
+                    Server.logger.error("Exiting...");
+                    System.exit(0);
                 }
             }
         }

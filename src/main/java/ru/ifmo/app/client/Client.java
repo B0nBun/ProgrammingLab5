@@ -237,9 +237,7 @@ public class Client {
                 }
             }
         } catch (ConnectException err) {
-            Client.logger.error(
-                "Connection refused: " + err.getMessage()
-            );
+            Client.logger.error("Connection refused: " + err.getMessage());
         }
     }
 }
