@@ -143,6 +143,8 @@ public class Client {
                 Scanner currentScanner = scriptPaths.empty()
                     ? inputScanner
                     : scriptPaths.peek();
+
+                // Scanning the command string
                 Client.logger.info("> ");
                 String commandString = null;
                 try {
@@ -161,6 +163,7 @@ public class Client {
                     }
                 }
 
+                // Constructing the client request
                 ClientRequest<CommandParameters, Serializable> requestObject = null;
                 try {
                     if (Client.isExecuteScriptCommand(commandString)) {
@@ -192,6 +195,8 @@ public class Client {
                 keysHandling:while (true) {
                     connection.selector().select();
                     var keys = connection.selector().selectedKeys().iterator();
+
+                    // Handling the connection (reading/writing)
                     while (keys.hasNext()) {
                         var key = keys.next();
                         keys.remove();
