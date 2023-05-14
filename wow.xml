@@ -342,4 +342,18 @@
     <vehicle-type>DRONE</vehicle-type>
     <fuel-type>GASOLINE</fuel-type>
   </vehicle>
+  <vehicle id="16482d3a-03a2-4847-882d-3a03a27847c5" creation-date="2023-05-14">
+    <name>asd</name>
+    <coordinates x="123" y="-123123" />
+    <engine-power>1.1</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="f82ead4b-752c-47fb-aead-4b752c97fb9e" creation-date="2023-05-14">
+    <name>booga</name>
+    <coordinates x="123" y="-123123" />
+    <engine-power>1.0</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
 </vehicles>

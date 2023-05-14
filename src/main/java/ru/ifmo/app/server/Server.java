@@ -9,16 +9,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.SocketAddress;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import org.jdom2.Element;
@@ -43,149 +46,57 @@ class NoClientRequestException extends Exception {
     }
 }
 
-class ServerContext {
-
-    public Vehicles activeCollection;
-    public String pathToSavefile = null;
-
-    public ServerContext(Vehicles collection) {
-        this.activeCollection = collection;
-    }
-}
-
-class ServerRunnable implements Runnable {
-
-    public ServerContext serverContext;
-
-    public ServerRunnable(Vehicles collection) {
-        this.serverContext = new ServerContext(collection);
-    }
-
-    private static ClientRequest<CommandParameters, Serializable> getClientRequestFromStream(
-        InputStream in
-    ) throws IOException, ClassNotFoundException, NoClientRequestException {
-        try {
-            byte[] sizeBytes = in.readNBytes(Integer.BYTES);
-            int objectSize = ByteBuffer.wrap(sizeBytes).getInt();
-            byte[] objectBytes = in.readNBytes(objectSize);
-            var bytesInput = new ByteArrayInputStream(objectBytes);
-            var objectInput = new ObjectInputStream(bytesInput);
-            var message = ClientRequest.uncheckedCast(objectInput.readObject());
-            bytesInput.close();
-            objectInput.close();
-            return message;
-        } catch (
-            BufferUnderflowException | ClassNotFoundException | InvalidClassException err
-        ) {
-            throw new NoClientRequestException(err.getMessage());
-        }
-    }
-
-    private static boolean handleClient(
-        InputStream in,
-        OutputStream out,
-        CommandExecutor executor,
-        ServerContext serverContext
-    ) throws IOException, ClassNotFoundException {
-        boolean clientDisconnected = false;
-        try (
-            var byteOutput = new ByteArrayOutputStream();
-            var writer = new PrintWriter(byteOutput)
-        ) {
-            ClientRequest<CommandParameters, Serializable> request = null;
-            try {
-                request = ServerRunnable.getClientRequestFromStream(in);
-                if (executor.commandsExecuted == 0) {
-                    String path = request.pathToSavefile();
-                    serverContext.pathToSavefile = path;
-                    executor.vehicles.replaceCollectionWith(
-                        Server.loadCollection(path, writer)
-                    );
-                }
-
-                executor.execute(request, writer);
-            } catch (InvalidCommandParametersException err) {
-                writer.println(
-                    "Invalid parameter object was passed to the command: " + err
-                );
-            } catch (ExitProgramException err) {
-                Server.saveCollection(
-                    executor.vehicles,
-                    request.pathToSavefile(),
-                    writer
-                );
-                clientDisconnected = true;
-            } catch (NoClientRequestException err) {
-                writer.println(
-                    "No message from client (" + err.getMessage() + "), disconnecting..."
-                );
-                clientDisconnected = true;
-            }
-
-            var error = writer.checkError();
-            if (error) {
-                Server.logger.error("Error in print writer occured");
-            }
-
-            writer.flush();
-            var response = new ServerResponse(
-                new String(byteOutput.toByteArray(), StandardCharsets.UTF_8),
-                clientDisconnected
-            );
-            var responseBuffer = Utils.objectToBuffer(response);
-            out.write(responseBuffer.array());
-        }
-        return clientDisconnected;
-    }
-
-    @Override
-    public void run() {
-        int port = 1111;
-        try (var server = new ServerSocket(port);) {
-            Server.logger.info("Server started at port: " + port);
-            while (true) {
-                try (
-                    var client = server.accept();
-                    var out = client.getOutputStream();
-                    var in = client.getInputStream();
-                ) {
-                    Server.logger.info("Client connected: " + client.getInetAddress());
-
-                    Vehicles vehicles = new Vehicles();
-                    this.serverContext.activeCollection = vehicles;
-                    var executor = new CommandExecutor(vehicles, null);
-
-                    while (true) {
-                        try {
-                            boolean clientQuit = ServerRunnable.handleClient(
-                                in,
-                                out,
-                                executor,
-                                this.serverContext
-                            );
-                            if (clientQuit) {
-                                this.serverContext.activeCollection = null;
-                                break;
-                            }
-                        } catch (ClassNotFoundException err) {
-                            Server.logger.error(
-                                "Unknown class in client request, skipping..."
-                            );
-                        }
-                    }
-                }
-            }
-        } catch (IOException err) {
-            Server.logger.error("IO Exception occured: " + err.getMessage());
-        }
-    }
-}
-
 public class Server {
 
     public static final Logger logger = LoggerFactory.getLogger(
         "ru.ifmo.app.server.logger"
     );
+
+    public static void main(String[] __) throws IOException, ClassNotFoundException {
+        var socketServerRunnable = new SocketServerRunnable();
+        var serverThread = new Thread(socketServerRunnable);
+        serverThread.start();
+
+        try (var scanner = new Scanner(System.in)) {
+            while (true) {
+                try {
+                    String commandName = scanner.nextLine();
+                    var parsed = Server.parseCommand(commandName);
+                    String command = parsed.getKey();
+                    if (command.equals("save")) {
+                        if (socketServerRunnable.serverContext.activeCollection == null) {
+                            Server.logger.info("No active collections");
+                            continue;
+                        }
+                        if (
+                            socketServerRunnable.serverContext.pathsToSavefiles.size() ==
+                            0
+                            // socketServerRunnable.serverContext.pathToSavefile == null
+                        ) {
+                            Server.logger.info(
+                                "No clients provided their savefiles yet (you can provide one in arguments to this command)"
+                            );
+                            continue;
+                        }
+                        for (var addrPath : socketServerRunnable.serverContext.pathsToSavefiles.entrySet()) {
+                            Server.saveCollection(
+                                socketServerRunnable.serverContext.activeCollection.get(
+                                    addrPath.getKey()
+                                ),
+                                addrPath.getValue(),
+                                null
+                            );
+                        }
+                    }
+                } catch (CommandParseException err) {
+                    Server.logger.error("Couldn't parse command: " + err.getMessage());
+                } catch (NoSuchElementException err) {
+                    Server.logger.error("Exiting...");
+                    System.exit(0);
+                }
+            }
+        }
+    }
 
     private static SimpleEntry<String, List<String>> parseCommand(String commandString)
         throws CommandParseException {
@@ -250,49 +161,170 @@ public class Server {
             );
         }
     }
+}
 
-    public static void main(String[] __) throws IOException, ClassNotFoundException {
-        var serverRunnable = new ServerRunnable(null);
-        var serverThread = new Thread(serverRunnable);
-        serverThread.start();
+class ServerContext {
 
-        try (var scanner = new Scanner(System.in)) {
+    public Map<SocketAddress, Vehicles> activeCollection = new HashMap<>();
+    public Map<SocketAddress, String> pathsToSavefiles = new HashMap<>();
+}
+
+class SocketServerRunnable implements Runnable {
+
+    public ServerContext serverContext;
+
+    public SocketServerRunnable() {
+        this.serverContext = new ServerContext();
+    }
+
+    @Override
+    public void run() {
+        int port = 1111;
+        try (var server = new ServerSocket(port);) {
+            Server.logger.info("Server started at port: " + port);
             while (true) {
-                try {
-                    String commandName = scanner.nextLine();
-                    var parsed = Server.parseCommand(commandName);
-                    String command = parsed.getKey();
-                    List<String> args = parsed.getValue();
-                    if (command.equals("save")) {
-                        if (serverRunnable.serverContext.activeCollection == null) {
-                            Server.logger.info("No active collections");
-                            continue;
-                        }
-                        if (
-                            args.size() == 0 &&
-                            serverRunnable.serverContext.pathToSavefile == null
-                        ) {
-                            Server.logger.info(
-                                "Client didn't send a request yet, so savefile is unknown (you can provide one in arguments to this command)"
-                            );
-                            continue;
-                        }
-                        String path = args.size() == 0
-                            ? serverRunnable.serverContext.pathToSavefile
-                            : args.get(0);
-                        Server.saveCollection(
-                            serverRunnable.serverContext.activeCollection,
-                            path,
-                            null
-                        );
-                    }
-                } catch (CommandParseException err) {
-                    Server.logger.error("Couldn't parse command: " + err.getMessage());
-                } catch (NoSuchElementException err) {
-                    Server.logger.error("Exiting...");
-                    System.exit(0);
-                }
+                Socket client = server.accept();
+                Server.logger.info("Client connected: " + client.getInetAddress());
+                var collection = new Vehicles();
+                serverContext.activeCollection.put(
+                    client.getRemoteSocketAddress(),
+                    collection
+                );
+                var handler = new ClientHandler(client, serverContext, collection);
+
+                new Thread(handler).start();
             }
+        } catch (IOException err) {
+            Server.logger.error("IO Exception occured: " + err.getMessage());
+        }
+    }
+}
+
+class ClientHandler implements Runnable {
+
+    private Socket client;
+    private ServerContext serverContext;
+    private Vehicles collection;
+
+    public ClientHandler(Socket socket, ServerContext context, Vehicles collection) {
+        this.client = socket;
+        this.serverContext = context;
+        this.collection = collection;
+    }
+
+    @Override
+    public void run() {
+        Server.logger.info("Client thread started: " + client.getInetAddress());
+
+        var executor = new CommandExecutor(this.collection, null);
+
+        while (true) {
+            try {
+                boolean clientQuit = ClientHandler.handleClient(
+                    this.client,
+                    executor,
+                    this.serverContext
+                );
+                if (clientQuit) {
+                    this.serverContext.pathsToSavefiles.remove(
+                            this.client.getRemoteSocketAddress()
+                        );
+                    this.serverContext.activeCollection.remove(
+                            this.client.getRemoteSocketAddress()
+                        );
+                    break;
+                }
+            } catch (ClassNotFoundException err) {
+                Server.logger.error("Unknown class in client request, skipping...");
+            } catch (IOException err) {
+                Server.logger.error("IOException in client handler: " + err.getMessage());
+            }
+        }
+    }
+
+    private static boolean handleClient(
+        Socket client,
+        CommandExecutor executor,
+        ServerContext serverContext
+    ) throws IOException, ClassNotFoundException {
+        boolean clientDisconnected = false;
+        try (
+            var byteOutput = new ByteArrayOutputStream();
+            var writer = new PrintWriter(byteOutput)
+        ) {
+            ClientRequest<CommandParameters, Serializable> request = null;
+            try {
+                request =
+                    ClientHandler.getClientRequestFromStream(client.getInputStream());
+                if (executor.commandsExecuted == 0) {
+                    String path = request.pathToSavefile();
+                    serverContext.pathsToSavefiles.put(
+                        client.getRemoteSocketAddress(),
+                        path
+                    );
+                    // serverContext.pathsToSavefiles.add(path);
+                    executor.vehicles.replaceCollectionWith(
+                        Server.loadCollection(path, writer)
+                    );
+                }
+
+                executor.execute(request, writer);
+            } catch (InvalidCommandParametersException err) {
+                writer.println(
+                    "Invalid parameter object was passed to the command: " + err
+                );
+            } catch (ExitProgramException err) {
+                if (request != null) {
+                    serverContext.pathsToSavefiles.remove(
+                        client.getRemoteSocketAddress()
+                    );
+                    Server.saveCollection(
+                        executor.vehicles,
+                        request.pathToSavefile(),
+                        writer
+                    );
+                }
+                clientDisconnected = true;
+            } catch (NoClientRequestException err) {
+                writer.println(
+                    "No message from client (" + err.getMessage() + "), disconnecting..."
+                );
+                clientDisconnected = true;
+            }
+
+            var error = writer.checkError();
+            if (error) {
+                Server.logger.error("Error in print writer occured");
+            }
+
+            writer.flush();
+            var response = new ServerResponse(
+                new String(byteOutput.toByteArray(), StandardCharsets.UTF_8),
+                clientDisconnected
+            );
+            var responseBuffer = Utils.objectToBuffer(response);
+            client.getOutputStream().write(responseBuffer.array());
+        }
+        return clientDisconnected;
+    }
+
+    private static ClientRequest<CommandParameters, Serializable> getClientRequestFromStream(
+        InputStream in
+    ) throws IOException, ClassNotFoundException, NoClientRequestException {
+        try {
+            byte[] sizeBytes = in.readNBytes(Integer.BYTES);
+            int objectSize = ByteBuffer.wrap(sizeBytes).getInt();
+            byte[] objectBytes = in.readNBytes(objectSize);
+            var bytesInput = new ByteArrayInputStream(objectBytes);
+            var objectInput = new ObjectInputStream(bytesInput);
+            var message = ClientRequest.uncheckedCast(objectInput.readObject());
+            bytesInput.close();
+            objectInput.close();
+            return message;
+        } catch (
+            BufferUnderflowException | ClassNotFoundException | InvalidClassException err
+        ) {
+            throw new NoClientRequestException(err.getMessage());
         }
     }
 }
