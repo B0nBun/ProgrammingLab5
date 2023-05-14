@@ -196,7 +196,7 @@ public class Client {
                     connection.selector().select();
                     var keys = connection.selector().selectedKeys().iterator();
 
-                    // Handling the connection (reading/writing)
+                    // Handling the connection 
                     while (keys.hasNext()) {
                         var key = keys.next();
                         keys.remove();

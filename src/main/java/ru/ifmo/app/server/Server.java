@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputFilter;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -64,11 +65,15 @@ class ServerRunnable implements Runnable {
             byte[] objectBytes = in.readNBytes(objectSize);
             var bytesInput = new ByteArrayInputStream(objectBytes);
             var objectInput = new ObjectInputStream(bytesInput);
+            var filter = ObjectInputFilter.Config.createFilter("!*;ru.ifmo.app.shared.ClientRequest");
+            objectInput.setObjectInputFilter(filter);
             var message = ClientRequest.uncheckedCast(objectInput.readObject());
             bytesInput.close();
             objectInput.close();
             return message;
         } catch (BufferUnderflowException err) {
+            throw new NoClientRequestException();
+        } catch (ClassNotFoundException err) {
             throw new NoClientRequestException();
         }
     }
