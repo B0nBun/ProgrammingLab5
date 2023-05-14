@@ -1,8 +1,344 @@
-<vehicles creation-date="2023-04-27">
+<vehicles creation-date="2023-05-14">
   <vehicle id="544729ac-2e6c-46b5-8729-ac2e6ce6b571" creation-date="2023-04-27">
     <name>asd</name>
     <coordinates x="123" y="-123123" />
     <engine-power>123123.0</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="d154a4ae-d333-47df-94a4-aed333b7df69" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="252aba07-2877-4423-aaba-072877242363" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="f0eeb75d-bbac-430a-aeb7-5dbbac030a32" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="5657bfe6-9f55-47f2-97bf-e69f5527f2bd" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="7bf88c83-9f76-4282-b88c-839f76e28298" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="44cfcdb5-a438-4d67-8fcd-b5a4387d67f4" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="65265412-5d49-4724-a654-125d4977246d" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="49af12f0-d981-49a8-af12-f0d981b9a84b" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="314916b9-ee54-48cb-8916-b9ee5438cb49" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="49a5bd79-7b1c-4a21-a5bd-797b1c9a2156" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="2b345eb2-0b0a-410e-b45e-b20b0a110e23" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="673889ee-3705-40e4-b889-ee3705c0e437" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="343f9f53-acae-42e8-bf9f-53acaeb2e8f0" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="a17d06e2-a4a1-4754-bd06-e2a4a1575417" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="b1b8d705-e342-491d-b8d7-05e342591de0" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="3fe348ab-2fe1-4b5a-a348-ab2fe15b5aa8" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="ad930212-8144-46d6-9302-128144b6d6ff" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="e38d94cd-265b-45b1-8d94-cd265b95b1a8" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="9fcec2ca-ca71-4f1b-8ec2-caca715f1b77" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="a993663d-20d1-4f7b-9366-3d20d12f7b60" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="7f5769fd-8bb5-4e92-9769-fd8bb55e92ef" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="95540cba-c259-4ed9-940c-bac2593ed91c" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="8837d9fe-ffc6-4ca9-b7d9-feffc60ca9e7" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="224df69f-0b6e-4b33-8df6-9f0b6e6b3336" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="65578a34-2eaa-4cda-978a-342eaa9cda35" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="6f1701a8-4fea-41b7-9701-a84feaf1b733" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="33ecb134-05c5-43d5-acb1-3405c5a3d5a3" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="b676a1ed-e5b5-49bd-b6a1-ede5b549bdd0" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="a2bfc623-3933-4121-bfc6-233933e12169" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="455647bb-b7eb-4586-9647-bbb7ebf586e6" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="82b52d68-ac1c-44ed-b52d-68ac1c14ed25" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="8f4889f0-be92-41f8-8889-f0be92a1f833" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="b5b1fef5-0602-4dc9-b1fe-f506024dc981" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="a3edc1ad-4c18-4ae6-adc1-ad4c18cae61d" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="84204eb2-1dfe-4291-a04e-b21dfe929124" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="929bbd8e-c8ac-430c-9bbd-8ec8ac030c01" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="4e5854ab-829e-4365-9854-ab829e236523" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="972b32bd-51a6-4ea8-ab32-bd51a6dea8fe" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="4924621b-2ab1-493a-a462-1b2ab1993adf" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="1580507a-8d91-4759-8050-7a8d911759d9" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="fe919e4c-d03f-44b1-919e-4cd03ff4b1f0" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="983d96f5-ccc7-4a43-bd96-f5ccc7ca433f" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="b07a204d-f659-4c1f-ba20-4df659bc1f3a" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="aa5c7e5d-caae-4224-9c7e-5dcaae5224a0" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="6b3aad36-1b19-48ac-baad-361b19f8ac38" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="cd78185a-0da7-471f-b818-5a0da7b71f0f" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="6bd7dbbf-198c-4d5b-97db-bf198c3d5bca" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
+    <vehicle-type>DRONE</vehicle-type>
+    <fuel-type>GASOLINE</fuel-type>
+  </vehicle>
+  <vehicle id="9733acf6-ca61-4942-b3ac-f6ca6189425e" creation-date="2023-05-14">
+    <name>SomeName</name>
+    <coordinates x="11" y="-2222" />
+    <engine-power>5.5</engine-power>
     <vehicle-type>DRONE</vehicle-type>
     <fuel-type>GASOLINE</fuel-type>
   </vehicle>

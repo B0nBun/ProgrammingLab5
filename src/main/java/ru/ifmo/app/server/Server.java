@@ -7,7 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputFilter;
+import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -36,7 +36,12 @@ import ru.ifmo.app.shared.Utils;
 import ru.ifmo.app.shared.Vehicles;
 import ru.ifmo.app.shared.commands.CommandParameters;
 
-class NoClientRequestException extends Exception {}
+class NoClientRequestException extends Exception {
+
+    public NoClientRequestException(String message) {
+        super(message);
+    }
+}
 
 class ServerContext {
 
@@ -65,16 +70,14 @@ class ServerRunnable implements Runnable {
             byte[] objectBytes = in.readNBytes(objectSize);
             var bytesInput = new ByteArrayInputStream(objectBytes);
             var objectInput = new ObjectInputStream(bytesInput);
-            var filter = ObjectInputFilter.Config.createFilter("!*;ru.ifmo.app.shared.ClientRequest");
-            objectInput.setObjectInputFilter(filter);
             var message = ClientRequest.uncheckedCast(objectInput.readObject());
             bytesInput.close();
             objectInput.close();
             return message;
-        } catch (BufferUnderflowException err) {
-            throw new NoClientRequestException();
-        } catch (ClassNotFoundException err) {
-            throw new NoClientRequestException();
+        } catch (
+            BufferUnderflowException | ClassNotFoundException | InvalidClassException err
+        ) {
+            throw new NoClientRequestException(err.getMessage());
         }
     }
 
@@ -113,7 +116,9 @@ class ServerRunnable implements Runnable {
                 );
                 clientDisconnected = true;
             } catch (NoClientRequestException err) {
-                writer.println("No message from client, disconnecting...");
+                writer.println(
+                    "No message from client (" + err.getMessage() + "), disconnecting..."
+                );
                 clientDisconnected = true;
             }
 
